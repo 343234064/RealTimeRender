@@ -28,6 +28,15 @@ typedef PlatformTypes::WCHAR    WIDECHAR;   //wide character, for UNICODE
 typedef PlatformTypes::CHAR16   CHAR16;     //UTF-16, for UNICODE
 typedef PlatformTypes::CHAR32   CHAR32;     //UTF-32, for UNICODE
 
+#if   PLATFORM_TEXT_IS_CHAR16
+typedef CHAR16                  TChar;      //basic char type used in string
+#elif PLATFORM_TEXT_IS_CHAR32
+typedef CHAR32                  TChar;
+#else PLATFORM_TEXT_IS_WCHAR
+typedef WIDECHAR                TChar;
+#endif
+
+
 
 /*
 Type test
@@ -277,4 +286,37 @@ template <typename Type>
 struct IsBitwiseComparable
 {
 	enum { Value = std::is_enum<Type>::value || std::is_arithmetic<Type>::value || std::is_pointer<Type>::value };
+};
+
+
+
+
+/**************************
+Helper template to test if
+the char type is fixed encoding
+
+****************************/
+template <typename T>
+struct IsCharFixedEncoding
+{
+	enum { Value = false };
+};
+
+template<> struct IsCharFixedEncoding<ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharFixedEncoding<CHAR32>   { enum { Value = true }; };
+template<> struct IsCharFixedEncoding<WIDECHAR> { enum { Value = true }; };
+
+
+/**************************
+Helper template to test if
+the 2 char type is compatible
+
+****************************/
+template <typename CharTypeA, typename CharTypeB>
+struct IsCharEncodingCompatible
+{
+	enum { Value = IsCharFixedEncoding<CharTypeA>::Value &&
+		           IsCharFixedEncoding<CharTypeB>::Value &&
+	               sizeof(CharTypeA) == sizeof(CharTypeB) };
+
 };

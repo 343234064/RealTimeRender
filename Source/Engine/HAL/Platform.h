@@ -22,22 +22,22 @@
 
 //==============================
 //Macro configs
-//May be redefined by different platforms
+//Be redefined by different platforms
 //==============================
 /*
-   Use wchar as TEXT macro type
+   Use wchar as TEXT type
 */
 #ifndef PLATFORM_TEXT_IS_WCHAR
    #define PLATFORM_TEXT_IS_WCHAR 0
 #endif
 /*
-   Use char16_t as TEXT macro type
+   Use char16_t as TEXT type
 */
 #ifndef PLATFORM_TEXT_IS_CHAR16
    #define PLATFORM_TEXT_IS_CHAR16 0
 #endif
 /*
-   Use char32_t as TEXT macro type
+   Use char32_t as TEXT type
 */
 #ifndef PLATFORM_TEXT_IS_CHAR32
 #define PLATFORM_TEXT_IS_CHAR32 0
@@ -69,10 +69,10 @@
 //==============================
 #if PLATFORM_TEXT_IS_CHAR16
 #  define _TEXT(x) u ## x//char16_t, utf-16
-#elif PLATFORM_TEXT_IS_CHAR32
-#  define _TEXT(x) U ## x//char32_t, utf-32
 #elif PLATFORM_TEXT_IS_WCHAR
 #  define _TEXT(x) L ## x//wchar_t
+#elif PLATFORM_TEXT_IS_CHAR32
+#  define _TEXT(x) U ## x//char32_t, utf-32
 #else 
 #  error Text macro is not defined
 #endif

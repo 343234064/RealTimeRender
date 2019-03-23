@@ -70,7 +70,20 @@ No 32-bit application
 
 
 
-
+/*************************
+Just for test 
+*************************/
+#define USE_FOR_TEST_CPP 1
+#
+#if _DEBUG
+#  if USE_FOR_TEST_CPP
+#    define FOR_TEST_CPP 1
+#  else 
+#    define MAIN_LAUNCH_CPP 1
+#  endif
+#else
+#  define MAIN_LAUNCH_CPP 1
+#endif   
 
 
 

@@ -15,7 +15,7 @@ Windows Memory Interface
 #define WINDOWS_BACKUP_OOM_MEMORY_SIZE 24 * 1024 * 1024
 
 
-class WindowsPlatformMemory :public PlatformMemoryInterface
+class WindowsMemory :public PlatformMemoryInterface
 {
 public:
 	static void Init();
@@ -36,4 +36,4 @@ protected:
 };
 
 
-typedef WindowsPlatformMemory PlatformMemory;
+typedef WindowsMemory PlatformMemory;

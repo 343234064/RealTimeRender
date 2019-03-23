@@ -108,6 +108,9 @@
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\DynamicArray.h">
       <Filter>Source\Engine\Core\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Utilities\String.h">
+      <Filter>Source\Engine\Core\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">

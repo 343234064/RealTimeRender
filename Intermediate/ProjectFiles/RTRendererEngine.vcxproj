@@ -26,6 +26,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\DynamicArray.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\LockGuard.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\SmartPointer.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Utilities\String.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocatorInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocDefault.h" />

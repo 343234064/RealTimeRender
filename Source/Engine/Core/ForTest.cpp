@@ -1,4 +1,7 @@
 #include "GlobalConfigs.h"
+
+#if FOR_TEST_CPP
+
 #include "GlobalDefinations.h"
 #include "Utilities/AtomicCounter.h"
 #include "HAL/Platform.h"
@@ -12,7 +15,7 @@
 #include "HAL/Memory/AllocDefault.h"
 #include "HAL/Memory/AllocThreadSafeDecorator.h"
 #include "HAL/Memory.h"
-
+#include "Core/Utilities/String.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -38,7 +41,28 @@ public:
 	}
 };
 
+template <typename Encoding>
+static bool IsValidChar(Encoding Ch)
+{
+	return true;
+}
 
+
+void func(int* ptr1, const int* ptr2)
+{
+	ptr1++;
+	ptr2++;
+	cout << ptr1 << endl;
+	cout << ptr2 << endl;
+
+}
+
+template <typename InType>
+static typename FuncTrigger<IsCharFixedEncoding<InType>::Value, int32>::Type
+ConvertedLength(int32 SrcSize)
+{
+	return SrcSize;
+}
 
 int main()
 {
@@ -88,30 +112,31 @@ int main()
 	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
 	cout << "MaxNum:" << IntArray.MaxNum() << endl;
 
-	IntArray += {201, 54, 121, 12};
-	IntArray.StableSort();
-	cout << "Array:";
-	for (int i = 0;i < IntArray.CurrentNum();i++)
-		cout << IntArray[i] << " ";
-	cout << endl;
-	
-	IntArray.Pop();
-	cout << "Array:";
-	for (int i = 0;i < IntArray.CurrentNum();i++)
-		cout << IntArray[i] << " ";
-	cout << endl;
-
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
-
-	IntArray.ClearElements();
-
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
 
 	PlatformMemory::UnInit();
+
+	int array1[5];
+	int array2[5];
+
+	cout << array1 << endl;
+	cout << array2 << endl;
+
+	func(array1, array2);
+
+	cout << array1 << endl;
+	cout << array2 << endl;
+
+	int32 a = 72;
+	bool trigger = true;
+
+	cout << ConvertedLength<char>(a) << endl;
+
 	int temin;
 	cin >> temin;
 	return 0;
 	
 }
+
+
+
+#endif

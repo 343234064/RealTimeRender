@@ -4,8 +4,8 @@
 #error Current Platform is NOT Windows or NO Platform macro
 #endif
 
-//Request Visual Studio 2015 or later version, Visual C++ 2017 version 15.8 or later recommend
-static_assert(_MSC_VER >= 1900, "Visual Studio 2015 or later is required to compile on Windows");
+//Request Visual C++ 2017 or later
+static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to compile on Windows");
 
 //Compiler Warning -> Error, to make the compile environment more stringent
 //Some may not work due to the compiler version
@@ -192,10 +192,9 @@ static_assert(_MSC_VER >= 1900, "Visual Studio 2015 or later is required to comp
 #define FORCE_INLINE __forceinline
 
 
-#include <intrin.h>
 
 
-class PlatformTypesWindows
+class WindowsTypes
 {
 public:
 	typedef	signed char			int8;
@@ -219,13 +218,13 @@ public:
 
 };
 
-typedef PlatformTypesWindows PlatformTypes;
+
 
 
 /**
   Helpers
 */
-class PlatformHelpersWindows
+class WindowsHelpers
 {
 public:
 	FORCE_INLINE
@@ -239,15 +238,14 @@ public:
 
 };
 
-typedef PlatformHelpersWindows PlatformHelpers;
 
 
-
+#include <intrin.h>
 
 /**
   Atomic functions
 */
-class PlatformAtomicsWindows
+class WindowsAtomics
 {
 public:
 	static_assert(sizeof(PlatformTypes::int8) == sizeof(char) && alignof(PlatformTypes::int8) == alignof(char), "size of int8 should be 8 bits, same as char type");
@@ -421,7 +419,6 @@ public:
 	}
 };
 
-typedef PlatformAtomicsWindows PlatformAtomics;
 
 
 
@@ -475,4 +472,39 @@ private:
 	CRITICAL_SECTION CriticalSection;
 };
 
-typedef WindowsCriticalSection PlatformCriticalSection;
+
+#define _UNICODE
+#include <tchar.h>
+/**
+  String
+*/
+class WindowsString
+{
+	FORCE_INLINE
+	static WIDECHAR* Strcpy(WIDECHAR* Dest, const WIDECHAR* Src)
+	{
+		return (WIDECHAR*)_tcscpy(Dest, Src);
+	}
+
+	FORCE_INLINE
+	static WIDECHAR* Strncpy(WIDECHAR* Dest, const WIDECHAR* Src, Size_T Num)
+	{
+        _tcsncpy(Dest, Src, Num);
+		Dest[Num - 1] = 0;
+		return Dest;
+	}
+
+};
+
+
+
+
+/**************************
+Platform typedef 
+
+***************************/
+typedef WindowsTypes            PlatformTypes;
+typedef WindowsHelpers          PlatformHelpers;
+typedef WindowsAtomics          PlatformAtomics;
+typedef WindowsCriticalSection  PlatformCriticalSection;
+typedef WindowsString           PlatformString;

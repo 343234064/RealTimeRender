@@ -17,26 +17,26 @@
 
 
 
-void WindowsPlatformMemory::Init()
+void WindowsMemory::Init()
 {
 	BackupOOMMemorySize = WINDOWS_BACKUP_OOM_MEMORY_SIZE;
 	PlatformMemoryInterface::Init();
 
-	WindowsPlatformMemory::GetMemoryDesc();
+	WindowsMemory::GetMemoryDesc();
 	//log
 
 	OutputMemoryStatistics();
 }
 
 
-void WindowsPlatformMemory::UnInit()
+void WindowsMemory::UnInit()
 {
 	PlatformMemoryInterface::UnInit();
 	//log
 }
 
 
-MallocInterface* WindowsPlatformMemory::Allocator()
+MallocInterface* WindowsMemory::Allocator()
 {
 	AllocatorTypes ToUse;
 
@@ -69,13 +69,13 @@ MallocInterface* WindowsPlatformMemory::Allocator()
 
 }
 
-void* WindowsPlatformMemory::AllocPageFromOS(Size_T Size)
+void* WindowsMemory::AllocPageFromOS(Size_T Size)
 {
 	//track
 	return VirtualAlloc(NULL, Size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 }
 
-void WindowsPlatformMemory::FreePageFromOS(void* Dest, Size_T Size)
+void WindowsMemory::FreePageFromOS(void* Dest, Size_T Size)
 {
 	//track
 	//check  VirtualFree(Dest, 0, MEM_RELEASE)!=0
@@ -83,15 +83,15 @@ void WindowsPlatformMemory::FreePageFromOS(void* Dest, Size_T Size)
 }
 
 
-void WindowsPlatformMemory::GetMemoryState(PlatformMemoryStates& State)
+void WindowsMemory::GetMemoryState(PlatformMemoryStates& State)
 {
 	MEMORYSTATUSEX MSE;
-	WindowsPlatformMemory::Memzero(&MSE, sizeof(MEMORYSTATUSEX));
+	WindowsMemory::Memzero(&MSE, sizeof(MEMORYSTATUSEX));
 	MSE.dwLength = sizeof(MEMORYSTATUSEX);
 	GlobalMemoryStatusEx(&MSE);
 
 	PROCESS_MEMORY_COUNTERS PMC;
-	WindowsPlatformMemory::Memzero(&PMC, sizeof(PROCESS_MEMORY_COUNTERS));
+	WindowsMemory::Memzero(&PMC, sizeof(PROCESS_MEMORY_COUNTERS));
 	GetProcessMemoryInfo(GetCurrentProcess(), &PMC, sizeof(PROCESS_MEMORY_COUNTERS));
 
 	State.PhysicalMemoryAvailable = MSE.ullAvailPhys;
@@ -105,17 +105,17 @@ void WindowsPlatformMemory::GetMemoryState(PlatformMemoryStates& State)
 }
 
 
-void WindowsPlatformMemory::GetMemoryDesc()
+void WindowsMemory::GetMemoryDesc()
 {
 	if (MemoryDesc.TotalPhysicalMemory == 0)
 	{
 		MEMORYSTATUSEX MSE;
-		WindowsPlatformMemory::Memzero(&MSE, sizeof(MEMORYSTATUSEX));
+		WindowsMemory::Memzero(&MSE, sizeof(MEMORYSTATUSEX));
 		MSE.dwLength = sizeof(MEMORYSTATUSEX);
 		GlobalMemoryStatusEx(&MSE);
 		
 		SYSTEM_INFO STI;
-		WindowsPlatformMemory::Memzero(&STI, sizeof(SYSTEM_INFO));
+		WindowsMemory::Memzero(&STI, sizeof(SYSTEM_INFO));
 		GetSystemInfo(&STI);
 
 		MemoryDesc.TotalPhysicalMemory = MSE.ullTotalPhys;
