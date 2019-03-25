@@ -7,7 +7,7 @@ String
 
 #include "Core/GlobalDefinations.h"
 #include "Core/Utilities/DynamicArray.h"
-
+#include "HAL/Chars.h"
 
 #define UNKOWN_CHAR '?'
 

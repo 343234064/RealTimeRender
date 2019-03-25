@@ -64,19 +64,6 @@
 #endif
 
 
-//==============================
-//Text define
-//==============================
-#if PLATFORM_TEXT_IS_CHAR16
-#  define _TEXT(x) u ## x//char16_t, utf-16
-#elif PLATFORM_TEXT_IS_WCHAR
-#  define _TEXT(x) L ## x//wchar_t
-#elif PLATFORM_TEXT_IS_CHAR32
-#  define _TEXT(x) U ## x//char32_t, utf-32
-#else 
-#  error Text macro is not defined
-#endif
-
 
 
 //==============================

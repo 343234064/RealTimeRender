@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/GlobalConfigs.h"
 #if !PLATFORM_WINDOWS
 #error Current Platform is NOT Windows or NO Platform macro
 #endif
@@ -186,10 +187,12 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 #define PLATFORM_ALLOC_USE_TBB 1
 #define PLATFORM_ALLOC_USE_JEM 0
 //Other 
-#define PLATFORM_TEXT_IS_CHAR16 1
+#define PLATFORM_TEXT_IS_WCHAR 1
 
 
 #define FORCE_INLINE __forceinline
+
+
 
 
 
@@ -211,14 +214,14 @@ public:
 
 	typedef unsigned __int64    Size_T;
 
-	typedef char                ACHAR;
-	typedef wchar_t             WCHAR;
+	typedef char                ANSICHAR;
+	typedef wchar_t             WIDECHAR;
 	typedef char16_t            CHAR16;
 	typedef char32_t            CHAR32;
 
 };
 
-
+typedef WindowsTypes            PlatformTypes;
 
 
 /**
@@ -238,6 +241,8 @@ public:
 
 };
 
+
+typedef WindowsHelpers          PlatformHelpers;
 
 
 #include <intrin.h>
@@ -419,7 +424,7 @@ public:
 	}
 };
 
-
+typedef WindowsAtomics          PlatformAtomics;
 
 
 /**
@@ -472,39 +477,8 @@ private:
 	CRITICAL_SECTION CriticalSection;
 };
 
-
-#define _UNICODE
-#include <tchar.h>
-/**
-  String
-*/
-class WindowsString
-{
-	FORCE_INLINE
-	static WIDECHAR* Strcpy(WIDECHAR* Dest, const WIDECHAR* Src)
-	{
-		return (WIDECHAR*)_tcscpy(Dest, Src);
-	}
-
-	FORCE_INLINE
-	static WIDECHAR* Strncpy(WIDECHAR* Dest, const WIDECHAR* Src, Size_T Num)
-	{
-        _tcsncpy(Dest, Src, Num);
-		Dest[Num - 1] = 0;
-		return Dest;
-	}
-
-};
-
-
-
-
-/**************************
-Platform typedef 
-
-***************************/
-typedef WindowsTypes            PlatformTypes;
-typedef WindowsHelpers          PlatformHelpers;
-typedef WindowsAtomics          PlatformAtomics;
 typedef WindowsCriticalSection  PlatformCriticalSection;
-typedef WindowsString           PlatformString;
+
+
+
+

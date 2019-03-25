@@ -16,6 +16,7 @@
 #include "HAL/Memory/AllocThreadSafeDecorator.h"
 #include "HAL/Memory.h"
 #include "Core/Utilities/String.h"
+#include "HAL/Chars.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -41,12 +42,6 @@ public:
 	}
 };
 
-template <typename Encoding>
-static bool IsValidChar(Encoding Ch)
-{
-	return true;
-}
-
 
 void func(int* ptr1, const int* ptr2)
 {
@@ -63,7 +58,8 @@ ConvertedLength(int32 SrcSize)
 {
 	return SrcSize;
 }
-
+#include <locale>
+#include <codecvt>
 int main()
 {
 
@@ -112,24 +108,19 @@ int main()
 	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
 	cout << "MaxNum:" << IntArray.MaxNum() << endl;
 
-
+	
 	PlatformMemory::UnInit();
 
-	int array1[5];
-	int array2[5];
+	CHAR16 a = u'a';
+	
+	wcout << ToUpper(a) << endl;
 
-	cout << array1 << endl;
-	cout << array2 << endl;
-
-	func(array1, array2);
-
-	cout << array1 << endl;
-	cout << array2 << endl;
-
-	int32 a = 72;
-	bool trigger = true;
-
-	cout << ConvertedLength<char>(a) << endl;
+	/*
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t> > myconv;
+	std::wstring ws(L"Your UTF-16 text");
+	std::string bs = myconv.to_bytes(ws);
+	std::cout << bs << '\n';
+	*/
 
 	int temin;
 	cin >> temin;

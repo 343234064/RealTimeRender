@@ -27,6 +27,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\LockGuard.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\SmartPointer.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\String.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Chars.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocatorInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocDefault.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocThreadSafeDecorator.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\MemoryInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h" />
   </ItemGroup>

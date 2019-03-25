@@ -23,17 +23,17 @@ typedef PlatformTypes::uint64	uint64;		//64-bit unsigned.
 
 typedef PlatformTypes::Size_T   Size_T;     //unsigned int, has same size as pointer 
 
-typedef PlatformTypes::ACHAR    ANSICHAR;   //8-bit ANSI character
-typedef PlatformTypes::WCHAR    WIDECHAR;   //wide character, for UNICODE
+typedef PlatformTypes::ANSICHAR ANSICHAR;   //8-bit ANSI character
+typedef PlatformTypes::WIDECHAR WIDECHAR;   //wide character, for UNICODE
 typedef PlatformTypes::CHAR16   CHAR16;     //UTF-16, for UNICODE
 typedef PlatformTypes::CHAR32   CHAR32;     //UTF-32, for UNICODE
 
 #if   PLATFORM_TEXT_IS_CHAR16
 typedef CHAR16                  TChar;      //basic char type used in string
 #elif PLATFORM_TEXT_IS_CHAR32
-typedef CHAR32                  TChar;
+typedef CHAR32                  TChar;      //basic char type used in string
 #else PLATFORM_TEXT_IS_WCHAR
-typedef WIDECHAR                TChar;
+typedef WIDECHAR                TChar;      //basic char type used in string
 #endif
 
 
@@ -102,6 +102,11 @@ static_assert(sizeof(CHAR32) == 4, "CHAR32 size uncorrect");
 #define MAX_INT16		((int16) 0x7fff)
 #define MAX_INT32		((int32) 0x7fffffff)
 #define MAX_INT64		((int64) 0x7fffffffffffffff)
+
+
+
+
+
 
 
 //==============================

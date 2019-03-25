@@ -111,6 +111,12 @@
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\String.h">
       <Filter>Source\Engine\Core\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Chars.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
