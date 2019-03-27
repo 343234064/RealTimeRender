@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdio.h>
 #include <type_traits>
 #include "HAL/Platform.h"
 
@@ -295,6 +296,33 @@ struct IsBitwiseComparable
 
 
 
+/**************************
+Helper template to test if
+the type is trivially copy assignable
+
+****************************/
+template <typename Type>
+struct IsTriviallyCopyAssignable
+{
+	enum { Value = __has_trivial_assign(Type) || std::is_pod<Type>::value };
+};
+
+
+/**************************
+Helper template to test if
+the type is char type we defined
+
+****************************/
+template <typename T>
+struct IsCharType
+{
+	enum { Value = false };
+};
+
+template<> struct IsCharType<ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharType<CHAR16>   { enum { Value = true }; };
+template<> struct IsCharType<CHAR32>   { enum { Value = true }; };
+template<> struct IsCharType<WIDECHAR> { enum { Value = true }; };
 
 /**************************
 Helper template to test if
@@ -314,7 +342,7 @@ template<> struct IsCharFixedEncoding<WIDECHAR> { enum { Value = true }; };
 
 /**************************
 Helper template to test if
-the 2 char type is compatible
+the 2 char type is encoding ompatible
 
 ****************************/
 template <typename CharTypeA, typename CharTypeB>
@@ -325,3 +353,22 @@ struct IsCharEncodingCompatible
 	               sizeof(CharTypeA) == sizeof(CharTypeB) };
 
 };
+
+
+/**************************
+Helper template to test if
+the 2 char type is compare compatible
+
+****************************/
+template<typename A, typename B>	
+struct IsCharComparisonCompatible 
+{ 
+	enum { Value = false }; 
+};
+template<> struct IsCharComparisonCompatible <WIDECHAR, ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR16, ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR32, ANSICHAR> { enum { Value = true }; };
+
+template<> struct IsCharComparisonCompatible <WIDECHAR, WIDECHAR> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR16, CHAR16> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR32, CHAR32> { enum { Value = true }; };

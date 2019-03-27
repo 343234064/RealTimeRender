@@ -9,11 +9,12 @@
 
 
 /**
-  String
+  Chars
   TODO: CHAR16/CHAR32 NOT COMPLETED
 */
-class WindowsString
+class WindowsChars
 {
+public:
 	FORCE_INLINE
 	static PlatformTypes::WIDECHAR* Strcpy(PlatformTypes::WIDECHAR* Dest, PlatformTypes::Size_T DestNum, const PlatformTypes::WIDECHAR* Src)
 	{
@@ -199,6 +200,7 @@ class WindowsString
 	}
 
 
+
 	FORCE_INLINE
 	static PlatformTypes::int32 Strncmp(const PlatformTypes::WIDECHAR* Dest1, const PlatformTypes::WIDECHAR* Dest2, PlatformTypes::Size_T Num)
 	{
@@ -230,6 +232,32 @@ class WindowsString
 			if (A != B) return A - B;
 		}
 		return 0;
+	}
+
+
+	template<typename CharTypeA, typename CharTypeB>
+	static typename FuncTrigger<IsCharComparisonCompatible<CharTypeA, CharTypeB>::Value, PlatformTypes::int32>::Type
+	Stricmp(const CharTypeA* Dest1, const CharTypeB* Dest2)
+	{
+		for (; *Dest1 || *Dest2; Dest1++, Dest2++)
+		{
+			if (*Dest1 == *Dest2) continue;
+
+			CharTypeA Tmp1 = ToLower(*Dest1);
+			CharTypeB Tmp2 = ToLower(*Dest2);
+			if (Tmp1 != Tmp2)
+			{
+				return *Dest1 - *Dest2;
+			}
+		}
+
+		return 0;
+	}
+
+	FORCE_INLINE
+	static PlatformTypes::int32 Stricmp(const PlatformTypes::ANSICHAR* Dest1, const PlatformTypes::ANSICHAR* Dest2)
+	{
+		return _stricmp(Dest1, Dest2);
 	}
 
 
@@ -282,6 +310,7 @@ class WindowsString
 	FORCE_INLINE
 	static PlatformTypes::Size_T Strlen(const PlatformTypes::CHAR16* Dest)
 	{
+		//TODO:CHAR16 is not fixed size
 		PlatformTypes::int32 Len = -1;
 
 		do
@@ -427,5 +456,5 @@ class WindowsString
 
 };
 
-typedef WindowsString           PlatformString;
+typedef WindowsChars           PlatformChars;
 

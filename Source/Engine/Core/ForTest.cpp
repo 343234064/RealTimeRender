@@ -112,15 +112,12 @@ int main()
 	PlatformMemory::UnInit();
 
 	CHAR16 a = u'a';
-	
-	wcout << ToUpper(a) << endl;
+	CHAR16 b = u'ñá';
 
-	/*
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t> > myconv;
-	std::wstring ws(L"Your UTF-16 text");
-	std::string bs = myconv.to_bytes(ws);
-	std::cout << bs << '\n';
-	*/
+	cout << sizeof(a) << endl;
+	cout << sizeof(b) << endl;
+	cout << b << endl;
+	
 
 	int temin;
 	cin >> temin;

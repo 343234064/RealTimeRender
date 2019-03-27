@@ -24,7 +24,10 @@ public:
 
 	FORCE_INLINE
 	virtual ElementType* Address() const { return Data; }
-
+	
+	FORCE_INLINE
+	SIZE_T AllocatedSize(int32 MaxNum, SIZE_T SizePerElement) const { return MaxNum * SizePerElement; }
+	
 	FORCE_INLINE
 	virtual void MoveFrom(BaseContainerAllocator* Other)
 	{

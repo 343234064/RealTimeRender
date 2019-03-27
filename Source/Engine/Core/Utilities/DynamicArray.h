@@ -195,6 +195,9 @@ public:
 	uint32 TypeSize() const { return sizeof(ElementType); }
 
 	FORCE_INLINE
+	Size_T AllocatedSize() const { return Allocator.AllocatedSize(MaxElementNum, sizeof(ElementType)); }
+
+	FORCE_INLINE
 	int32 RemainElementSize() const { return MaxElementNum - CurrentElementNum; }
 
 
@@ -615,40 +618,22 @@ public:
 		CurrentElementNum = 0;
 	}
 
-	
-
-
-
-
-private:
 	/*
-	   Unique memory entrance
-	*/
-	FORCE_INLINE
-	ElementType* Begin() { return Allocator.Address(); }
-	FORCE_INLINE
-	const ElementType* Begin() const { return Allocator.Address(); }
-
-	/*
-       Resize the allocation to NewMaxElementNum
-	   Be careful if NewMaxElementNum < CurrentElementNum
+       Clear all the elements and allocation
     */
 	FORCE_INLINE
-	void Resize(int32 NewMaxElementNum)
+	void Empty()
 	{
-		//check 
-		if (NewMaxElementNum != MaxElementNum)
-		{
-			Allocator.Resize(MaxElementNum, NewMaxElementNum);
-		}
-
-		MaxElementNum = NewMaxElementNum;
+		//check
+		ClearElements();
+		Resize(0);
 	}
 
+
 	/*
-	  Add Uninitialize element to the last
-	  Return the element num that calling AddUninitialize() before
-	*/
+      Add Uninitialize element to the last
+      Return the element num that calling AddUninitialize() before
+    */
 	int32 AddUninitialize(int32 Num = 1)
 	{
 		//check
@@ -665,7 +650,7 @@ private:
 
 	/*
 	  Insert Uninitialize element to the array
-    */  
+	*/
 	void InsertUninitialize(int32 Index, int32 Num = 1)
 	{
 		//check
@@ -678,6 +663,33 @@ private:
 		}
 		ElementType* MoveData = Begin() + Index;
 		Memory::RelocateItem(MoveData + Num, MoveData, OldElementNum - Index);
+
+	}
+
+
+	/*
+      Unique memory entrance
+    */
+	FORCE_INLINE
+	ElementType* Begin() { return Allocator.Address(); }
+
+	FORCE_INLINE
+	const ElementType* Begin() const { return Allocator.Address(); }
+
+private:
+	/*
+       Resize the allocation to NewMaxElementNum
+	   Be careful if NewMaxElementNum < CurrentElementNum
+    */
+	FORCE_INLINE
+	void Resize(int32 NewMaxElementNum)
+	{
+		//check 
+		if (NewMaxElementNum != MaxElementNum)
+		{
+			Allocator.Resize(MaxElementNum, NewMaxElementNum);
+			MaxElementNum = NewMaxElementNum;
+		}
 
 	}
 

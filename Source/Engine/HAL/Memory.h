@@ -252,7 +252,28 @@ namespace Memory
 
 
 
+	//////////////////////////////////////////////////////////////////////
+    //Copy Assign Item
+    //
+    //////////////////////////////////////////////////////////////////////
+	template <typename ItemType>
+	FORCE_INLINE
+	typename FuncTrigger<IsTriviallyCopyAssignable<ItemType>::Value>::Type
+	CopyAssignItem(ItemType* Dest, const ItemType* Src, int32 Num)
+	{
+		PlatformMemory::Memcopy(Dest, Src, Num * sizeof(ItemType));
+	}
 
 
-
+	template <typename ItemType>
+	FORCE_INLINE
+	typename FuncTrigger<!IsTriviallyCopyAssignable<ItemType>::Value>::Type
+	CopyAssignItem(ItemType* Dest, const ItemType* Src, int32 Num)
+	{
+		while (Num)
+		{
+			*Dest++ = *Src++;
+			--Num;
+		}
+	}
 };
