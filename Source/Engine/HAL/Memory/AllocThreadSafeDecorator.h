@@ -4,7 +4,7 @@ Thread safe decorator
 *****************************************/
 #pragma once
 
-#include "Core/Utilities/LockGuard.h"
+#include "Core/Utilities/Misc.h"
 #include "Core/GlobalDefinations.h"
 #include "HAL/Memory/AllocatorInterface.h"
 

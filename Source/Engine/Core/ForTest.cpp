@@ -5,7 +5,7 @@
 #include "GlobalDefinations.h"
 #include "Utilities/AtomicCounter.h"
 #include "HAL/Platform.h"
-#include "Utilities/LockGuard.h"
+#include "Utilities/Misc.h"
 #include "Utilities/SmartPointer.h"
 #include "Utilities/ContainerAllocator.h"
 #include "Utilities/DynamicArray.h"

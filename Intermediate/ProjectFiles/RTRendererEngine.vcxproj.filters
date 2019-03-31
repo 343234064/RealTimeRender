@@ -69,9 +69,6 @@
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\AtomicCounter.h">
       <Filter>Source\Engine\Core\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Utilities\LockGuard.h">
-      <Filter>Source\Engine\Core\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Utilities\SmartPointer.h">
       <Filter>Source\Engine\Core\Utilities</Filter>
     </ClInclude>
@@ -116,6 +113,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Chars.h">
       <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Utilities\Misc.h">
+      <Filter>Source\Engine\Core\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

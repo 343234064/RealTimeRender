@@ -90,8 +90,8 @@ static_assert(sizeof(CHAR32) == 4, "CHAR32 size uncorrect");
 #define	MIN_UINT16		((uint16)0x0000)
 #define	MIN_UINT32		((uint32)0x00000000)
 #define MIN_UINT64		((uint64)0x0000000000000000)
-#define MIN_INT8		((int8)	 -128)
-#define MIN_INT16		((int16) -32768)
+#define MIN_INT8		((int8)	 0x80)
+#define MIN_INT16		((int16) 0x8000)
 #define MIN_INT32		((int32) 0x80000000)
 #define MIN_INT64		((int64) 0x8000000000000000)
 
@@ -107,12 +107,19 @@ static_assert(sizeof(CHAR32) == 4, "CHAR32 size uncorrect");
 
 
 
-
-
-
 //==============================
 //Type traits
 //==============================
+//Returns the type T
+//
+template <typename T>
+struct ExplicitType
+{
+	typedef T Type;
+};
+
+
+
 /**
  * Helper template to test if Type is ReferenceType
  */

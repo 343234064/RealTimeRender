@@ -10,7 +10,8 @@
 
 /**
   Chars
-  TODO: CHAR16/CHAR32 NOT COMPLETED
+  //TODO:Support for char16_t(unfixed-encoding)
+  //TODO:Support for char32_t
 */
 class WindowsChars
 {
@@ -29,6 +30,7 @@ public:
 		return Dest;
 	}
 
+	/*
 	static PlatformTypes::CHAR16* Strcpy(PlatformTypes::CHAR16* Dest, PlatformTypes::Size_T DestNum, const PlatformTypes::CHAR16* Src)
 	{
 		PlatformTypes::CHAR16* Buf = Dest;
@@ -52,7 +54,7 @@ public:
 
 		return Dest;
 	}
-
+	*/
 
 	FORCE_INLINE
 	static PlatformTypes::WIDECHAR* Strncpy(PlatformTypes::WIDECHAR* Dest, const PlatformTypes::WIDECHAR* Src, PlatformTypes::Size_T MaxNumToCopy)
@@ -66,7 +68,7 @@ public:
 	{
 		strncpy_s(Dest, MaxNumToCopy, Src, MaxNumToCopy - 1);
 	}
-
+	/*
 	static PlatformTypes::CHAR16* Strncpy(PlatformTypes::CHAR16* Dest, const PlatformTypes::CHAR16* Src, PlatformTypes::Size_T MaxNumToCopy)
 	{
 		PlatformTypes::CHAR16* Buf = Dest;
@@ -112,7 +114,7 @@ public:
 
 		return Dest;
 	}
-
+	*/
 
 	FORCE_INLINE
 	static PlatformTypes::WIDECHAR* Strcat(PlatformTypes::WIDECHAR* Dest, PlatformTypes::Size_T DestNum, const PlatformTypes::WIDECHAR* Src)
@@ -128,6 +130,7 @@ public:
 		return Dest;
 	}
 
+	/*
 	static PlatformTypes::CHAR16* Strcat(PlatformTypes::CHAR16* Dest, PlatformTypes::Size_T DestNum, const PlatformTypes::CHAR16* Src)
 	{
 		PlatformTypes::CHAR16* Buf = Dest;
@@ -165,7 +168,7 @@ public:
 
 		return Dest;
 	}
-
+	*/
 
 	FORCE_INLINE
 	static PlatformTypes::int32 Strcmp(const PlatformTypes::WIDECHAR* Dest1, const PlatformTypes::WIDECHAR* Dest2)
@@ -179,6 +182,7 @@ public:
 		return strcmp(Dest1, Dest2);
 	}
 
+	/*
 	static PlatformTypes::int32 Strcmp(const PlatformTypes::CHAR16* Dest1, const PlatformTypes::CHAR16* Dest2)
 	{
 		for (; *Dest1 || *Dest2; Dest1++, Dest2++)
@@ -198,7 +202,7 @@ public:
 		}
 		return 0;
 	}
-
+	*/
 
 
 	FORCE_INLINE
@@ -213,6 +217,7 @@ public:
 		return strncmp(Dest1, Dest2, Num);
 	}
 
+	/*
 	static PlatformTypes::int32 Strncmp(const PlatformTypes::CHAR16* Dest1, const PlatformTypes::CHAR16* Dest2, PlatformTypes::Size_T Num)
 	{
 		for (; *Dest1 || *Dest2 && Num; Dest1++, Dest2++, Num--)
@@ -233,7 +238,7 @@ public:
 		}
 		return 0;
 	}
-
+	*/
 
 	template<typename CharTypeA, typename CharTypeB>
 	static typename FuncTrigger<IsCharComparisonCompatible<CharTypeA, CharTypeB>::Value, PlatformTypes::int32>::Type
@@ -273,12 +278,12 @@ public:
 		return _strnicmp(Dest1, Dest2, Num);
 	}
 
-
+	/*
 	static PlatformTypes::int32 Strnicmp(const PlatformTypes::CHAR16* Dest1, const PlatformTypes::CHAR16* Dest2, PlatformTypes::Size_T Num)
 	{
 		for (; *Dest1 || *Dest2 && Num; Dest1++, Dest2++, Num--)
 		{
-			PlatformTypes::CHAR16 A = ToUpper(*Dest1), B = ToUpper(*Dest2);
+			PlatformTypes::CHAR16 A = Chars::ToUpper(*Dest1), B = Chars::ToUpper(*Dest2);
 			if (A != B) return A - B;
 		}
 		return 0;
@@ -288,12 +293,12 @@ public:
 	{
 		for (; *Dest1 || *Dest2 && Num; Dest1++, Dest2++, Num--)
 		{
-			PlatformTypes::CHAR32 A = ToUpper(*Dest1), B = ToUpper(*Dest2);
+			PlatformTypes::CHAR32 A = Chars::ToUpper(*Dest1), B = Chars::ToUpper(*Dest2);
 			if (A != B) return A - B;
 		}
 		return 0;
 	}
-
+	*/
 
 	FORCE_INLINE
 	static PlatformTypes::Size_T Strlen(const PlatformTypes::WIDECHAR* Dest)
@@ -307,6 +312,7 @@ public:
 		return strlen(Dest);
 	}
 
+	/*
 	FORCE_INLINE
 	static PlatformTypes::Size_T Strlen(const PlatformTypes::CHAR16* Dest)
 	{
@@ -333,7 +339,7 @@ public:
 
 		return Len;
 	}
-
+	*/
 
 	FORCE_INLINE
 	static PlatformTypes::int32 Atoi(const PlatformTypes::WIDECHAR* Dest)
@@ -453,6 +459,58 @@ public:
 	}
 
 
+
+	FORCE_INLINE
+	static const PlatformTypes::WIDECHAR* Strstr(const PlatformTypes::WIDECHAR* Dest, const PlatformTypes::WIDECHAR* Find)
+	{
+		return _tcsstr(Dest, Find);
+	}
+
+	FORCE_INLINE
+	static const PlatformTypes::ANSICHAR* Strstr(const PlatformTypes::ANSICHAR* Dest, const PlatformTypes::ANSICHAR* Find)
+	{
+		return strstr(Dest, Find);
+	}
+
+
+	template <typename CharType>
+	static const CharType* Stristr(const CharType* Dest, const CharType* Find)
+	{
+		//check Dest Find
+		if (*Find == 0) return nullptr;
+
+		//Ignore the first letter 
+		int32 FindLength = WindowsChars::Strlen(Find) - 1;
+		
+		CharType FindFirstChar = ToUpper(*Find++);
+		CharType DestChar = *Dest++;
+
+		while (DestChar)
+		{
+			DestChar = ToUpper(DestChar);
+			if (DestChar == FindFirstChar && !WindowsChars::Strnicmp(Dest, Find, FindLength))
+			{
+				return --Dest;
+			}
+
+			DestChar = *Dest++;
+		}
+
+		return nullptr;
+	}
+
+
+	FORCE_INLINE 
+	static int32 VarArgSprintf(PlatformTypes::WIDECHAR* Buffer, Size_T BufferCount, int32 MaxCount, const PlatformTypes::WIDECHAR* Format, va_list ArgsPtr)
+	{
+		return _vsntprintf_s(Buffer, BufferCount, MaxCount, Format, ArgsPtr);
+	}
+
+	FORCE_INLINE
+	static int32 VarArgSprintf(PlatformTypes::ANSICHAR* Buffer, Size_T BufferCount, int32 MaxCount,  const PlatformTypes::ANSICHAR* Format, va_list ArgsPtr)
+	{
+		return _vsnprintf_s(Buffer, BufferCount, MaxCount, Format, ArgsPtr);
+	}
 
 };
 
