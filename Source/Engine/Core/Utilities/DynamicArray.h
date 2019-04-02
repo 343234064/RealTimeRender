@@ -96,9 +96,14 @@ int32 ShrinkPolicy(int32 ElementSlackNum, int32 MaxElementNum, int32 BytesPerEle
   * Continuous memory array
   * Memory operation seperated
  */
-template<typename ElementType, typename AllocatorType = BaseContainerAllocator<ElementType>>
+template<typename TElementType, typename TAllocatorType = BaseContainerAllocator<TElementType>>
 class Array
 {
+public:
+
+	typedef TElementType    ElementType;
+	typedef TAllocatorType  AllocatorType;
+
 public:
 	//Default constructor
 	FORCE_INLINE
@@ -129,7 +134,7 @@ public:
 	FORCE_INLINE
 	Array(const Array& Other)
 	{
-		InitDataCopyFrom(Other.Begin(), Other.CurrentSize());
+		InitDataCopyFrom(Other.Begin(), Other.CurrentNum());
 	}
 
 
@@ -719,7 +724,7 @@ private:
 	Move(DestArrayType& DestArray, SrcArrayType& SrcArray)
 	{
 		//Array pointer can be moved
-		DestArray.Allocator.MoveFrom(SrcArray.Allocator);
+		DestArray.Allocator.MoveFrom(&(SrcArray.Allocator));
 
 		DestArray.CurrentElementNum = SrcArray.CurrentElementNum;
 		DestArray.MaxElementNum = SrcArray.MaxElementNum;

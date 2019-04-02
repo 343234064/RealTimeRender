@@ -248,8 +248,8 @@ public:
 		{
 			if (*Dest1 == *Dest2) continue;
 
-			CharTypeA Tmp1 = ToLower(*Dest1);
-			CharTypeB Tmp2 = ToLower(*Dest2);
+			CharTypeA Tmp1 = Chars::ToLower(*Dest1);
+			CharTypeB Tmp2 = Chars::ToLower(*Dest2);
 			if (Tmp1 != Tmp2)
 			{
 				return *Dest1 - *Dest2;
@@ -480,14 +480,14 @@ public:
 		if (*Find == 0) return nullptr;
 
 		//Ignore the first letter 
-		int32 FindLength = WindowsChars::Strlen(Find) - 1;
+		int32 FindLength = (int32)WindowsChars::Strlen(Find) - 1;
 		
-		CharType FindFirstChar = ToUpper(*Find++);
+		CharType FindFirstChar = Chars::ToUpper(*Find++);
 		CharType DestChar = *Dest++;
 
 		while (DestChar)
 		{
-			DestChar = ToUpper(DestChar);
+			DestChar = Chars::ToUpper(DestChar);
 			if (DestChar == FindFirstChar && !WindowsChars::Strnicmp(Dest, Find, FindLength))
 			{
 				return --Dest;

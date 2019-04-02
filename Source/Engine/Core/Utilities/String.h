@@ -106,7 +106,7 @@ public:
 	{
 		if (Src && *Src)
 		{
-			int32 SrcLen = PlatformChars::Strlen(Src) + 1;
+			int32 SrcLen = (int32)PlatformChars::Strlen(Src) + 1;
 			Strings.AddUninitialize(SrcLen);
 			ConvertChar(Strings.Begin(), Strings.MaxNum(), Src, SrcLen);
 			*(Strings.Begin() + Strings.CurrentNum() - 1) = TEXTS('\0');
@@ -195,9 +195,10 @@ public:
 		if (!Num) return;
 
 		int32 CurNum = Strings.CurrentNum();
-		Strings.AddUninitialize(Num + (CurNum? 0 : 1));
-		TChar* InsertAddress = Strings.Begin() + CurNum - (CurNum ? 1 : 0);
+		Strings.AddUninitialize(CurNum > 0 ? Num : Num + 1);
 
+		TChar* InsertAddress = Strings.Begin() + (CurNum > 0 ? CurNum - 1 : 0);
+		
 		Memory::CopyAssignItem(InsertAddress, Src, Num);
 
 		*(InsertAddress + Num) = 0;
@@ -213,7 +214,8 @@ public:
 		{
 			//TODO: if CharType is not fixed size
 			int32 InsertIndex = Strings.CurrentNum() ? Strings.CurrentNum() - 1 : 0;
-			Strings.AddUninitialize(Strings.CurrentNum() ? 1 : 2);
+			int32 InsertCount = Strings.CurrentNum() ? 1 : 2;
+			Strings.AddUninitialize(InsertCount);
 			Strings[InsertIndex] = Char;
 			Strings[InsertIndex + 1] = 0;
 		}
@@ -245,6 +247,7 @@ public:
 				}
 			}
 
+			Strings.AddUninitialize(1);
 			Append(Path, PathLen);
 		}
 	}
@@ -259,7 +262,7 @@ public:
 		//So cast it to int64 to avoid this error
 		int64 Num = Number;
 		TChar Buffer[16];
-		TChar BufferIndex = 15;
+		TChar BufferIndex = 16;
 
 		bool IsNagative = false;
 		if (Number < 0)
@@ -268,18 +271,18 @@ public:
 			Num = -Num;
 		}
 
-		Buffer[BufferIndex--] = 0;
+		Buffer[--BufferIndex] = 0;
 
 		do
 		{
-			Buffer[BufferIndex--] = *NumberList[Num % 10];
+			Buffer[--BufferIndex] = *NumberList[Num % 10];
 			Num /= 10;
 
 		} while (Num);
 
 		if (IsNagative)
 		{
-			Buffer[BufferIndex--] = *NumberList[10];
+			Buffer[--BufferIndex] = *NumberList[10];
 		}
 
 		*this += (Buffer + BufferIndex);
@@ -292,7 +295,7 @@ public:
 		if (FNumber == double(-0.0)) FNumber = 0;
 
 		//Conver to String
-		String BufferString = String::Printf(TEXTS("%f", FNumber));
+		String BufferString = String::Printf(TEXTS("%f"), FNumber);
 		if (!BufferString.IsNumeric())
 		{
 			*this += BufferString;
@@ -303,13 +306,13 @@ public:
 		int32 ZeroIndex = -1;
 		int32 DotIndex = -1;
 		int32 BufferLen = BufferString.Len();
-		for (int32 Index = BufferLen; Index >= 0; Index--)
+		for (int32 Index = BufferLen - 1; Index >= 0; Index--)
 		{
 			const TChar Char = BufferString[Index];
 			if (Char == TEXTS('.'))
 			{
 				DotIndex = Index;
-				ZeroIndex = max(ZeroIndex, DotIndex);
+				ZeroIndex = std::max(ZeroIndex, DotIndex);
 				break;
 			}
 
@@ -324,21 +327,23 @@ public:
 			if (DotIndex == ZeroIndex)
 				BufferString.Append(TEXTS('.'));
 
-			const int32 FractionalDigitsNum = BufferLen - DotIndex - 1;
+			const int32 FractionalDigitsNum = BufferString.Len() - DotIndex - 1;
 			const int32 DigitsToAdd = MinFractionalDigits - FractionalDigitsNum;
 			if (DigitsToAdd > 0)
 			{
 				for (int32 i = 0; i < DigitsToAdd; i++)
 					BufferString.Append(TEXTS('0'));
 			}
-			/*
 			else if (DigitsToAdd < 0)
 			{
 			    const int32 DigitsToSub = -DigitsToAdd;
 			    BufferString.RemoveAt(DotIndex + MinFractionalDigits + 1, DigitsToSub, false);
 			}
-			*/
+			
 		}
+
+		*this += BufferString;
+		return;
 	}
 
 	FORCE_INLINE
@@ -437,7 +442,7 @@ public:
 	{
 		if (!(Suffix && *Suffix)) return false;
 
-		int32 Offset = Len() - PlatformChars::Strlen(Suffix);
+		int32 Offset = Len() - (int32)PlatformChars::Strlen(Suffix);
 		
 		if (Offset < 0) return false;
 		if (IgnoreCase)
@@ -471,7 +476,7 @@ public:
 	{
 		if (StartWith(Prefix, IgnoreCase))
 		{
-			RemoveAt(0, PlatformChars::Strlen(Prefix));
+			RemoveAt(0, (int32)PlatformChars::Strlen(Prefix));
 			return true;
 		}
 
@@ -493,7 +498,7 @@ public:
 	{
 		if (EndWith(Suffix, IgnoreCase))
 		{
-			int32 SuffixLen = PlatformChars::Strlen(Suffix);
+			int32 SuffixLen = (int32)PlatformChars::Strlen(Suffix);
 			RemoveAt(Len() - SuffixLen, SuffixLen);
 			return true;
 		}
@@ -550,7 +555,7 @@ public:
 		{
 			const TChar* Found = IgnoreCase ? PlatformChars::Stristr(Begin, SubString) : PlatformChars::Strstr(Begin, SubString);
 			
-			return Found ? (Found - **this) : -1;
+			return Found ? (int32)(Found - **this) : -1;
 		}
 
 		return -1;
@@ -564,7 +569,7 @@ public:
 		//check substring == null **this
 
 		//Ignore the first letter 
-		int32 SubLength = PlatformChars::Strlen(SubString) - 1;
+		int32 SubLength = (int32)PlatformChars::Strlen(SubString) - 1;
 		int32 DestLength = Len();
 
 		if (*SubString == 0 || DestLength < SubLength + 1) return -1;
@@ -580,7 +585,7 @@ public:
 				DestChar = Chars::ToUpper(DestChar);
 				if (DestChar == FindFirstChar && !PlatformChars::Strnicmp(Dest + 1, SubString, SubLength))
 				{
-					return Dest - **this;
+					return int32(Dest - **this);
 				}
 
 				DestChar = *(--Dest);
@@ -595,7 +600,7 @@ public:
 			{
 				if (DestChar == FindFirstChar && !PlatformChars::Strncmp(Dest + 1, SubString, SubLength))
 				{
-					return Dest - **this;
+					return int32(Dest - **this);
 				}
 
 				DestChar = *(--Dest);
@@ -659,7 +664,7 @@ public:
 
 	bool IsNumeric()
 	{
-		if (!Len()) return;
+		if (!Len()) return false;
 
 		const TChar* Data = Strings.Begin();
 		if (*Data == '-' || *Data == '+') Data++;
@@ -842,7 +847,7 @@ public:
 protected:
 	template <typename LeftType, typename RightType>
 	FORCE_INLINE static
-	String Concat(typename ExplicitType<LeftType>::Type Left, typename ExplicitType<LeftType>::Type Right)
+	String Concat(typename ExplicitType<LeftType>::Type Left, typename ExplicitType<RightType>::Type Right)
 	{
 		//check
 		if (Left.IsClear())
@@ -867,7 +872,7 @@ protected:
 		}
 
 		String Value(std::move(Left));
-		Value.Append(Right, PlatformChars::Strlen(Right));
+		Value.Append(Right, (int32)PlatformChars::Strlen(Right));
 
 		return Value;
 	}
@@ -883,7 +888,7 @@ protected:
 		}
 
 		String Value(std::move(Right));
-		Value.Append(Left, PlatformChars::Strlen(Left));
+		Value.Append(Left, (int32)PlatformChars::Strlen(Left));
 
 		return Value;
 	}

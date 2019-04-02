@@ -19,6 +19,9 @@
 #include "HAL/Chars.h"
 #include <iostream>
 #include <string>
+#include <locale>
+#include <codecvt>
+
 using namespace std;
 
 
@@ -58,65 +61,88 @@ ConvertedLength(int32 SrcSize)
 {
 	return SrcSize;
 }
-#include <locale>
-#include <codecvt>
+
+#define PRINTEXT(text) wprintf(text);
+
 int main()
 {
 
 	PlatformMemory::Init();
-	Array<int> IntArray;
-	IntArray = { 8,3,5,6,32,56,23,2,3,5 };
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
-	IntArray.Sort();
 
-	cout << "Array:";
-	for (int i = 0;i < IntArray.CurrentNum();i++)
-		cout << IntArray[i] << " ";
-	cout << endl;
+	TChar Path[12] = TEXTS("Reatl/dasd");
+	TChar RawData[8] = TEXTS("ÕâÊÇÒ»¸ö×Ö·û´®");
+	setlocale(LC_ALL, "chs");
 
-	IntArray.Add(100);
-	IntArray.Add(50);
-	cout << "FindIndex:" << IntArray.Find(5) << endl;//cout << "In ele:" << In << endl;return (In == 32);
-	cout << "FindIndex:" << IntArray.FindBySelector([](const int& In)->bool {if (In == 32) { return true; }return false;}) << endl;
+	String MyString(RawData);
+	MyString.Append(TEXTS('¥»'));
 
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
-
-	IntArray.Add(20);
+	cout << "CurrentNum:" << MyString.Len() << endl;
 	
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
-
-	IntArray.Shrink();
-
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
-
-	IntArray.RemoveAt(2, 3);
-
-	cout << "Array:";
-	for (int i = 0;i < IntArray.CurrentNum();i++)
-		cout << IntArray[i] << " ";
-	cout << endl;
-
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
-
-	IntArray.ForceShrink();
-
-	cout << "CurrentNum:" << IntArray.CurrentNum() << endl;
-	cout << "MaxNum:" << IntArray.MaxNum() << endl;
-
+	MyString.AppendPath(Path,10);
+	PRINTEXT(*MyString);
 	
+	MyString += TEXTS('\n');
+	PRINTEXT(*MyString);
+	MyString.AppendFloat(-7.1545000);
+	MyString += TEXTS('\n');
+	PRINTEXT(*MyString);
+
+
+	MyString.AppendInt(-5646554);
+	MyString += TEXTS('\n');
+	PRINTEXT(*MyString);
+
+	MyString.AppendInt(46554);
+	MyString += TEXTS('\n');
+	PRINTEXT(*MyString);
+	
+	MyString.Insert(5, TEXTS("Ù¤Ä¦"));
+	PRINTEXT(*MyString);
+
+	String tmp1 = MyString.Front(5);
+	PRINTEXT(*tmp1);
+
+	String tmp2 = MyString.End(5);
+	PRINTEXT(*tmp2);
+
+	String tmp3 = MyString.Range(5, 9);
+	PRINTEXT(*tmp3);
+
+	MyString.Clear();
+	MyString.Empty();
+
+	if (tmp3 == TEXTS("Ù¤Ä¦·û´®"))
+		cout << "true" << endl;
+
+	MyString += TEXTS("adsÙ¤Ä¦·û´®\n");
+	PRINTEXT(*MyString);
+
+	cout << "Find:" << MyString.Find(TEXTS("Ù¤Ä¦·û´®"), 1) << endl;;
+	
+	MyString.ToUpper();
+	PRINTEXT(*MyString);
+
+	MyString.ToLower();
+	PRINTEXT(*MyString);
+
+	String Prefix = TEXTS("·û´®\n");
+	MyString.RemoveSuffix(Prefix, false);
+	PRINTEXT(*MyString);
+
+
+	if (MyString.EndWith(Prefix, true))
+		cout << "true" << endl;
+	MyString.Clear();
+	MyString = String::FromFloat(56.655060);
+	cout << MyString.ToBool() << endl;
+	cout << MyString.ToFloat() << endl;
+	cout << MyString.ToInt32() << endl;
+	MyString += TEXTS("·û  ´®sad ad adwqc°®»ª¶ÙÀ­ÈøµÂ¿¨£»\n");
+
+	MyString.RemoveSpaces();
+	PRINTEXT(*MyString);
 	PlatformMemory::UnInit();
 
-	CHAR16 a = u'a';
-	CHAR16 b = u'ñá';
-
-	cout << sizeof(a) << endl;
-	cout << sizeof(b) << endl;
-	cout << b << endl;
 	
 
 	int temin;

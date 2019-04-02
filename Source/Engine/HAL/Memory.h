@@ -107,24 +107,24 @@ namespace Memory
 	template <typename DestType, typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<!IsBitwiseConstructible<DestType, ItemType>::Value, void>::Type
-	ConstructItem(void* Dest, const ItemType* SrcItems)
+	ConstructItem(DestType* Dest, const ItemType* SrcItem)
 	{
-		new (Dest) DestType(*SrcItems);
+		new (Dest) DestType(*SrcItem);
 	}
 
 	template <typename DestType, typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<IsBitwiseConstructible<DestType, ItemType>::Value, void>::Type
-	ConstructItem(void* Dest, const ItemType* SrcItems)
+	ConstructItem(DestType* Dest, const ItemType* SrcItem)
 	{
-		PlatformMemory::Memcopy(Dest, SrcItems, sizeof(ItemType));
+		PlatformMemory::Memcopy(Dest, SrcItem, sizeof(ItemType));
 	}
 
 
 	template <typename DestType, typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<!IsBitwiseConstructible<DestType, ItemType>::Value, void>::Type
-	ConstructItem(void* Dest, const ItemType* SrcItems, int32 Num)
+	ConstructItem(DestType* Dest, const ItemType* SrcItems, int32 Num)
 	{
 		while (Num)
 		{
@@ -138,7 +138,7 @@ namespace Memory
 	template <typename DestType, typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<IsBitwiseConstructible<DestType, ItemType>::Value, void>::Type
-	ConstructItem(void* Dest, const ItemType* SrcItems, int32 Num)
+	ConstructItem(DestType* Dest, const ItemType* SrcItems, int32 Num)
 	{
 		PlatformMemory::Memcopy(Dest, SrcItems, sizeof(ItemType) * Num);
 	}
@@ -169,13 +169,13 @@ namespace Memory
 	template <typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<!IsTriviallyDestructible<ItemType>::Value, void>::Type
-	DestructItem(ItemType* Item, int32 Num)
+	DestructItem(ItemType* Items, int32 Num)
 	{
 		while (Num)
 		{
 			typedef ItemType DestructItemType;
-			Item->DestructItemType::~DestructItemType();
-			++Item;
+			Items->DestructItemType::~DestructItemType();
+			++Items;
 			--Num;
 		}
 	}
@@ -183,7 +183,7 @@ namespace Memory
 	template <typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<IsTriviallyDestructible<ItemType>::Value, void>::Type
-	DestructItem(ItemType* Item, int32 Num) {}
+	DestructItem(ItemType* Items, int32 Num) {}
 
 
 
@@ -195,7 +195,7 @@ namespace Memory
 	template <typename DestType, typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<!IsBitwiseRelocatable<DestType, ItemType>::Value, void>::Type
-	RelocateItem(void* Dest, const ItemType* SrcItems, int32 Num)
+	RelocateItem(DestType* Dest, const ItemType* SrcItems, int32 Num)
 	{
 		while (Num)
 		{
@@ -212,7 +212,7 @@ namespace Memory
 	template <typename DestType, typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<IsBitwiseRelocatable<DestType, ItemType>::Value, void>::Type 
-	RelocateItem(void* Dest, const ItemType* SrcItems, int32 Num)
+	RelocateItem(DestType* Dest, const ItemType* SrcItems, int32 Num)
 	{
 		PlatformMemory::Memmove(Dest, SrcItems, sizeof(ItemType) * Num);
 	}
