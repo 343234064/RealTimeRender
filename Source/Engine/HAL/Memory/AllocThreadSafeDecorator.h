@@ -4,8 +4,8 @@ Thread safe decorator
 *****************************************/
 #pragma once
 
-#include "Core/Utilities/Misc.h"
-#include "Core/GlobalDefinations.h"
+#include "Global/Utilities/Misc.h"
+#include "Global/GlobalType.h"
 #include "HAL/Memory/AllocatorInterface.h"
 
 

@@ -6,7 +6,7 @@ Do management of platform memory
 *********************************/
 #pragma once
 
-#include "Core/GlobalConfigs.h"
+#include "Global/GlobalConfigs.h"
 #include "HAL/Memory/AllocatorInterface.h"
 
 

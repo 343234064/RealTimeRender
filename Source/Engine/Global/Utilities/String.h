@@ -6,10 +6,8 @@ String
 #pragma once
 
 
-
-#include "Core/GlobalDefinations.h"
-#include "Core/Utilities/DynamicArray.h"
-#include "Core/Utilities/Misc.h"
+#include "Global/Utilities/DynamicArray.h"
+#include "Global/Utilities/Misc.h"
 #include "HAL/Chars.h"
 
 #define UNKOWN_CHAR '?'

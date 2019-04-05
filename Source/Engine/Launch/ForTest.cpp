@@ -1,8 +1,8 @@
-#include "GlobalConfigs.h"
+#include "Global/GlobalConfigs.h"
 
 #if FOR_TEST_CPP
 
-#include "GlobalDefinations.h"
+#include "GlobalType.h"
 #include "Utilities/AtomicCounter.h"
 #include "HAL/Platform.h"
 #include "Utilities/Misc.h"

@@ -7,8 +7,8 @@ Global Memory Allocator
 
 #pragma once
 
-#include "Core/GlobalDefinations.h"
-#include "Core/Utilities/AtomicCounter.h"
+#include "Global/GlobalType.h"
+#include "Global/Utilities/AtomicCounter.h"
 
 
 /***************************

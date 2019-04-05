@@ -5,9 +5,9 @@
 #include <functional>
 #include <initializer_list>
 
-#include "Core/GlobalConfigs.h"
-#include "Core/GlobalDefinations.h"
-#include "Core/Utilities/ContainerAllocator.h"
+#include "Global/GlobalConfigs.h"
+#include "Global/GlobalType.h"
+#include "Global/Utilities/ContainerAllocator.h"
 #include "HAL/Memory.h"
 
 
@@ -325,7 +325,7 @@ public:
        return the index of that element
     */
 	FORCE_INLINE
-		int32 Add(const ElementType& Item)
+	int32 Add(const ElementType& Item)
 	{
 		return AddWithInitArgs(Item);
 	}

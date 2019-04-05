@@ -5,7 +5,7 @@ http://jemalloc.net/
 *****************************************/
 #pragma once
 
-#include "Core/GlobalDefinations.h"
+#include "Global/GlobalType.h"
 #include "HAL/Memory/AllocatorInterface.h"
 
 

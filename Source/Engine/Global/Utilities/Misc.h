@@ -28,7 +28,7 @@ Variable Arguments
 //Helpers
 //==============================
 template <typename Type>
-static FORCE_INLINE
+static inline
 Type Clamp(const Type Value, const Type Min, const Type Max)
 {
 	return Value < Min ? Min : Value < Max ? Value : Max;

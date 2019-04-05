@@ -16,9 +16,6 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{1d5a91f3-de7f-4611-b828-0a87108236e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Core">
-      <UniqueIdentifier>{60f107d1-1909-48da-89b3-6de3ab40057b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\HAL">
       <UniqueIdentifier>{b7e5ccac-2dca-4868-9e5e-fcdea807c5c7}</UniqueIdentifier>
     </Filter>
@@ -33,9 +30,6 @@
     </Filter>
     <Filter Include="Source\Engine\HAL\Platforms\Windows">
       <UniqueIdentifier>{0e0146a4-8323-4696-9741-a728e13e295b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Core\Utilities">
-      <UniqueIdentifier>{a80bbb4d-c15d-41d2-9010-08984687f011}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Engine\HAL\_Internals">
       <UniqueIdentifier>{25e6aacb-1099-4185-81d8-f7e254ecda10}</UniqueIdentifier>
@@ -55,22 +49,25 @@
     <Filter Include="Source\Engine\HAL\Memory">
       <UniqueIdentifier>{cc1af065-ca45-4a6f-81a3-c8a43e5f8cc2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Engine\Global">
+      <UniqueIdentifier>{5924189f-7a10-46db-acd0-20100980b4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Global\Utilities">
+      <UniqueIdentifier>{fde4cc32-9fea-46e8-bfcd-a0931813092d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Launch">
+      <UniqueIdentifier>{60f107d1-1909-48da-89b3-6de3ab40057b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Launch\_Internals">
+      <UniqueIdentifier>{daefbdb6-2d66-4229-b645-391019e3c015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Global\_Internals">
+      <UniqueIdentifier>{aef2a59f-a30c-46a5-9810-d99f9ae43196}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Engine\Core\GlobalDefinations.h">
-      <Filter>Source\Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\GlobalConfigs.h">
-      <Filter>Source\Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Utilities\AtomicCounter.h">
-      <Filter>Source\Engine\Core\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Utilities\SmartPointer.h">
-      <Filter>Source\Engine\Core\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Memory.h">
       <Filter>Source\Engine\HAL</Filter>
@@ -99,23 +96,38 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Platform.h">
       <Filter>Source\Engine\HAL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Utilities\ContainerAllocator.h">
-      <Filter>Source\Engine\Core\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Utilities\DynamicArray.h">
-      <Filter>Source\Engine\Core\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Utilities\String.h">
-      <Filter>Source\Engine\Core\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Chars.h">
       <Filter>Source\Engine\HAL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Utilities\Misc.h">
-      <Filter>Source\Engine\Core\Utilities</Filter>
+    <ClInclude Include="..\..\Source\Engine\Global\GlobalConfigs.h">
+      <Filter>Source\Engine\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\AtomicCounter.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\ContainerAllocator.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\DynamicArray.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Misc.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\SmartPointer.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\EngineVariables.h">
+      <Filter>Source\Engine\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\GlobalType.h">
+      <Filter>Source\Engine\Global</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,8 +149,20 @@
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\MemoryInterface.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Core\ForTest.cpp">
-      <Filter>Source\Engine\Core</Filter>
+    <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp">
+      <Filter>Source\Engine\Launch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Launch\_Internals\WindowsLaunch.cpp">
+      <Filter>Source\Engine\Launch\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Global\_Internals\EngineVariables.cpp">
+      <Filter>Source\Engine\Global\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Launch\Application.h">
+      <Filter>Source\Engine\Launch</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

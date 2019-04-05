@@ -4,9 +4,9 @@
 ***********************/
 #pragma once
 
-
+#include "Global/GlobalType.h"
 #include "HAL/Platform.h"
-#include "Core/GlobalDefinations.h"
+
 
 /*
   Atomic Counter

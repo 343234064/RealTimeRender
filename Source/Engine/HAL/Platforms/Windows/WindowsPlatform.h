@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/GlobalConfigs.h"
+#include "Global/GlobalConfigs.h"
+
 #if !PLATFORM_WINDOWS
 #error Current Platform is NOT Windows or NO Platform macro
 #endif
@@ -66,7 +67,7 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 // 4770 partially validated enum 'name' used as index
 // 4772 'string' : format string expected in argument number is not a string literal
 #pragma warning (error: 4600 4601 4602 4603 4604      4606 4607      4609 4610 4611 4612 4613 4614 4615 4616 4617 4618      4620 4621 4622 4623 4624           4627 4628 4629 4630 4631 4632 4633 4634 4635 4636 4637 4638 4639 4640 4641 4642 4643 4644 4645 4646 4647 4648 4649 4650      4652 4653 4654 4655 4656 4657 4658 4659 4660 4661 4662 4663 4664 4665 4666 4667      4669 4670 4671 4672 4673 4674 4675 4676 4677 4678 4679 4680 4681 4682 4683 4684 4685 4686 4687 4688 4689 4690 4691      4693 4694 4695 4696 4697 4698 4699)
-#pragma warning (error: 4700 4701 4702 4703 4704 4705 4706 4707 4708 4709      4711 4712 4713 4714 4715 4716 4717 4718 4719 4720 4721 4722 4723 4724 4725 4726 4727 4728 4729      4731 4732 4733 4734 4735 4736 4737      4739 4740 4741 4742 4743 4744 4745 4746 4747 4748 4749 4750 4751 4752 4753 4754 4755 4756 4757 4758 4759 4760 4761 4762 4763 4764 4765 4766           4769      4771 4772 4773      4775 4776 4777 4778 4779 4780 4781 4782 4783 4784 4785 4786 4787 4788 4789 4790 4791 4792 4793 4794 4795 4796 4797 4798 4799)
+#pragma warning (error: 4700 4701 4702 4703 4704 4705 4706 4707 4708 4709           4712 4713 4714 4715 4716 4717 4718 4719 4720 4721 4722 4723 4724 4725 4726 4727 4728 4729      4731 4732 4733 4734 4735 4736 4737      4739 4740 4741 4742 4743 4744 4745 4746 4747 4748 4749 4750 4751 4752 4753 4754 4755 4756 4757 4758 4759 4760 4761 4762 4763 4764 4765 4766           4769      4771 4772 4773      4775 4776 4777 4778 4779 4780 4781 4782 4783 4784 4785 4786 4787 4788 4789 4790 4791 4792 4793 4794 4795 4796 4797 4798 4799)
 // 4800 ~ 4999 SKIPPED:	
 // 4820 'bytes' bytes padding added after construct 'member_name'
 // 4837 trigraph detected: '??character' replaced by 'character'
@@ -102,6 +103,9 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 //Set this warning to ON
 #pragma warning (1:4100 4165 4625 4626 4710)
 
+//C4711 The compiler performed inlining on the given function
+//This warning is informational
+#pragma warning (1:4711)
 
 
 
@@ -175,10 +179,6 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 #undef InterlockedCompareExchange
 #endif
 
-//hide the console window
-#ifndef _DEBUG
-#pragma comment( linker, "/subsystem:windows /entry:mainCRTStartup" )
-#endif
 
 
 //Allocator
@@ -225,24 +225,25 @@ typedef WindowsTypes            PlatformTypes;
 
 
 /**
-  Helpers
+  Platform misc
 */
-class WindowsHelpers
+namespace Platform
 {
-public:
 	FORCE_INLINE
-	static void MemoryWriteBarrier() { _mm_sfence(); }
+	void MemoryWriteBarrier() { _mm_sfence(); }
 
 	FORCE_INLINE
-	static void MemoryReadBarrier() { _mm_lfence(); }
+	void MemoryReadBarrier() { _mm_lfence(); }
 
 	FORCE_INLINE
-	static void MemoryRWBarrier() { _mm_mfence(); }
+	void MemoryRWBarrier() { _mm_mfence(); }
 
+
+	void RequestExit(bool ForceExit);
+
+	PlatformTypes::int32 ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo);
 };
 
-
-typedef WindowsHelpers          PlatformHelpers;
 
 
 #include <intrin.h>

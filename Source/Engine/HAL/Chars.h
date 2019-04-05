@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HAL/Platform.h"
-
+#include "Global/GlobalType.h"
 
 //==============================
 //Text define

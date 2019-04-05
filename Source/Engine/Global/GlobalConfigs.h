@@ -7,9 +7,6 @@ Naming standard:
 2.macro\global constant variable:
 "SOME_GLOBAL_CONSTANTS"
 
-3.class that has concrete implement should name firist with "I":
-"IClass"
-
 
 /!!!!!!!!!!!!!!!!!!!!!!!
 	  No 32 bit App
@@ -22,11 +19,11 @@ Naming standard:
 //==============================
 //Version
 //==============================
-#define APPLICATION_VERSION "ver 0.01"
+#define APPLICATION_VERSION "-ver 0.01"
 #define APPLICATION_VERSION_NUM 001
 
 #define APPLICATION_IDENTITY "_RT_Renderer_001"
-#define APPLICATION_NAME "RT Renderer"
+#define APPLICATION_NAME "RT-Renderer"
 
 
 
@@ -73,7 +70,7 @@ No 32-bit application
 /*************************
 Just for test 
 *************************/
-#define USE_FOR_TEST_CPP 1
+#define USE_FOR_TEST_CPP 0
 #
 #if _DEBUG
 #  if USE_FOR_TEST_CPP
