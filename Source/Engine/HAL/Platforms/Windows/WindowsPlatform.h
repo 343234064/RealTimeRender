@@ -193,7 +193,7 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 #define FORCE_INLINE __forceinline
 
 
-
+#include <intrin.h>
 
 
 
@@ -227,26 +227,56 @@ typedef WindowsTypes            PlatformTypes;
 /**
   Platform misc
 */
-namespace Platform
+struct Platform
 {
 	FORCE_INLINE
-	void MemoryWriteBarrier() { _mm_sfence(); }
+    static void MemoryWriteBarrier() { _mm_sfence(); }
 
 	FORCE_INLINE
-	void MemoryReadBarrier() { _mm_lfence(); }
+	static void MemoryReadBarrier() { _mm_lfence(); }
 
 	FORCE_INLINE
-	void MemoryRWBarrier() { _mm_mfence(); }
+	static void MemoryRWBarrier() { _mm_mfence(); }
 
 
-	void RequestExit(bool ForceExit);
+	static void RequestExit(bool ForceExit);
+    static PlatformTypes::int32 ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo);
 
-	PlatformTypes::int32 ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo);
+	FORCE_INLINE
+	static PlatformTypes::int32 GetCurrentThreadId()
+	{
+		return ::GetCurrentThreadId();
+	}
+	
+	FORCE_INLINE
+	static void SetCurrentThreadAffinityMask(PlatformTypes::uint64 AffinityMask)
+	{
+		::SetThreadAffinityMask(::GetCurrentThread(), (DWORD_PTR)AffinityMask);
+	}
+
+	FORCE_INLINE
+	static PlatformTypes::int32 TruncToInt(float FNum)
+	{
+		//SSE Intrinsic
+		return _mm_cvt_ss2si(_mm_set_ss(FNum));
+	}
+
+	static PlatformTypes::int32 NumberOfCores()
+	{
+		static PlatformTypes::int32 NumOfCores = 0;
+		if (NumOfCores == 0)
+		{
+			SYSTEM_INFO SystemInfo;
+			::GetSystemInfo(&SystemInfo);
+			NumOfCores = SystemInfo.dwNumberOfProcessors;
+		}
+		return NumOfCores;
+	}
 };
 
 
 
-#include <intrin.h>
+
 
 /**
   Atomic functions

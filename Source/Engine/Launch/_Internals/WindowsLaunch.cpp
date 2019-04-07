@@ -8,10 +8,9 @@
 #include <crtdbg.h>
 
 
-#include <iostream>
-
 //Globals
 HANDLE gNamedMutex = NULL;
+
 
 void ReleaseNamedMutex()
 {
@@ -123,8 +122,12 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		{
 			ReleaseNamedMutex();
 			Error = 1;
-			gIsThrowError = true;
+			gIsGetError = true;
 			//log dump error
+			//flush log
+
+			//Kill process directly
+			//Note that some destructor may not called
 			Platform::RequestExit(true);
 		}
 	}

@@ -129,6 +129,18 @@
     <ClInclude Include="..\..\Source\Engine\Global\GlobalType.h">
       <Filter>Source\Engine\Global</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h">
+      <Filter>Source\Engine\Launch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Time.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
@@ -163,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Launch\Application.h">
       <Filter>Source\Engine\Launch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Launch\_Internals\CoreEngine.cpp">
+      <Filter>Source\Engine\Launch\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsTime.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

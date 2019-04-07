@@ -2,7 +2,7 @@
 #include "HAL/Memory/AllocatorInterface.h"
 #include "HAL/Memory.h"
 
-MallocInterface* gMallocator = nullptr;
+
 AtomicCounter MallocInterface::TotalMallocCalls(0);
 AtomicCounter MallocInterface::TotalReallocCalls(0);
 AtomicCounter MallocInterface::TotalFreeCalls(0);

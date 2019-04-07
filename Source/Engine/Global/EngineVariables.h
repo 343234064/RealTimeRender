@@ -5,6 +5,8 @@ Universal Variables
 *************************************/
 #pragma once
 
+#include "Global/GlobalType.h"
+
 
 /************************************
 Globals
@@ -22,4 +24,15 @@ extern bool gReportCrashEvenDebugger;
 extern bool gEnableInnerException;
 
 /*If we get error*/
-extern bool gIsThrowError;
+extern bool gIsGetError;
+
+/*If we init the gMainThreadId*/
+extern bool gIsMainThreadIdCached;
+
+
+/*Main thread id*/
+extern uint32 gMainThreadId;
+
+/*The time process started*/
+extern double gStartTime;
+

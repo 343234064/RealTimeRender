@@ -3,6 +3,7 @@
 #include "Global/GlobalType.h"
 #include "Global/EngineVariables.h"
 
+#include "CoreEngine.h"
 
 #if PLATFORM_WINDOWS
 #define MAIN_ENTRANCE_DECL int32 Main(HINSTANCE hInInstance, HINSTANCE hPrevInstance, int32 nCmdShow)
@@ -13,39 +14,43 @@
 #endif
 
 
+
 struct Application 
 {
 	static int32 PreInit()
 	{
-		return 0;
+		int32 Error = gCoreEngine.PreInit();
+		return Error;
 	}
 
 	static int32 Init()
 	{
-		return 0;
+		int32 Error = gCoreEngine.Init();
+		return Error;
 	}
 
-	static void  Tick() 
+	static void Tick() 
 	{
-
+		gCoreEngine.Tick();
 	}
 
-	static void  Exit()
+	static void Exit()
 	{
-
+		gIsAppRequestExit = true;
+		gCoreEngine.Exit();
 	}
-
-	struct CleanUpGuard
-	{
-		~CleanUpGuard()
-		{
-			Application::Exit();
-		}
-	};
 
 	static MAIN_ENTRANCE_DECL
 	{
+	    struct CleanUpGuard
+	    {
+		    ~CleanUpGuard()
+	    	{
+		 	   Application::Exit();
+		    }
+	    };
 		CleanUpGuard CallWhenExit;
+
 
 	    int32 Error = 0;
 
@@ -61,7 +66,6 @@ struct Application
 		{
 			return Error;
 		}
-
 
 		//log
 

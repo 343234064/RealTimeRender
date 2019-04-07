@@ -293,7 +293,7 @@ public:
 		if (FNumber == double(-0.0)) FNumber = 0;
 
 		//Conver to String
-		String BufferString = String::Printf(TEXTS("%f"), FNumber);
+		String BufferString = String::Sprintf(TEXTS("%f"), FNumber);
 		if (!BufferString.IsNumeric())
 		{
 			*this += BufferString;
@@ -688,11 +688,17 @@ public:
 
 	template<typename... Types>
 	FORCE_INLINE
-	static String Printf(const TChar* Format, Types... Args)
+	static String Sprintf(const TChar* Format, Types... Args)
 	{
-		return PrintfInternal(Format, Args...);
+		return SprintfInternal(Format, Args...);
 	}
 
+	template<typename... Types>
+	FORCE_INLINE
+	static int32 Snprintf(TChar* Dest, int32 DestSize, const TChar* Format, Types... Args)
+	{
+		return SnprintfInternal(Dest, DestSize, Format, Args...);
+	}
 
 	FORCE_INLINE static
 	String FromInt(int32 Number)
@@ -892,7 +898,7 @@ protected:
 	}
 
 	
-	static String PrintfInternal(const TChar* Format, ...)
+	static String SprintfInternal(const TChar* Format, ...)
 	{
 		TChar  PrintBuffer[PRINTF_BUFFER_INIT_SIZE];
 		TChar* BufferPtr = PrintBuffer;
@@ -921,6 +927,19 @@ protected:
 		return Result;
 	}
 
+	static int32 SnprintfInternal(TChar* Dest, int32 DestSize, const TChar* Format, ...)
+	{
+		int32  WroteCount = -1;
+
+		GET_FORMAT_VARARGS(Dest, DestSize, DestSize - 1, Format, Format, WroteCount);
+
+		if (WroteCount != -1)
+		{
+			Dest[WroteCount] = 0;
+		}
+
+		return WroteCount;
+	}
 protected:
 	Array<TChar> Strings;
 

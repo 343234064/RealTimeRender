@@ -12,7 +12,7 @@ void Platform::RequestExit(bool ForceExit)
 	if (ForceExit)
 	{
 		//log flush
-		TerminateProcess(GetCurrentProcess(), gIsThrowError ? 1 : 0);
+		TerminateProcess(GetCurrentProcess(), gIsGetError ? 1 : 0);
 	}
 	else
 	{

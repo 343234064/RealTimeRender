@@ -3,11 +3,9 @@
 #include "Global/GlobalConfigs.h"
 
 //==============================
-//PlatformMisc
+//Platform
 //
-//PlatformTypes;
-//PlatformAtomics;
-//PlatformHelpers;
+//
 //==============================
 #if PLATFORM_WINDOWS
 #include "HAL/Platforms/Windows/WindowsPlatform.h"

@@ -2,21 +2,24 @@
 
 #if FOR_TEST_CPP
 
-#include "GlobalType.h"
-#include "Utilities/AtomicCounter.h"
+#include "Global/GlobalType.h"
+#include "Global/Utilities/AtomicCounter.h"
 #include "HAL/Platform.h"
-#include "Utilities/Misc.h"
-#include "Utilities/SmartPointer.h"
-#include "Utilities/ContainerAllocator.h"
-#include "Utilities/DynamicArray.h"
+#include "Global/Utilities/Misc.h"
+#include "Global/Utilities/SmartPointer.h"
+#include "Global/Utilities/ContainerAllocator.h"
+#include "Global/Utilities/DynamicArray.h"
 #include "HAL/Memory/AllocatorInterface.h"
 #include "HAL/Memory/AllocIntelTBB.h"
 #include "HAL/Memory/AllocJemalloc.h"
 #include "HAL/Memory/AllocDefault.h"
 #include "HAL/Memory/AllocThreadSafeDecorator.h"
 #include "HAL/Memory.h"
-#include "Core/Utilities/String.h"
+#include "Global/Utilities/String.h"
 #include "HAL/Chars.h"
+#include "HAL/Time.h"
+
+
 #include <iostream>
 #include <string>
 #include <locale>
@@ -69,78 +72,34 @@ int main()
 
 	PlatformMemory::Init();
 
-	TChar Path[12] = TEXTS("Reatl/dasd");
-	TChar RawData[8] = TEXTS("ÕâÊÇÒ»¸ö×Ö·û´®");
-	setlocale(LC_ALL, "chs");
+	PlatformTime::InitTime();
 
-	String MyString(RawData);
-	MyString.Append(TEXTS('¥»'));
+	double sec = PlatformTime::Time_Seconds();
 
-	cout << "CurrentNum:" << MyString.Len() << endl;
-	
-	MyString.AppendPath(Path,10);
-	PRINTEXT(*MyString);
-	
-	MyString += TEXTS('\n');
-	PRINTEXT(*MyString);
-	MyString.AppendFloat(-7.1545000);
-	MyString += TEXTS('\n');
-	PRINTEXT(*MyString);
+	String timeStr = PlatformTime::SecondToFormatTime(float(sec));
+	PRINTEXT(*timeStr);
 
+	cout << "Seconds:" << sec << endl;
+	cout << "Cycles:" << PlatformTime::Time_Cycles() << endl;
 
-	MyString.AppendInt(-5646554);
-	MyString += TEXTS('\n');
-	PRINTEXT(*MyString);
+	TChar TimeBuffer[20];
+	PlatformTime::TimeToStr(TimeBuffer, 20);
+	PRINTEXT(TimeBuffer);
 
-	MyString.AppendInt(46554);
-	MyString += TEXTS('\n');
-	PRINTEXT(*MyString);
-	
-	MyString.Insert(5, TEXTS("Ù¤Ä¦"));
-	PRINTEXT(*MyString);
+	cout << endl;
 
-	String tmp1 = MyString.Front(5);
-	PRINTEXT(*tmp1);
+	PlatformTime::DateToStr(TimeBuffer, 20);
+	PRINTEXT(TimeBuffer);
 
-	String tmp2 = MyString.End(5);
-	PRINTEXT(*tmp2);
+	PlatformTime::UpdateCPUTime();
+	cout << endl;
+	PlatformTime::UpdateCPUTime();
 
-	String tmp3 = MyString.Range(5, 9);
-	PRINTEXT(*tmp3);
+	CPUTime cput = PlatformTime::GetCPUTime();
 
-	MyString.Clear();
-	MyString.Empty();
+	cout << "CPU:" << cput.CPUTimeUtilization << endl;
+	cout << "CPU cores:" << cput.CPUTimeUtilizationCores << endl;
 
-	if (tmp3 == TEXTS("Ù¤Ä¦·û´®"))
-		cout << "true" << endl;
-
-	MyString += TEXTS("adsÙ¤Ä¦·û´®\n");
-	PRINTEXT(*MyString);
-
-	cout << "Find:" << MyString.Find(TEXTS("Ù¤Ä¦·û´®"), 1) << endl;;
-	
-	MyString.ToUpper();
-	PRINTEXT(*MyString);
-
-	MyString.ToLower();
-	PRINTEXT(*MyString);
-
-	String Prefix = TEXTS("·û´®\n");
-	MyString.RemoveSuffix(Prefix, false);
-	PRINTEXT(*MyString);
-
-
-	if (MyString.EndWith(Prefix, true))
-		cout << "true" << endl;
-	MyString.Clear();
-	MyString = String::FromFloat(56.655060);
-	cout << MyString.ToBool() << endl;
-	cout << MyString.ToFloat() << endl;
-	cout << MyString.ToInt32() << endl;
-	MyString += TEXTS("·û  ´®sad ad adwqc°®»ª¶ÙÀ­ÈøµÂ¿¨£»\n");
-
-	MyString.RemoveSpaces();
-	PRINTEXT(*MyString);
 	PlatformMemory::UnInit();
 
 	
