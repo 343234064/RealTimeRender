@@ -135,6 +135,7 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 #define NOIMAGE
 #define NOPROXYSTUB
 #define NORPC
+#define UNICODE                 //Use unicode
 #include <Windows.h>
 
 //Undo Windows definations which may be repeated
@@ -272,6 +273,25 @@ struct Platform
 		}
 		return NumOfCores;
 	}
+
+	static void Sleep(float Seconds)
+	{
+		PlatformTypes::uint32 MicroSeconds = (PlatformTypes::uint32)(Seconds * 1000.0);
+		if (MicroSeconds == 0)
+		{
+			::SwitchToThread();
+		}
+		::Sleep(MicroSeconds);
+	}
+
+	static bool IsCurrentProcessForeground()
+	{
+		PlatformTypes::uint32 ForegroundProcess;
+		::GetWindowThreadProcessId(GetForegroundWindow(), (DWORD*)&ForegroundProcess);
+		return (ForegroundProcess == GetCurrentProcessId());
+	}
+
+
 };
 
 

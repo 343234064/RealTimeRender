@@ -64,6 +64,24 @@
     <Filter Include="Source\Engine\Global\_Internals">
       <UniqueIdentifier>{aef2a59f-a30c-46a5-9810-d99f9ae43196}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Engine\Editor">
+      <UniqueIdentifier>{9192414d-422f-4067-8f42-2c7e66a59d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms">
+      <UniqueIdentifier>{d5174c82-e4c5-4e07-bb24-fd94d2f9acc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\_Internals">
+      <UniqueIdentifier>{88e91dc8-f734-4087-934f-390c8412a011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms\Windows">
+      <UniqueIdentifier>{2ad92ce6-0f9d-459c-a5bb-39fe4ee8e5be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms\Linux">
+      <UniqueIdentifier>{99e992a6-fe25-44e7-8bd1-0bc35a86efad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms\Mac">
+      <UniqueIdentifier>{2ad12020-5fa3-4113-a975-a5190ae5482a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h">
@@ -117,9 +135,6 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Misc.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Global\Utilities\SmartPointer.h">
-      <Filter>Source\Engine\Global\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
@@ -140,6 +155,30 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Time.h">
       <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Editor.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\CountedPtr.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Window.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsEditorMisc.h">
+      <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsWindow.h">
+      <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Resources.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\GUI.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h">
+      <Filter>Source\Engine\Launch</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,14 +212,23 @@
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Launch\Application.h">
-      <Filter>Source\Engine\Launch</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\CoreEngine.cpp">
       <Filter>Source\Engine\Launch\_Internals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsTime.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsEditorMisc.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\Editor.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsWindow.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

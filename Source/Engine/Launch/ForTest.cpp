@@ -6,7 +6,7 @@
 #include "Global/Utilities/AtomicCounter.h"
 #include "HAL/Platform.h"
 #include "Global/Utilities/Misc.h"
-#include "Global/Utilities/SmartPointer.h"
+
 #include "Global/Utilities/ContainerAllocator.h"
 #include "Global/Utilities/DynamicArray.h"
 #include "HAL/Memory/AllocatorInterface.h"
@@ -29,26 +29,6 @@ using namespace std;
 
 
 
-
-
-class TestClass:public SharedObject
-{
-public:
-
-	static int a;
-};
-int TestClass::a = 2;
-
-class TestClass2 :public TestClass
-{
-public:
-	static void func()
-	{
-		cout << "a=" << a << endl;
-	}
-};
-
-
 void func(int* ptr1, const int* ptr2)
 {
 	ptr1++;
@@ -65,40 +45,63 @@ ConvertedLength(int32 SrcSize)
 	return SrcSize;
 }
 
+
+class Obj
+{
+public:
+	Obj(int32 i=0):
+		a(i)
+	{}
+	~Obj()
+	{
+		cout << "delete:" << a << endl;
+	}
+
+	int32 a;
+};
+bool operator==(const Obj& left, const Obj& right)
+{
+	return left.a == right.a;
+}
+
+
 #define PRINTEXT(text) wprintf(text);
 
 int main()
 {
 
 	PlatformMemory::Init();
+	setlocale(LC_ALL, "chs");
 
-	PlatformTime::InitTime();
+	Array<int32> Test = { 5,4,3,2,0,1,5,5,5};
 
-	double sec = PlatformTime::Time_Seconds();
-
-	String timeStr = PlatformTime::SecondToFormatTime(float(sec));
-	PRINTEXT(*timeStr);
-
-	cout << "Seconds:" << sec << endl;
-	cout << "Cycles:" << PlatformTime::Time_Cycles() << endl;
-
-	TChar TimeBuffer[20];
-	PlatformTime::TimeToStr(TimeBuffer, 20);
-	PRINTEXT(TimeBuffer);
-
+	for (int32 i = 0; i < Test.CurrentNum();i++)
+		cout << Test[i]<<" ";
 	cout << endl;
 
-	PlatformTime::DateToStr(TimeBuffer, 20);
-	PRINTEXT(TimeBuffer);
+	Test.RemoveAllMatch(5);
 
-	PlatformTime::UpdateCPUTime();
+	for (int32 i = 0; i < Test.CurrentNum();i++)
+		cout << Test[i] << " ";
 	cout << endl;
-	PlatformTime::UpdateCPUTime();
+	
+	TChar Test2[13] = TEXTS("abbcdcdbccdc");
+	String Str(Test2);
+	PRINTEXT(*Str);
 
-	CPUTime cput = PlatformTime::GetCPUTime();
+	Str.RemoveAllMatch(TEXTS('c'));
+	cout << endl;
+	PRINTEXT(*Str);
 
-	cout << "CPU:" << cput.CPUTimeUtilization << endl;
-	cout << "CPU cores:" << cput.CPUTimeUtilizationCores << endl;
+	Obj remove(1);
+	Array<Obj> Test3 = {Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(1)};
+	cout << "+++++++++++++++" << endl;
+	Test3.RemoveAllMatch(remove);
+	cout << "+++++++++++++++" << endl;
+	for (int32 i = 0; i < Test3.CurrentNum();i++)
+		cout << Test3[i].a << " ";
+	cout << endl;
+
 
 	PlatformMemory::UnInit();
 

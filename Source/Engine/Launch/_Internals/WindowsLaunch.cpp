@@ -1,9 +1,11 @@
-#include "Launch/Application.h"
+#include "Launch/LoopWrapper.h"
 
 #if MAIN_LAUNCH_CPP && PLATFORM_WINDOWS  
 
 #include "HAL/Platform.h"
 #include "HAL/Chars.h"
+
+#include "Editor/Editor.h"
 
 #include <crtdbg.h>
 
@@ -84,9 +86,18 @@ int32 GuardedMainEntrance(HINSTANCE hInstance, HINSTANCE hPrevInstance, int nCmd
 	return Error;
 }
 
-
+#if _DEBUG //Show the console window
+int32 main()
+#else
 int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+#endif
 {
+#if _DEBUG
+	HINSTANCE hInstance = GetModuleHandle(nullptr);
+	HINSTANCE hPrevInstance = NULL;
+	int32 nCmdShow = 0;
+#endif
+
 	//Setup invalid parameter handler and CRT report mode
 	_set_invalid_parameter_handler(InvalidParameterHandler);
 #if _DEBUG
@@ -102,8 +113,11 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	gIsFirstInstance = CreateNemedMutex();
 
 
+	//Cache the hInstance
+	gMainInstanceHandle = hInstance;
+
+
 	int32 Error = 0;
-	
 	if (::IsDebuggerPresent() && !gReportCrashEvenDebugger)
 	{
 		Error = MAIN_ENTRANCE_CALL(hInstance, hPrevInstance, nCmdShow);

@@ -17,13 +17,13 @@ public:
 	}
 
 	FORCE_INLINE
-	virtual void AddRef() const
+	void AddRef() const
 	{
 		++SharedCount;
 	}
 
 	FORCE_INLINE
-	virtual void Release() const
+	void Release() const
 	{
 		--SharedCount;
 		if (SharedCount == 0)
@@ -33,12 +33,12 @@ public:
 	}
 
 	FORCE_INLINE
-	virtual uint32 GetCount() const
+	uint32 GetCount() const
 	{
 		return SharedCount;
 	}
 
-protected:
+private:
 	mutable uint32 SharedCount;
 
 };
@@ -58,13 +58,13 @@ public:
 	}
 
 	FORCE_INLINE
-	virtual void AddRef() const
+	void AddRef() const
 	{
 		Counter.Increment();
 	}
 
 	FORCE_INLINE
-	virtual void Release() const
+	void Release() const
 	{
 		int32 Val = Counter.Decrement();
 		if (Val == 0)
@@ -74,13 +74,13 @@ public:
 	}
 
 	FORCE_INLINE
-	virtual uint32 GetCount() const
+	uint32 GetCount() const
 	{
 		return (uint32)Counter.GetCounter();
 	}
 
 
-protected:
+private:
 	mutable AtomicCounter Counter;
 
 };
@@ -88,16 +88,18 @@ protected:
 
 
 /**
-  Shared smart pointer type
+  Shared Count pointer type
+
+  Used for Com object liked structure
  */
 template<typename PointerType>
-class SmartPtr
+class CountedPtr
 {
 public:
 	FORCE_INLINE
-	SmartPtr() :Pointer(nullptr) {}
+	CountedPtr() :Pointer(nullptr) {}
 
-	SmartPtr(PointerType* InPtr)
+	CountedPtr(PointerType* InPtr)
 	{
 		Pointer = InPtr;
 		if (Pointer)
@@ -106,7 +108,7 @@ public:
 		}
 	}
 
-	SmartPtr(const SmartPtr& Copy)
+	CountedPtr(const CountedPtr& Copy)
 	{
 		Pointer = Copy.Pointer;
 		if (Pointer)
@@ -116,13 +118,13 @@ public:
 	}
 
 	FORCE_INLINE
-	SmartPtr(SmartPtr&& Copy)
+	CountedPtr(CountedPtr&& Copy)
 	{
 		Pointer = Copy.Pointer;
 		Copy.Pointer = nullptr;
 	}
 
-	~SmartPtr()
+	~CountedPtr()
 	{
 		if (Pointer)
 		{
@@ -131,7 +133,7 @@ public:
 	}
 
 
-	SmartPtr& operator=(PointerType* InPtr)
+	CountedPtr& operator=(PointerType* InPtr)
 	{
 		PointerType* OldPtr = Pointer;
 		Pointer = InPtr;
@@ -149,14 +151,14 @@ public:
 	}
 
 	FORCE_INLINE
-	SmartPtr& operator=(const SmartPtr& Other)
+	CountedPtr& operator=(const CountedPtr& Other)
 	{
 		//just pass the pointer,
 		//do not need to check if the come-in object is same as this
 		return *this = Other.Pointer;
 	}
 
-	SmartPtr& operator=(SmartPtr&& Other)
+	CountedPtr& operator=(CountedPtr&& Other)
 	{
 		//see if the come-in referenced object is same as this
 		if (this != &Other)
@@ -200,7 +202,7 @@ public:
 
 
 
-protected:
+private:
 	PointerType* Pointer;
 };
 
@@ -208,7 +210,7 @@ protected:
 
 template<typename PointerType>
 FORCE_INLINE
-bool operator==(const SmartPtr<PointerType>& Left, const SmartPtr<PointerType>& Right)
+bool operator==(const CountedPtr<PointerType>& Left, const CountedPtr<PointerType>& Right)
 {
 	return Left.Get() == Right.Get();
 }
@@ -216,7 +218,7 @@ bool operator==(const SmartPtr<PointerType>& Left, const SmartPtr<PointerType>& 
 
 template<typename PointerType>
 FORCE_INLINE
-bool operator==(const SmartPtr<PointerType>& Left, PointerType* RightPtr)
+bool operator==(const CountedPtr<PointerType>& Left, PointerType* RightPtr)
 {
 	return Left.Get() == RightPtr;
 }
@@ -224,7 +226,7 @@ bool operator==(const SmartPtr<PointerType>& Left, PointerType* RightPtr)
 
 template<typename PointerType>
 FORCE_INLINE
-bool operator==(PointerType* LeftPtr, const SmartPtr<PointerType>& RightPtr)
+bool operator==(PointerType* LeftPtr, const CountedPtr<PointerType>& RightPtr)
 {
 	return LeftPtr == RightPtr.Get();
 }

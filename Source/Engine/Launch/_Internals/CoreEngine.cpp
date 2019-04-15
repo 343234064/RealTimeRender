@@ -1,8 +1,11 @@
 #include "Launch/CoreEngine.h"
 #include "Global/EngineVariables.h"
+#include "Editor/Editor.h"
 #include "HAL/Memory.h"
 #include "HAL/Thread.h"
 #include "HAL/Time.h"
+
+
 
 int32 CoreEngine::PreInit()
 {
@@ -46,7 +49,16 @@ int32 CoreEngine::Init()
 	//load module
 	//e.g phys..
 
-	//creat window
+	//Creat Editor
+	gEditor = Editor::CreateEditor();
+	
+	if (!gEditor->Init())
+	{
+		//log
+		return 1;
+	}
+	gEditor->Show();
+	
 
 	//broadcast OnInitComplete
 	return 0;
@@ -55,6 +67,17 @@ int32 CoreEngine::Init()
 
 void CoreEngine::Tick()
 {
+	//Render thread tick
+
+	//begin frame render thread
+
+	//tick performance and statistics monitoing 
+
+	//tick(world, game objects, etc.)
+
+	//tick RHI
+	gEditor->Tick();
+
 
 }
 
@@ -63,16 +86,26 @@ void CoreEngine::Exit()
 {
    //Flush all Loading things
 
-	//save config and ini file
-	//broadcast OnExit()
-   //close windows
-    //destroy any pool
-	//destroy any global
+   //save engine config and ini file
+   //broadcast OnExit()
+
+   if (gEditor)
+   {
+	  gEditor->Exit();
+	  delete gEditor;
+	  gEditor = nullptr;
+   }
+
+   //destroy any pool
+   //destroy any global
    //terminate phys
    //stop render thread
    //RHI exit
 
    PlatformMemory::UnInit();
+
+   
+ 
 }
 
 

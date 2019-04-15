@@ -27,6 +27,12 @@ public:
 	void Tick();
 	void Exit();
 
+	
+	CoreEngine(CoreEngine&&) = delete;
+	CoreEngine(const CoreEngine&) = delete;
+	CoreEngine& operator=(CoreEngine&&) = delete;
+	CoreEngine& operator=(const CoreEngine&) = delete;
+
 protected:
 	void InitTime();
 

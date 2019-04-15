@@ -16,16 +16,6 @@ Naming standard:
 #pragma once
 
 
-//==============================
-//Version
-//==============================
-#define APPLICATION_VERSION "-ver 0.01"
-#define APPLICATION_VERSION_NUM 001
-
-#define APPLICATION_IDENTITY "_RT_Renderer_001"
-#define APPLICATION_NAME "RT-Renderer"
-
-
 
 //==============================
 //Platform global configs
@@ -62,8 +52,6 @@ No 32-bit application
 #elif PLATFORM_MAC
    #error No platform implement code here
 #endif
-
-
 
 
 

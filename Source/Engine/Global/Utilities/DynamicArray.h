@@ -119,7 +119,7 @@ public:
 	//Initializer List 
 	Array(std::initializer_list<ElementType> List)
 	{
-		InitDataCopyFrom(List.begin(), List.size());
+		InitDataCopyFrom(List.begin(), (int32)List.size());
 	}
 
 
@@ -143,7 +143,7 @@ public:
 		if (this != &Other)
 		{
 			Memory::DestructItem(Begin(), CurrentElementNum);
-			InitDataCopyFrom(Other.Begin(), Other.CurrentSize());
+			InitDataCopyFrom(Other.Begin(), Other.CurrentNum());
 		}
 		return *this;
 	}
@@ -342,6 +342,20 @@ public:
 		return AddWithInitArgs(std::move(Item));
 	}
 
+
+
+
+	FORCE_INLINE
+	int32 AddUnique(const ElementType& Item)
+	{
+		return AddUniqueInternal(Item);
+	}
+
+	FORCE_INLINE
+	int32 AddUnique(ElementType&& Item)
+	{
+		return AddUniqueInternal(std::move(Item));
+	}
 
 
 	/*
@@ -554,9 +568,89 @@ public:
 	}
 
 
+	//Remove the first match item
+	void Remove(const ElementType& ToRemove)
+	{
+		if (CurrentElementNum)
+		{
+			ElementType* Data = Begin();
+			for (int32 Index = 0; Index < CurrentElementNum; Index++)
+			{
+				if (Data[Index] == ToRemove)
+				{
+					RemoveAt(Index, 1, false);
+					break;
+				}
+			}
+			
+		}
+	}
+
+	//Remove the all match item
+	void RemoveAllMatch(const ElementType& ToRemove, bool AllowShrinking = true)
+	{
+		if (!CurrentElementNum) return;
+
+		int32 MoveIndex = 0;
+		int32 MoveNum = 0;
+		int32 HitIndex = 0;
+		int32 HitNum = 0;
+		int32 EndIndex = CurrentElementNum;
+		bool FirstHit = false;
+		bool ShouldMove = false;
+		ElementType* Data = Begin();
+
+		for (int32 Index = 0; Index <= EndIndex; Index++)
+		{
+			if (Index == EndIndex || Data[Index] == ToRemove)
+			{
+				if (ShouldMove)
+				{
+					HitIndex = Index - MoveNum - HitNum;
+					Memory::DestructItem(Data + HitIndex, HitNum);
+
+					Memory::Move((uint8*)Data + MoveIndex * sizeof(ElementType),
+						(uint8*)Data + (HitIndex + HitNum) * sizeof(ElementType),
+						MoveNum * sizeof(ElementType));
+
+					CurrentElementNum -= HitNum;
+
+					MoveIndex = MoveIndex + MoveNum;
+					HitNum = 0;
+					MoveNum = 0;
+					ShouldMove = false;
+					Index--;
+				}
+				else
+				{
+					if (!FirstHit)
+					{
+						MoveIndex = Index;
+						FirstHit = true;
+					}
+					HitNum++;
+
+					//this hitted one is the last one 
+					if(Index == EndIndex - 1) ShouldMove = true;
+				}
+			}
+			else if (HitNum)
+			{
+				ShouldMove = true;
+				MoveNum++;
+			}
+		}
+
+		if (AllowShrinking)
+		{
+			Shrink();
+		}
+	}
+
+
 	void RemoveAt(const int32 StartIndex, const int32 RemoveNum = 1, bool AllowShrinking = true)
 	{
-		if (RemoveNum)
+		if (RemoveNum && StartIndex >= 0)
 		{
 			//check
 
@@ -742,6 +836,16 @@ private:
 		DestArray.InitDataCopyFrom(SrcArray.Begin(), SrcArray.CurrentSize());
 	}
 
+	
+	template<typename ArgsType>
+	int32 AddUniqueInternal(ArgsType&& Args)
+	{
+		int32 Index = Find(Args);
+		if (Index != -1)
+			return Index;
+		else
+			return Add(std::forward<ArgsType>(Args));
+	}
 
 private:
 	typedef AllocatorType AllocatorInstance;

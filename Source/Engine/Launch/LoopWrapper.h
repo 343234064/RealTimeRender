@@ -7,15 +7,17 @@
 
 #if PLATFORM_WINDOWS
 #define MAIN_ENTRANCE_DECL int32 Main(HINSTANCE hInInstance, HINSTANCE hPrevInstance, int32 nCmdShow)
-#define MAIN_ENTRANCE_CALL(InInstance, PrevInstance, CmdShow) Application::Main(InInstance, PrevInstance, nCmdShow)
+#define MAIN_ENTRANCE_CALL(InInstance, PrevInstance, CmdShow) LoopWrapper::Main(InInstance, PrevInstance, nCmdShow)
 #else
 #define MAIN_ENTRANCE_DECL int32 Main()  
-#define MAIN_ENTRANCE_CALL Application::Main()  
+#define MAIN_ENTRANCE_CALL LoopWrapper::Main()  
 #endif
 
 
-
-struct Application 
+#include <iostream>
+using std::cout;
+using std::endl;
+struct LoopWrapper
 {
 	static int32 PreInit()
 	{
@@ -46,7 +48,7 @@ struct Application
 	    {
 		    ~CleanUpGuard()
 	    	{
-		 	   Application::Exit();
+			   LoopWrapper::Exit();
 		    }
 	    };
 		CleanUpGuard CallWhenExit;
@@ -54,14 +56,14 @@ struct Application
 
 	    int32 Error = 0;
 
-		Error = Application::PreInit();
+		Error = LoopWrapper::PreInit();
 		if (Error > 0 || gIsAppRequestExit)
 		{
 			return Error;
 		}
 
 
-		Error = Application::Init();
+		Error = LoopWrapper::Init();
 		if (Error || gIsAppRequestExit)
 		{
 			return Error;
@@ -71,9 +73,9 @@ struct Application
 
 		while (!gIsAppRequestExit)
 		{
-			Application::Tick();
-			break;
+			LoopWrapper::Tick();
 		}
+
 
 		//log
 

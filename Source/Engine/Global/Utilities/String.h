@@ -137,6 +137,8 @@ public:
 
 			if(Len) Memory::Copy(Strings.Begin(), Other, Len * sizeof(TChar));
 		}
+
+		return *this;
 	}
 
 	FORCE_INLINE
@@ -365,7 +367,12 @@ public:
 		return *this;
 	}
 
-
+	
+	void RemoveAllMatch(const TChar ToRemove)
+	{
+		Strings.RemoveAllMatch(ToRemove);
+		Strings[Strings.CurrentNum() - 1] = 0;
+	}
 
 	FORCE_INLINE
 	void RemoveAt(int32 Index, int32 Num = 1, bool AllowShrinking = true)
