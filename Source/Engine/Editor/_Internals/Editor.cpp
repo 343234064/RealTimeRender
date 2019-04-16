@@ -4,6 +4,9 @@
 #include "HAL/Time.h"
 
 
+
+
+
 Editor* Editor::CreateEditor()
 {
 	if (gEditor == nullptr)
@@ -20,15 +23,14 @@ Editor* Editor::CreateEditor()
 
 
 Editor::Editor():
-	Callback(nullptr),
+	PlatformEditorCore(nullptr),
 	IsInitialized(false),
-	IsDeferMessageProcessing(true),
 	CurrentTime(PlatformTime::Time_Seconds()),
 	LastTickTime(0.0),
 	AverageDeltaTime(1.0f/30.0f)
 {
-	PLATFORM_EDITOR_MEMBER_INIT
 }
+
 
 Editor::~Editor()
 {
@@ -37,23 +39,26 @@ Editor::~Editor()
 		Exit();
 	}
 	
-    PLATFORM_EDITOR_MEMBER_CLEANUP
 }
 
 
 
 bool Editor::Init()
 {
-	//set messager handler
-	Callback = this;
-	
+
 	LoadEditorConfig();
 
 	//key map init
 
+	//Create Platform Editor
+	if (!InitPlatformEditor())
+	{
+		return false;
+	}
+		
 
 	//Create main window
-	if (!CreateMainWindow())
+	if (!InitMainWindow())
 		return false;
 
 
@@ -73,22 +78,11 @@ void Editor::Exit()
 		//gui shutdown
 
 		
-	    //Loop to destory all window Immediately
-		CloseAllWindowsImmediately();
+		PlatformEditorCore->Exit();
 
-	    //Flush all array
-		if (DeferMessagesQueue.CurrentNum())
-		{
-			DeferMessagesQueue.Empty();
-		}
-
-		if (MessageHandlers.CurrentNum())
-		{
-			MessageHandlers.Empty();
-		}
-
+	
 	    //reset array and pointer
-
+		PlatformEditorCore.reset();
 
 		IsInitialized = false;
 	}
@@ -102,19 +96,16 @@ void Editor::Tick()
 
 	const float DeltaTime = (float)(CurrentTime - LastTickTime);
 
-	if (Windows.CurrentNum() > 0)
-	{
-		PumpMessages(DeltaTime);
-	}
+	PlatformEditorCore->Tick(DeltaTime);
 
-	PlatformEditorTick();
-	ProcessDeferredEvents(DeltaTime);
 
 	//OnPreTickEvent()
 
+	ProcessDeferredCommand(DeltaTime);
 
 	//render do release things
-	
+
+
 
     //Update time and statistics
 	LastTickTime = CurrentTime;
@@ -149,115 +140,76 @@ void Editor::Tick()
 }
 
 
+
+bool Editor::InitPlatformEditor()
+{
+	PlatformEditor* NewPlatformEditor = nullptr;
+#if PLATFORM_WINDOWS
+	NewPlatformEditor = new WindowsEditor();
+#elif PLATFORM_LINUX
+#error No platform implement code here
+#elif PLATFORM_MAC
+#error No platform implement code here
+#endif
+
+	if (!NewPlatformEditor)
+	{
+		return false;
+	}
+
+	PlatformEditorCore.reset(NewPlatformEditor);
+
+	return PlatformEditorCore->Init();
+}
+
+
+bool Editor::InitMainWindow()
+{
+	//get config of main window size and other stuff
+	SharedPTRWinDescription MainWindowDesc(new WindowDescription());
+
+	//Default settings
+	MainWindowDesc->AcceptsInput = true;
+	MainWindowDesc->ActivationPolicy = WindowActivation::Always;
+	MainWindowDesc->AppearInTaskBar = true;
+	MainWindowDesc->HasCloseButton = true;
+	MainWindowDesc->HasSizingBorder = true;
+	MainWindowDesc->KeepAspectRatio = true;
+	MainWindowDesc->SupportMaximize = true;
+	MainWindowDesc->SupportMinimize = true;
+	MainWindowDesc->TopMostWindow = true;
+	MainWindowDesc->Opacity = 1.0f;
+	MainWindowDesc->Title = APPLICATION_NAME;
+	MainWindowDesc->Title += APPLICATION_VERSION_NAME;
+
+	//temp
+	MainWindowDesc->DesiredPosXOnScreen = 100;
+	MainWindowDesc->DesiredPosYOnScreen = 100;
+	MainWindowDesc->DesiredWidthOnScreen = 1280;
+	MainWindowDesc->DesiredHeightOnScreen = 720;
+	MainWindowDesc->DesiredMaxHeight = 1080;
+	MainWindowDesc->DesiredMaxWidth = 1920;
+	MainWindowDesc->DesiredMinHeight = 600;
+	MainWindowDesc->DesiredMinWidth = 800;
+	MainWindowDesc->WinMode = WindowMode::Windowed;
+
+	//Create
+	return PlatformEditorCore->AddNewWindow(nullptr, MainWindowDesc, false, false);
+
+}
+
+
 void Editor::Show()
 {
 	//temp
-	if (CanDisplayMainWindow() && Windows.CurrentNum() >= 1)
+	if (CanDisplayMainWindow() && PlatformEditorCore->GetWindowNum() >= 1)
 	{
-		Windows[0]->Show();
-		Windows[0]->Focus();
+		PlatformEditorCore->ShowWindow(0);
+		PlatformEditorCore->FocusWindow(0);
+
 	}
 }
 
-
-int32 Editor::GetWindowIndex(void* WindowHandle)
-{
-	for (int32 Index = 0; Index < Windows.CurrentNum(); Index++)
-	{
-		SharedPTRWindow Window = Windows[Index];
-		if (Window->GetWindowHandle() == WindowHandle)
-		{
-			return Index;
-		}
-	}
-
-	return -1;
-}
-
-
-const SharedPTRWindow& Editor::GetWindow(int32 WinIndex)
-{
-	//check
-	return Windows[WinIndex];
-}
-
-
-bool Editor::CanDisplayMainWindow()
-{
-	//Todo: see if gui renderer is ready
-	return true;
-}
-
-
-void Editor::CloseAllWindowsImmediately()
-{	
-	//The application currently has at most 1 toplevel window and 1~2 subwindow
-	//Destroy subwindow recursively is not needed
-
-	while (Windows.CurrentNum() > 0)
-	{
-		int32 Index = Windows.CurrentNum() - 1;
-		//Delete from top-down
-		SharedPTRWindow CurrentWindow = Windows[Index];
-		Windows.RemoveAt(Index, 1, false);
-
-		DestroySingleWindow(CurrentWindow);
-
-		CurrentWindow = nullptr;
-	}
-
-	Windows.Empty();
-}
-
-
-void Editor::CloseSingleWindowImmediately(SharedPTRWindow& ToClose)
-{
-	//The application currently has at most 1 toplevel window and 1~2 subwindow
-	//Destroy subwindow recursively is not needed
-	if (Windows.CurrentNum())
-	{
-		if (ToClose != Windows[0])
-		{
-			DestroySingleWindow(ToClose);
-			Windows.Remove(ToClose);
-			ToClose = nullptr;
-		}
-		else//Windows[0] is top window
-		{
-			//
-		}
-	}
-	
-}
-
-
-void Editor::DestroySingleWindow(const SharedPTRWindow& ToDestroy)
-{
-	//Todo:Render release res..
-
-	if (ToDestroy != nullptr)
-	{
-		ToDestroy->Destroy();
-	}
-
-}
-
-
-void Editor::ProcessDeferredEvents(const float Delta)
-{
-	//Make a copy to avoid processing the same messages twice 
-	Array<PlatformDeferMessageArgs> MessageList(DeferMessagesQueue);
-	DeferMessagesQueue.ClearElements();
-
-	for (int32 Index = 0; Index < MessageList.CurrentNum(); Index++)
-	{
-		const PlatformDeferMessageArgs& Message = MessageList[Index];
-		ProcessDeferredMessage(Message);
-	}
-
-
-	//ProcessDeferredCommand
-}
 
 
 void Editor::RequestCloseEditor()
@@ -288,6 +240,16 @@ bool Editor::CanCloseEditor()
 }
 
 
+bool Editor::CanDisplayMainWindow()
+{
+	//See if something is not finished before display main window
+	//if so, stop it and call Defercommand.add(CanDisplayMainWindow) again
+	//return false
+	//else
+	
+	return true;
+}
+
 void Editor::CloseEditor()
 {
 	gIsAppRequestExit = true;
@@ -306,3 +268,5 @@ void Editor::SaveEditorConfig()
 {
 
 }
+
+

@@ -104,8 +104,6 @@ void CoreEngine::Exit()
 
    PlatformMemory::UnInit();
 
-   
- 
 }
 
 

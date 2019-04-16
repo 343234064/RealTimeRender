@@ -3,6 +3,7 @@
 #include "Global/GlobalType.h"
 #include "Global/Utilities/DynamicArray.h" 
 #include "HAL/Platforms/Windows/WindowsPlatform.h"
+#include "Editor/Platforms/PlatformEditor.h"
 #include <memory>
 
 
@@ -12,65 +13,50 @@
 extern HINSTANCE gMainInstanceHandle;
 
 
-#define PLATFORM_EDITOR_PUBLIC_FUNCTIONS \
-   int32 MainMessageHandler(HWND hWnd, uint32 msg, WPARAM wParam, LPARAM lParam); 
 
-
-#define PLATFORM_EDITOR_PROTECTED_FUNCTIONS \
-   void  DeferMessage(SharedPTRWindow& CurrentWindow, HWND hWnd, uint32 msg,  WPARAM wParam, LPARAM lParam, int32 MouseX = 0, int32 MouseY = 0); \
-
-
-
-#define PLATFORM_EDITOR_PROTECTED_VARIABLES \
-   bool IsActivateByMouse; \
-   bool IsEnterSizeMove; \
-
-
-#define PLATFORM_EDITOR_MEMBER_INIT \
-       IsActivateByMouse = false; \
-       IsEnterSizeMove = false;
-
-#define PLATFORM_EDITOR_MEMBER_CLEANUP
-
-
-
-
-
-struct WindowsDeferMessageArgs
-{
-	WindowsDeferMessageArgs(const SharedPTRWindow& Window, HWND Hwnd, uint32 Message, WPARAM WParam, LPARAM LParam, int32 X = 0, int32 Y = 0):
-		CurrentWindow(Window),
-		hWnd(Hwnd),
-		msg(Message),
-		wParam(WParam),
-		lParam(LParam),
-		MouseX(X),
-		MouseY(Y)
-	{}
-
-	SharedPTRWindow CurrentWindow;
-	HWND hWnd;
-	uint32 msg;
-	WPARAM wParam;
-	LPARAM lParam;
-	int32 MouseX;
-	int32 MouseY;
-};
-typedef WindowsDeferMessageArgs PlatformDeferMessageArgs;
-
-
-
-class WinowsMessageHandler
+  
+class WindowsEditor: public PlatformEditorInterface, public ActionCallback
 {
 public:
-	virtual bool ProcessMessage(HWND hWnd, uint32 msg, WPARAM wParam, LPARAM lParam, int32& HandledResult) = 0;
+	WindowsEditor():
+		IsActivateByMouse(false),
+		IsEnterSizeMove(false)
+	{}
+	virtual ~WindowsEditor()
+	{
+		if (IsInitialized)
+		{
+			Exit();
+		}
+	}
+
+	bool Init() override;
+	void Tick(const float DeltaTime) override;
+	void Exit() override;
+
+	int32 MainMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	bool  AddNewWindow(const SharedPTRWindow& ParentWindow, const SharedPTRWinDescription& Description, bool ShowImmediately, bool FocusImmediately) override;
+	int32 ProcessDeferredMessage(const PlatformDeferMessageArgs& Message) override;
+	void  PumpMessages(const float TimeDelta) override;
+
+
+	
+
+
+protected:
+	void  DeferMessage(SharedPTRWindow& CurrentWindow, HWND hWnd, uint32 msg, WPARAM wParam, LPARAM lParam, int32 MouseX = 0, int32 MouseY = 0);
+
+
+protected:
+	bool IsActivateByMouse;
+	bool IsEnterSizeMove;
 
 };
-typedef WinowsMessageHandler PlatformMessageHandler;
-typedef std::shared_ptr<WinowsMessageHandler> SharedPTRMessageHandler;
 
 
-
+typedef WindowsEditor PlatformEditor;
+typedef std::unique_ptr<PlatformEditor> PTRPlatformEditor;
 
 
 

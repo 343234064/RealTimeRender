@@ -1,5 +1,5 @@
 /************************************
-Gui
+Action callback
 
 
 *************************************/
@@ -24,14 +24,14 @@ public:
 	ActionCallback() {}
 	virtual ~ActionCallback() {}
 
-	virtual bool OnKeyChar(const TChar Character, const bool IsRepeat) { return false; }
-	virtual bool OnKeyDown(const int32 KeyCode, const uint32 CharacterCode, const bool Repeat) { return false; }
-	virtual bool OnKeyUp(const int32 KeyCode, const uint32 CharacterCode, const bool Repeat) { return false; }
-	virtual bool OnMouseDown(const MouseButton Button, const float CursorScreenX, const float CursorScreenY) { return false; }
-	virtual bool OnMouseUp(const MouseButton Button, const float CursorScreenX, const float CursorScreenY) { return false; }
-	virtual bool OnMouseDoubleClick(const MouseButton Button, const float CursorScreenX, const float CursorScreenY) { return false; }
-	virtual bool OnMouseWheel(const float Delta, const float CursorScreenX, const float CursorScreenY) { return false; }
-	virtual bool OnMouseMove() { return false; }
+	virtual bool OnKeyChar(const TChar Character, const bool IsRepeat) { return true; }
+	virtual bool OnKeyDown(const int32 KeyCode, const uint32 CharacterCode, const bool Repeat) { return true; }
+	virtual bool OnKeyUp(const int32 KeyCode, const uint32 CharacterCode, const bool Repeat) { return true; }
+	virtual bool OnMouseDown(const MouseButton Button, const float CursorScreenX, const float CursorScreenY) { return true; }
+	virtual bool OnMouseUp(const MouseButton Button, const float CursorScreenX, const float CursorScreenY) { return true; }
+	virtual bool OnMouseDoubleClick(const MouseButton Button, const float CursorScreenX, const float CursorScreenY) { return true; }
+	virtual bool OnMouseWheel(const float Delta, const float CursorScreenX, const float CursorScreenY) { return true; }
+	virtual bool OnMouseMove() { return true; }
 	virtual bool OnWindowAction(const SharedPTRWindow& Window, const bool IsMaximized, const bool IsRestored) { return true; }
 	virtual bool OnMoveWindow(const SharedPTRWindow& Window, const int32 X, const int32 Y) { return true; }
 	virtual bool OnPaint(const SharedPTRWindow& Window) { return true; }
@@ -42,7 +42,6 @@ public:
 	virtual bool OnResizingWindow(const SharedPTRWindow& Window) { return true; }
 	virtual bool BeginResizingWindow(const SharedPTRWindow& Window) { return true; }
 	virtual bool FinishResizingWindow(const SharedPTRWindow& Window) { return true; }
-
 
 };
 typedef std::shared_ptr<ActionCallback> SharedPTRCallback;

@@ -20,8 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\Editor\Editor.h" />
-    <ClInclude Include="..\..\Source\Engine\Editor\GUI.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\ActionCallback.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\PlatformEditor.h" />
     <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsEditorMisc.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsMessage.h" />
     <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsWindow.h" />
     <ClInclude Include="..\..\Source\Engine\Editor\Resources.h" />
     <ClInclude Include="..\..\Source\Engine\Editor\Window.h" />
@@ -54,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\Editor.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\PlatformEditor.cpp" />
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsEditorMisc.cpp" />
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsWindow.cpp" />
     <ClCompile Include="..\..\Source\Engine\Global\_Internals\EngineVariables.cpp" />

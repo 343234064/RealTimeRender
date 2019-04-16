@@ -4,14 +4,14 @@
 
 
 #include "Global/EngineVariables.h"
-#include "Editor/Editor.h"
 #include "Editor/Resources.h"
 #include "Editor/Platforms/Windows/WindowsWindow.h"
+#include "Editor/Platforms/Windows/WindowsEditorMisc.h"
+#include "Editor/Editor.h"
 
 
 
 HINSTANCE gMainInstanceHandle = NULL;
-
 
 
 HICON GetMainWindowIcon()
@@ -20,13 +20,106 @@ HICON GetMainWindowIcon()
 }
 
 
+FORCE_INLINE
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	return gEditor->MainMessageHandler(hWnd, msg, wParam, lParam);
+	return gEditor->GetPlatformEditor()->MainMessageHandler(hWnd, msg, wParam, lParam);
 }
 
 
-int32 Editor::MainMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+void RequestCloseEditor()
+{
+	gEditor->RequestCloseEditor();
+}
+
+
+bool WindowsEditor::Init()
+{
+	//Default callback to advoid null pointer crash
+	Callback = this;
+
+	//Disable the process from being showing "ghosted"(Not responding)
+	::DisableProcessWindowsGhosting();
+
+	//Register class
+	WNDCLASS WC;
+	Memory::Zero(&WC, sizeof(WC));
+
+	HICON MainWinIcon = GetMainWindowIcon();
+	if (MainWinIcon == NULL)
+	{
+		MainWinIcon = LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);
+		//log load icon failed
+	}
+
+	WC.style = CS_DBLCLKS;
+	WC.lpfnWndProc = WndProc;
+	WC.cbClsExtra = 0;
+	WC.cbWndExtra = 0;
+	WC.hInstance = gMainInstanceHandle;
+	WC.hIcon = MainWinIcon;
+	WC.hCursor = NULL;
+	WC.hbrBackground = NULL;
+	WC.lpszMenuName = NULL;
+	WC.lpszClassName = APPLICATION_IDENTITY;
+
+	if (!::RegisterClass(&WC))
+	{
+		MessageBox(NULL, TEXT("Window Class Registration Failed"), TEXT("Error"), MB_ICONEXCLAMATION | MB_OK);
+		//log
+		return false;
+	}
+
+	IsInitialized = true;
+	return true;
+}
+
+
+void WindowsEditor::Tick(const float DeltaTime)
+{
+	if (Windows.CurrentNum() > 0)
+	{
+		PumpMessages(DeltaTime);
+	}
+
+	ProcessDeferredEvents(DeltaTime);
+}
+
+
+void WindowsEditor::Exit()
+{
+	if (IsInitialized)
+	{
+		//Loop to destory all window Immediately
+		CloseAllWindowsImmediately();
+
+		//Flush all array
+		if (DeferMessagesQueue.CurrentNum())
+		{
+			DeferMessagesQueue.Empty();
+		}
+
+		if (MessageHandlers.CurrentNum())
+		{
+			MessageHandlers.Empty();
+		}
+
+		//reset array and pointer
+		
+		//Callback will not be released here
+		Callback = nullptr;
+		
+		IsActivateByMouse = false; 
+		IsEnterSizeMove = false;
+		
+		IsInitialized = false;
+	}
+}
+
+
+
+
+int32 WindowsEditor::MainMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 
 	int32 SearchIndex = GetWindowIndex(hWnd);
@@ -520,7 +613,7 @@ int32 Editor::MainMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 }
 
 
-void Editor::DeferMessage(SharedPTRWindow& CurrentWindow, HWND hWnd, uint32 msg, WPARAM wParam, LPARAM lParam, int32 MouseX, int32 MouseY)
+void WindowsEditor::DeferMessage(SharedPTRWindow& CurrentWindow, HWND hWnd, uint32 msg, WPARAM wParam, LPARAM lParam, int32 MouseX, int32 MouseY)
 {
 	if (gIsPumpingMessagesOutOfMainLoop && IsDeferMessageProcessing)
 	{
@@ -533,7 +626,7 @@ void Editor::DeferMessage(SharedPTRWindow& CurrentWindow, HWND hWnd, uint32 msg,
 }
 
 
-int32 Editor::ProcessDeferredMessage(const PlatformDeferMessageArgs& Message)
+int32 WindowsEditor::ProcessDeferredMessage(const PlatformDeferMessageArgs& Message)
 {
 	
 	if (Windows.CurrentNum() && Message.CurrentWindow != nullptr)
@@ -910,84 +1003,7 @@ int32 Editor::ProcessDeferredMessage(const PlatformDeferMessageArgs& Message)
 
 
 
-
-bool Editor::CreateMainWindow()
-{
-
-	//Disable the process from being showing "ghosted"(Not responding)
-	::DisableProcessWindowsGhosting();
-
-	//Register class
-	WNDCLASS WC;
-	Memory::Zero(&WC, sizeof(WC));
-
-	HICON MainWinIcon = GetMainWindowIcon();
-	if (MainWinIcon == NULL)
-	{
-		MainWinIcon = LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);
-		//log load icon failed
-	}
-
-	WC.style = CS_DBLCLKS;
-	WC.lpfnWndProc = WndProc;
-	WC.cbClsExtra = 0;
-	WC.cbWndExtra = 0;
-	WC.hInstance = gMainInstanceHandle;
-	WC.hIcon = MainWinIcon;
-	WC.hCursor = NULL;
-	WC.hbrBackground = NULL;
-	WC.lpszMenuName = NULL;
-	WC.lpszClassName = APPLICATION_IDENTITY;
-
-	if (!::RegisterClass(&WC))
-	{
-		MessageBox(NULL, TEXT("Window Class Registration Failed"), TEXT("Error"), MB_ICONEXCLAMATION | MB_OK);
-		return false;
-	}
-
-
-	///////////////////////////////////////////////////////////////
-
-
-	//get config of main window size and other stuff
-	SharedPTRWinDescription MainWindowDesc(new WindowDescription());
-
-	//Default settings
-	MainWindowDesc->AcceptsInput = true;
-	MainWindowDesc->ActivationPolicy = WindowActivation::Always;
-	MainWindowDesc->AppearInTaskBar = true;
-	MainWindowDesc->HasCloseButton = true;
-	MainWindowDesc->HasSizingBorder = true;
-	MainWindowDesc->KeepAspectRatio = true;
-	MainWindowDesc->SupportMaximize = true;
-	MainWindowDesc->SupportMinimize = true;
-	MainWindowDesc->TopMostWindow = true;
-	MainWindowDesc->Opacity = 1.0f;
-	MainWindowDesc->Title = APPLICATION_NAME;
-	MainWindowDesc->Title += APPLICATION_VERSION_NAME;
-
-	//temp
-	MainWindowDesc->DesiredPosXOnScreen = 100;
-	MainWindowDesc->DesiredPosYOnScreen = 100;
-	MainWindowDesc->DesiredWidthOnScreen = 1280;
-	MainWindowDesc->DesiredHeightOnScreen = 720;
-	MainWindowDesc->DesiredMaxHeight = 1080;
-	MainWindowDesc->DesiredMaxWidth = 1920;
-	MainWindowDesc->DesiredMinHeight = 600;
-	MainWindowDesc->DesiredMinWidth = 800;
-	MainWindowDesc->WinMode = WindowMode::Windowed;
-
-	//Create main window
-	AddNewWindow(nullptr, MainWindowDesc, false, false);
-
-
-
-	return true;
-}
-
-
-
-void Editor::AddNewWindow(const SharedPTRWindow& ParentWindow, const SharedPTRWinDescription& Description, bool ShowImmediately, bool FocusImmediately)
+bool WindowsEditor::AddNewWindow(const SharedPTRWindow& ParentWindow, const SharedPTRWinDescription& Description, bool ShowImmediately, bool FocusImmediately)
 {
 
 	SharedPTRWindow NewWindow(new WindowsWindow());
@@ -1009,17 +1025,15 @@ void Editor::AddNewWindow(const SharedPTRWindow& ParentWindow, const SharedPTRWi
 	{
 		MessageBox(NULL, TEXT("Window Create Failed"), TEXT("Error"), MB_ICONEXCLAMATION | MB_OK);
 		//log
+		return false;
 	}
+
+	return true;
 	
 }
 
 
-void Editor::PlatformEditorTick()
-{
-	//Nothing to do 
-}
-
-void Editor::PumpMessages(const float TimeDelta)
+void WindowsEditor::PumpMessages(const float TimeDelta)
 {
 
 	gIsPumpingMessagesOutOfMainLoop = false;

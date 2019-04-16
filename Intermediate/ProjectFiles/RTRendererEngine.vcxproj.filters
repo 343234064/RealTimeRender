@@ -162,9 +162,6 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\CountedPtr.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Editor\Window.h">
-      <Filter>Source\Engine\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsEditorMisc.h">
       <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
     </ClInclude>
@@ -174,11 +171,20 @@
     <ClInclude Include="..\..\Source\Engine\Editor\Resources.h">
       <Filter>Source\Engine\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Editor\GUI.h">
-      <Filter>Source\Engine\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h">
       <Filter>Source\Engine\Launch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\ActionCallback.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Window.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\PlatformEditor.h">
+      <Filter>Source\Engine\Editor\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsMessage.h">
+      <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +231,9 @@
       <Filter>Source\Engine\Editor\_Internals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsWindow.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\PlatformEditor.cpp">
       <Filter>Source\Engine\Editor\_Internals</Filter>
     </ClCompile>
   </ItemGroup>
