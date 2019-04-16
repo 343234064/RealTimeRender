@@ -36,7 +36,7 @@ bool WindowsWindow::Create(const SharedPTRWinDescription& Description, const std
 		WinExStyle = WS_EX_WINDOWEDGE;
 
 		//Paints all descendants of a window in bottom-to-top painting order using double-buffering
-		//WinExStyle |= WS_EX_COMPOSITED;
+		WinExStyle |= WS_EX_COMPOSITED;
 
 		WinStyle = WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
@@ -109,8 +109,8 @@ bool WindowsWindow::Create(const SharedPTRWinDescription& Description, const std
 		return false;
 	}
 
-	ActualWidth = ClientWidth;
-	ActualHeight = ClientHeight;
+	//ActualWidth = ClientWidth;
+	//ActualHeight = ClientHeight;
 
 	Reshape(ClientX, ClientY, ClientWidth, ClientHeight);
 
@@ -178,7 +178,6 @@ bool WindowsWindow::Create(const SharedPTRWinDescription& Description, const std
 	}
 	
 
-
 	HasNeverShow = true;
 	IsInitialized = true;
 
@@ -223,9 +222,8 @@ void WindowsWindow::Reshape(int32 ClientX, int32 ClientY, int32 ClientWidth, int
 	}
 
 	//bool ActualSizeChanged = WindowWidth != ActualWidth || WindowHeight != ActualHeight;
-	ActualWidth = WindowWidth;
-	ActualHeight = WindowHeight;
-
+	//ActualWidth = WindowWidth;
+	//ActualHeight = WindowHeight;
 
 	if (IsMaximized())
 	{
@@ -246,9 +244,8 @@ void WindowsWindow::Reshape(int32 ClientX, int32 ClientY, int32 ClientWidth, int
 
 void WindowsWindow::AdjustWindowRegion(int32 Width, int32 Height)
 {
-	HRGN Region;
-
-
+	
+	HRGN Region ;
 	if (IsMaximized())
 	{
 		if (WindowDesc->WinMode == WindowMode::Borderless)
@@ -258,7 +255,8 @@ void WindowsWindow::AdjustWindowRegion(int32 Width, int32 Height)
 			WinInfo.cbSize = sizeof(WinInfo);
 			::GetWindowInfo(Hwnd, &WinInfo);
 
-			Region = CreateRectRgn(WinInfo.cxWindowBorders, WinInfo.cxWindowBorders, Width + WinInfo.cxWindowBorders, Height + WinInfo.cxWindowBorders);
+			const int32 WindowBorderSize = WinInfo.cxWindowBorders;
+			Region = CreateRectRgn(WindowBorderSize, WindowBorderSize, Width + WindowBorderSize, Height + WindowBorderSize);
 		}
 		else
 		{
@@ -273,11 +271,11 @@ void WindowsWindow::AdjustWindowRegion(int32 Width, int32 Height)
 	}
 
 	
-	if (::SetWindowRgn(Hwnd, Region, true) == 0)
+	if (::SetWindowRgn(Hwnd, Region, false) == 0)
 	{
 		//log
 	}
-
+	
 }
 
 
@@ -411,9 +409,10 @@ void WindowsWindow::SetWindowMode(WindowMode NewMode)
 	if (NewMode != WindowDesc->WinMode)
 	{
 		WindowDesc->WinMode = NewMode;
-
+		
 		LONG WindowStyle = GetWindowLong(Hwnd, GWL_STYLE);
 		LONG WindowedModeStyle = WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION;
+
 		if (WindowDesc->SupportMaximize)
 		{
 			WindowedModeStyle |= WS_MAXIMIZEBOX;
@@ -433,10 +432,55 @@ void WindowsWindow::SetWindowMode(WindowMode NewMode)
 			WindowedModeStyle |= WS_BORDER;
 		}
 
+		if (NewMode == WindowMode::Windowed)
+		{
+			//Enable the non-client area rendering
+			const DWMNCRENDERINGPOLICY Policy = DWMNCRP_ENABLED;
+			if (FAILED(DwmSetWindowAttribute(Hwnd, DWMWA_NCRENDERING_POLICY, &Policy, sizeof(Policy))))
+			{
+				//log
+			}
+			//Enable content rendered in the non-client area
+			const BOOL NCPaint = true;
+			if (FAILED(DwmSetWindowAttribute(Hwnd, DWMWA_ALLOW_NCPAINT, &NCPaint, sizeof(NCPaint))))
+			{
+				//log
+			}
+			//Reset
+			const MARGINS Margins = { 0 };
+			if (FAILED(DwmExtendFrameIntoClientArea(Hwnd, &Margins)))
+			{
+				//log
+			}
+
+
+		}
+		else if (NewMode == WindowMode::Borderless)
+		{
+
+			const DWMNCRENDERINGPOLICY Policy = DWMNCRP_DISABLED;
+			if (FAILED(DwmSetWindowAttribute(Hwnd, DWMWA_NCRENDERING_POLICY, &Policy, sizeof(Policy))))
+			{
+				//log
+			}
+
+			const BOOL NCPaint = false;
+			if (FAILED(DwmSetWindowAttribute(Hwnd, DWMWA_ALLOW_NCPAINT, &NCPaint, sizeof(NCPaint))))
+			{
+				//log
+			}
+
+			
+			const MARGINS Margins = { -1 };
+			if (FAILED(DwmExtendFrameIntoClientArea(Hwnd, &Margins)))
+			{
+				//log
+			}
+		}
+
 		WindowStyle |= WindowedModeStyle;
 		SetWindowLong(Hwnd, GWL_STYLE, WindowStyle);
 		::SetWindowPos(Hwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-	
 		UpdateWindow(Hwnd);
 	}
 

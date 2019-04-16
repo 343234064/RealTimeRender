@@ -66,6 +66,7 @@ Just for test
 #  else 
 #    define MAIN_LAUNCH_CPP 1
 #  endif
+#  define SHOW_DEBUG_CONSOLE 1
 #else
 #  define MAIN_LAUNCH_CPP 1
 #endif   

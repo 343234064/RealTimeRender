@@ -86,13 +86,13 @@ int32 GuardedMainEntrance(HINSTANCE hInstance, HINSTANCE hPrevInstance, int nCmd
 	return Error;
 }
 
-#if _DEBUG //Show the console window
+#if SHOW_DEBUG_CONSOLE //Show the console window
 int32 main()
 #else
 int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 #endif
 {
-#if _DEBUG
+#if SHOW_DEBUG_CONSOLE
 	HINSTANCE hInstance = GetModuleHandle(nullptr);
 	HINSTANCE hPrevInstance = NULL;
 	int32 nCmdShow = 0;

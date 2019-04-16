@@ -14,14 +14,15 @@ public:
 		Hwnd(NULL),
 		//RegionWidth(0),
 		//RegionHeight(0),
-		ActualWidth(0),
-	    ActualHeight(0),
+		//ActualWidth(0),
+	    //ActualHeight(0),
 		AspectRatio(1.0f),
 		IsVisibled(false),
 		IsInitialized(false),
 		HasNeverShow(false)
 	{
 		Memory::Zero(&PreParentMinimizedWindowPlacement, sizeof(PreParentMinimizedWindowPlacement));
+		Memory::Zero(&PreBorderlessWindowPlacement, sizeof(PreBorderlessWindowPlacement));
 	}
 
 	virtual ~WindowsWindow() 
@@ -77,8 +78,8 @@ protected:
 	//int32 RegionWidth;
 	//int32 RegionHeight;
 	//The actual window size
-	int32 ActualWidth;
-	int32 ActualHeight;
+	//int32 ActualWidth;
+	//int32 ActualHeight;
 
 	float AspectRatio;
 
@@ -89,4 +90,6 @@ protected:
 
 	//The placement of the window, used to store minimized state when its parent window being minimized
 	WINDOWPLACEMENT PreParentMinimizedWindowPlacement;
+	WINDOWPLACEMENT PreBorderlessWindowPlacement;
+	HRGN Rgn;
 };

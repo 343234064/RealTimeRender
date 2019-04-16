@@ -600,12 +600,7 @@ int32 Editor::ProcessDeferredMessage(const PlatformDeferMessageArgs& Message)
 			case VK_SHIFT: //Shift
 			{
 				Key = MapVirtualKey((lParam & 0x00ff0000) >> 16, MAPVK_VSC_TO_VK_EX);
-				WindowMode Cur = CurrentWindow->GetWindowMode();
-				if (Cur != WindowMode::Windowed)
-					Cur = WindowMode::Windowed;
-				else
-					Cur = WindowMode::Borderless;
-				CurrentWindow->SetWindowMode(Cur);
+			
 			}	break;
 			case VK_CAPITAL:
 				break;
@@ -613,6 +608,17 @@ int32 Editor::ProcessDeferredMessage(const PlatformDeferMessageArgs& Message)
 				break;
 			}
 			
+				if (CurrentWindow != nullptr)
+				{
+					WindowMode Cur = CurrentWindow->GetWindowMode();
+					if (Cur != WindowMode::Windowed)
+						Cur = WindowMode::Windowed;
+					else
+						Cur = WindowMode::Borderless;
+					CurrentWindow->SetWindowMode(Cur);
+				}
+			
+
 			if (Callback->OnKeyDown(Key, CharCode, IsRepeat) || msg != WM_SYSKEYDOWN)
 				return 0;
 
@@ -655,6 +661,7 @@ int32 Editor::ProcessDeferredMessage(const PlatformDeferMessageArgs& Message)
 				break;
 			}
 
+		
 			if (Callback->OnKeyUp(Key, CharCode, IsRepeat) || msg != WM_SYSKEYUP)
 				return 0;
 
@@ -817,13 +824,13 @@ int32 Editor::ProcessDeferredMessage(const PlatformDeferMessageArgs& Message)
 		{
 			if (CurrentWindow != nullptr)
 			{
+
 				if (CurrentWindow != Windows[0])
 				{
 					Callback->OnWindowClose(CurrentWindow);
 					//Close current window
 					CloseSingleWindowImmediately(CurrentWindow);
 				}
-				   
 				else
 				{
 					//Close main window
@@ -973,6 +980,8 @@ bool Editor::CreateMainWindow()
 	//Create main window
 	AddNewWindow(nullptr, MainWindowDesc, false, false);
 
+
+
 	return true;
 }
 
@@ -982,7 +991,6 @@ void Editor::AddNewWindow(const SharedPTRWindow& ParentWindow, const SharedPTRWi
 {
 
 	SharedPTRWindow NewWindow(new WindowsWindow());
-	//NewWindow = std::make_shared<WindowInterface>();
 
 	if (NewWindow != nullptr && NewWindow->Create(Description, ParentWindow))
 	{
@@ -1023,6 +1031,7 @@ void Editor::PumpMessages(const float TimeDelta)
 		DispatchMessage(&Message);
 	}
 
+	
 	bool HasFocus = Platform::IsCurrentProcessForeground();
 	static bool HadFocus = true;
 
