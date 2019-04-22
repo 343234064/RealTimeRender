@@ -30,6 +30,8 @@
     <ClInclude Include="..\..\Source\Engine\Global\GlobalConfigs.h" />
     <ClInclude Include="..\..\Source\Engine\Global\GlobalType.h" />
     <ClInclude Include="..\..\Source\Engine\Global\EngineVariables.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Serializer.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Assertion.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\AtomicCounter.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\ContainerAllocator.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\DynamicArray.h" />
@@ -37,6 +39,9 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\CountedPtr.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Chars.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\File\FileHandle.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\File\FileManage.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\File\Path.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocatorInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocDefault.h" />
@@ -46,6 +51,7 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\MemoryInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platform.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h" />
@@ -53,12 +59,16 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\Logger.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LoggerFile.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\Editor.cpp" />
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\PlatformEditor.cpp" />
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsEditorMisc.cpp" />
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsWindow.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Global\_Internals\Assertion.cpp" />
     <ClCompile Include="..\..\Source\Engine\Global\_Internals\EngineVariables.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocDefault.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp" />
@@ -71,6 +81,8 @@
     <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\CoreEngine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\WindowsLaunch.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\Logger.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LoggerFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

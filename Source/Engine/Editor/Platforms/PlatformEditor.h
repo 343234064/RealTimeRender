@@ -64,6 +64,8 @@ public:
 	virtual void ShowWindow(int32 WindowIndex) { Windows[WindowIndex]->Show(); }
 	virtual void HideWindow(int32 WindowIndex) { Windows[WindowIndex]->Hide(); }
 	virtual void FocusWindow(int32 WindowIndex) { Windows[WindowIndex]->Focus(); }
+	virtual void SetWindowOpacity(int32 WindowIndex, float Opacity) { Windows[WindowIndex]->SetOpacity(Opacity); }
+
 
 
 protected:

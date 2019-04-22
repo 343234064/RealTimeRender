@@ -501,15 +501,39 @@ public:
 
 
 	FORCE_INLINE 
-	static int32 VarArgSprintf(PlatformTypes::WIDECHAR* Buffer, Size_T BufferCount, int32 MaxCount, const PlatformTypes::WIDECHAR* Format, va_list ArgsPtr)
+	static PlatformTypes::int32 VarArgSprintf(PlatformTypes::WIDECHAR* Buffer, Size_T BufferCount, PlatformTypes::int32 MaxCount, const PlatformTypes::WIDECHAR* Format, va_list ArgsPtr)
 	{
 		return _vsntprintf_s(Buffer, BufferCount, MaxCount, Format, ArgsPtr);
 	}
 
 	FORCE_INLINE
-	static int32 VarArgSprintf(PlatformTypes::ANSICHAR* Buffer, Size_T BufferCount, int32 MaxCount,  const PlatformTypes::ANSICHAR* Format, va_list ArgsPtr)
+	static PlatformTypes::int32 VarArgSprintf(PlatformTypes::ANSICHAR* Buffer, Size_T BufferCount, PlatformTypes::int32 MaxCount,  const PlatformTypes::ANSICHAR* Format, va_list ArgsPtr)
 	{
 		return _vsnprintf_s(Buffer, BufferCount, MaxCount, Format, ArgsPtr);
+	}
+
+
+
+	static PlatformTypes::int32 Sprintf(PlatformTypes::WIDECHAR* Buffer, Size_T BufferCount, const PlatformTypes::WIDECHAR* Format, ...)
+	{
+		PlatformTypes::int32 Result = 0;
+		va_list ArgPtr; 
+		va_start(ArgPtr, Format);
+		Result = WindowsChars::VarArgSprintf(Buffer, (PlatformTypes::int32)BufferCount, (PlatformTypes::int32)BufferCount-1, Format, ArgPtr);
+		va_end(ArgPtr); 
+		if (Result >= BufferCount) Result = -1; 
+		return Result;
+	}
+
+	static PlatformTypes::int32 Sprintf(PlatformTypes::ANSICHAR* Buffer, Size_T BufferCount, const PlatformTypes::ANSICHAR* Format, ...)
+	{
+		PlatformTypes::int32 Result = 0;
+		va_list ArgPtr;
+		va_start(ArgPtr, Format);
+		Result = WindowsChars::VarArgSprintf(Buffer, (PlatformTypes::int32)BufferCount, (PlatformTypes::int32)BufferCount - 1, Format, ArgPtr);
+		va_end(ArgPtr);
+		if (Result >= BufferCount) Result = -1;
+		return Result;
 	}
 
 };

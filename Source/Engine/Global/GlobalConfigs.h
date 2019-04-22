@@ -7,11 +7,6 @@ Naming standard:
 2.macro\global constant variable:
 "SOME_GLOBAL_CONSTANTS"
 
-
-/!!!!!!!!!!!!!!!!!!!!!!!
-	  No 32 bit App
-!!!!!!!!!!!!!!!!!!!!!!!!
-
 ************************************/
 #pragma once
 
@@ -56,17 +51,32 @@ No 32-bit application
 
 
 /*************************
+Enable log and assertion for debug 
+*************************/
+//See Assertion.h
+#if _DEBUG
+#define ENABLE_DEBUG_ASSERTION 1
+#endif
+
+//See LogMacros.h
+#if _DEBUG
+#define ENABLE_DEBUG_LOG 1
+#endif
+
+
+/*************************
 Just for test 
 *************************/
-#define USE_FOR_TEST_CPP 0
+#define USE_FOR_TEST_CPP 1
 #
 #if _DEBUG
 #  if USE_FOR_TEST_CPP
 #    define FOR_TEST_CPP 1
 #  else 
+#    //Show the console window when using MAIN_LAUNCH_CPP
+#    define SHOW_DEBUG_CONSOLE 0
 #    define MAIN_LAUNCH_CPP 1
 #  endif
-#  define SHOW_DEBUG_CONSOLE 1
 #else
 #  define MAIN_LAUNCH_CPP 1
 #endif   

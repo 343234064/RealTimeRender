@@ -6,7 +6,7 @@
 #include "Global/Utilities/AtomicCounter.h"
 #include "HAL/Platform.h"
 #include "Global/Utilities/Misc.h"
-
+#include "Global/Utilities/Assertion.h"
 #include "Global/Utilities/ContainerAllocator.h"
 #include "Global/Utilities/DynamicArray.h"
 #include "HAL/Memory/AllocatorInterface.h"
@@ -18,6 +18,9 @@
 #include "Global/Utilities/String.h"
 #include "HAL/Chars.h"
 #include "HAL/Time.h"
+#include "Log/LogMacros.h"
+#include "HAL/File/FileMisc.h"
+#include "HAL/File/Path.h"
 
 
 #include <iostream>
@@ -65,6 +68,8 @@ bool operator==(const Obj& left, const Obj& right)
 }
 
 
+
+
 #define PRINTEXT(text) wprintf(text);
 
 int main()
@@ -73,39 +78,17 @@ int main()
 	PlatformMemory::Init();
 	setlocale(LC_ALL, "chs");
 
-	Array<int32> Test = { 5,4,3,2,0,1,5,5,5};
+	String path = TEXTS("E:\\MAX自动烘焙插件\\自动烘焙插件\\..\\file");
 
-	for (int32 i = 0; i < Test.CurrentNum();i++)
-		cout << Test[i]<<" ";
-	cout << endl;
+	String NewPath = Path::NormalizeFilePath(*path);
 
-	Test.RemoveAllMatch(5);
+	PRINTEXT(*NewPath);
 
-	for (int32 i = 0; i < Test.CurrentNum();i++)
-		cout << Test[i] << " ";
-	cout << endl;
-	
-	TChar Test2[13] = TEXTS("abbcdcdbccdc");
-	String Str(Test2);
-	PRINTEXT(*Str);
-
-	Str.RemoveAllMatch(TEXTS('c'));
-	cout << endl;
-	PRINTEXT(*Str);
-
-	Obj remove(1);
-	Array<Obj> Test3 = {Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(5), Obj(1)};
-	cout << "+++++++++++++++" << endl;
-	Test3.RemoveAllMatch(remove);
-	cout << "+++++++++++++++" << endl;
-	for (int32 i = 0; i < Test3.CurrentNum();i++)
-		cout << Test3[i].a << " ";
-	cout << endl;
 
 
 	PlatformMemory::UnInit();
 
-	
+
 
 	int temin;
 	cin >> temin;

@@ -28,6 +28,13 @@ public:
 	static Editor* CreateEditor();
 	virtual ~Editor();
 
+	Editor(Editor&&) = delete;
+	Editor(const Editor&) = delete;
+	Editor& operator=(Editor&&) = delete;
+	Editor& operator=(const Editor&) = delete;
+	
+
+
 	bool Init();
 	void Show();
 	void Tick();
@@ -40,10 +47,7 @@ public:
 	FORCE_INLINE
 	PTRPlatformEditor& GetPlatformEditor() { return PlatformEditorCore; }
 
-	Editor(Editor&&) = delete;
-	Editor(const Editor&) = delete;
-	Editor& operator=(Editor&&) = delete;
-	Editor& operator=(const Editor&) = delete;
+
 
 
 protected:

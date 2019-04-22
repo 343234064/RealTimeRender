@@ -41,8 +41,8 @@ extern bool gReportCrashEvenDebugger;
 /*If enable the inner exception handler within native C++*/
 extern bool gEnableInnerException;
 
-/*If we get error*/
-extern bool gIsGetError;
+/*If we get critical error*/
+extern bool gIsGetCriticalError;
 
 /*If we init the gMainThreadId*/
 extern bool gIsMainThreadIdCached;

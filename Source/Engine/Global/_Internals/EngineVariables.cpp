@@ -21,8 +21,8 @@ bool gReportCrashEvenDebugger = false;
 /*If enable the exception handler within native C++*/
 bool gEnableInnerException = false;
 
-/*If we get error*/
-bool gIsGetError = false;
+/*If we get critical error*/
+bool gIsGetCriticalError = false;
 
 /*If we init the gMainThreadId*/
 bool gIsMainThreadIdCached = false;

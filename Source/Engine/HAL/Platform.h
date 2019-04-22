@@ -61,6 +61,36 @@
    #endif
 #endif
 
+// Hints compiler that expression is unlikely to be true
+#ifndef UNLIKELY	
+#if (PLATFORM_LINUX) && ( defined(__clang__) || defined(__GNUC__) ) 
+#define UNLIKELY(x)	__builtin_expect(!!(x), 0)
+#else
+#define UNLIKELY(x)	(x)
+#endif
+#endif
+
+
+//If the platform is little-endian
+/*
+static const union
+{
+	unsigned char _Bytes[4];
+	uint32_t _Value;
+} Host_Order32 = { {0, 1, 2, 3} };
+enum
+{
+	LITTLE_ENDIAN_ = 0x03020100ul,
+	BIG_ENDIAN_    = 0x00010203ul
+};
+
+#ifndef PLATFORM_LITTLE_ENDIAN_RUNTIME
+#   define PLATFORM_LITTLE_ENDIAN_RUNTIME ( LITTLE_ENDIAN_ == Host_Order32._Value )
+#endif 
+#ifndef PLATFORM_BIG_ENDIAN_RUNTIME
+#   define PLATFORM_BIG_ENDIAN_RUNTIME ( BIG_ENDIAN_ == Host_Order32._Value )
+#endif
+*/
 
 
 

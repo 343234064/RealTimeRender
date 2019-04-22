@@ -120,6 +120,14 @@ struct ExplicitType
 
 
 
+//Return the size of array
+template <typename T, Size_T N>
+char ( &ArraySizeHelper( const T (&)[N] ))[N];
+
+// Number of elements in an array
+#define ARRAY_SIZE( Array ) ( sizeof(ArraySizeHelper(Array)) )
+
+
 /**
  * Helper template to test if Type is ReferenceType
  */
@@ -379,3 +387,41 @@ template<> struct IsCharComparisonCompatible <CHAR32, ANSICHAR> { enum { Value =
 template<> struct IsCharComparisonCompatible <WIDECHAR, WIDECHAR> { enum { Value = true }; };
 template<> struct IsCharComparisonCompatible <CHAR16, CHAR16> { enum { Value = true }; };
 template<> struct IsCharComparisonCompatible <CHAR32, CHAR32> { enum { Value = true }; };
+
+
+
+
+/**************************
+Helper template to test if
+the type is enum type
+
+****************************/
+template <typename Type>
+struct IsEnumType
+{
+	enum { Value = std::is_enum<Type>::value };
+};
+
+
+/**************************
+Helper template to test if
+the type is enum class type
+
+****************************/
+template <typename Type>
+struct IsEnumConvertibleToInt
+{
+	//If Type can convert to int, return a char& type (size 2) array 
+	//else return a char type
+	static char(&Resolve(int))[2]; 
+	static char Resolve(...);
+
+	enum { Value = sizeof(Resolve(T())) - 1 };
+};
+
+template <typename Type>
+struct IsEnumClassType
+{
+	enum { Value = std::is_enum<Type>::value &&  !IsEnumConvertibleToInt<Type>::Value };
+};
+

@@ -230,39 +230,37 @@ typedef WindowsTypes            PlatformTypes;
 */
 struct Platform
 {
-	FORCE_INLINE
-    static void MemoryWriteBarrier() { _mm_sfence(); }
+	
+	inline static void MemoryWriteBarrier() { _mm_sfence(); }
 
-	FORCE_INLINE
-	static void MemoryReadBarrier() { _mm_lfence(); }
+	inline static void MemoryReadBarrier() { _mm_lfence(); }
 
-	FORCE_INLINE
-	static void MemoryRWBarrier() { _mm_mfence(); }
+	inline static void MemoryRWBarrier() { _mm_mfence(); }
 
 
-	static void RequestExit(bool ForceExit);
-    static PlatformTypes::int32 ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo);
+	inline static void RequestExit(bool ForceExit);
 
-	FORCE_INLINE
-	static PlatformTypes::int32 GetCurrentThreadId()
+	inline static PlatformTypes::int32 ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo);
+
+
+	inline static PlatformTypes::int32 GetCurrentThreadId()
 	{
 		return ::GetCurrentThreadId();
 	}
 	
-	FORCE_INLINE
-	static void SetCurrentThreadAffinityMask(PlatformTypes::uint64 AffinityMask)
+
+	inline static void SetCurrentThreadAffinityMask(PlatformTypes::uint64 AffinityMask)
 	{
 		::SetThreadAffinityMask(::GetCurrentThread(), (DWORD_PTR)AffinityMask);
 	}
 
-	FORCE_INLINE
-	static PlatformTypes::int32 TruncToInt(float FNum)
+	inline static PlatformTypes::int32 TruncToInt(float FNum)
 	{
 		//SSE Intrinsic
 		return _mm_cvt_ss2si(_mm_set_ss(FNum));
 	}
 
-	static PlatformTypes::int32 NumberOfCores()
+	inline static PlatformTypes::int32 NumberOfCores()
 	{
 		static PlatformTypes::int32 NumOfCores = 0;
 		if (NumOfCores == 0)
@@ -274,7 +272,7 @@ struct Platform
 		return NumOfCores;
 	}
 
-	static void Sleep(float Seconds)
+	inline static void Sleep(float Seconds)
 	{
 		PlatformTypes::uint32 MicroSeconds = (PlatformTypes::uint32)(Seconds * 1000.0);
 		if (MicroSeconds == 0)
@@ -284,13 +282,44 @@ struct Platform
 		::Sleep(MicroSeconds);
 	}
 
-	static bool IsCurrentProcessForeground()
+
+	inline static bool IsCurrentProcessForeground()
 	{
 		PlatformTypes::uint32 ForegroundProcess;
 		::GetWindowThreadProcessId(GetForegroundWindow(), (DWORD*)&ForegroundProcess);
 		return (ForegroundProcess == GetCurrentProcessId());
 	}
 
+
+	inline static void LocalPrintA(const PlatformTypes::ANSICHAR* Message)
+	{
+		OutputDebugStringA(Message);
+	}
+
+
+	inline static bool IsDebuggerPresent()
+	{
+		return ::IsDebuggerPresent();
+	}
+
+
+	inline static void DebugBreak()
+	{
+		//if (MessageBox(0, TEXT("Got error or assertion failed. Hit Yes to start Debug Break"), TEXT("Debug Break In"), MB_YESNO | MB_SYSTEMMODAL) == IDYES)
+		//{
+			::DebugBreak();
+		//}
+	}
+
+	inline static void GetCurrentDirW(PlatformTypes::WIDECHAR* OutDir, PlatformTypes::uint32 DestSize)
+	{
+		::GetCurrentDirectoryW(DestSize, OutDir);
+	}
+
+	inline static void GetCurrentDirA(PlatformTypes::ANSICHAR* OutDir, PlatformTypes::uint32 DestSize)
+	{
+		::GetCurrentDirectoryA(DestSize, OutDir);
+	}
 
 };
 

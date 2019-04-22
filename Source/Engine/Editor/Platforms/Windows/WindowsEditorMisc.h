@@ -2,7 +2,7 @@
 
 #include "Global/GlobalType.h"
 #include "Global/Utilities/DynamicArray.h" 
-#include "HAL/Platforms/Windows/WindowsPlatform.h"
+#include "HAL/Platform.h"
 #include "Editor/Platforms/PlatformEditor.h"
 #include <memory>
 

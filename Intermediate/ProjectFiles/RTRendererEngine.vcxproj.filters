@@ -82,6 +82,15 @@
     <Filter Include="Source\Engine\Editor\Platforms\Mac">
       <UniqueIdentifier>{2ad12020-5fa3-4113-a975-a5190ae5482a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Engine\Log">
+      <UniqueIdentifier>{f9a64564-6586-48f3-9b56-99b62617e761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Log\_Internals">
+      <UniqueIdentifier>{94ab1a99-0795-4715-bc4f-63333c436b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\HAL\File">
+      <UniqueIdentifier>{6fe85449-18e1-4ce9-99c8-0023708b58a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h">
@@ -186,6 +195,33 @@
     <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsMessage.h">
       <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Assertion.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\Logger.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LoggerFile.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Serializer.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\File\FileManage.h">
+      <Filter>Source\Engine\HAL\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\File\FileHandle.h">
+      <Filter>Source\Engine\HAL\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\File\Path.h">
+      <Filter>Source\Engine\HAL\File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
@@ -235,6 +271,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\PlatformEditor.cpp">
       <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Global\_Internals\Assertion.cpp">
+      <Filter>Source\Engine\Global\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\Logger.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LoggerFile.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

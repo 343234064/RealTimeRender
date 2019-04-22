@@ -5,7 +5,7 @@ String
 *****************************************/
 #pragma once
 
-
+#include "Global/Utilities/Assertion.h"
 #include "Global/Utilities/DynamicArray.h"
 #include "Global/Utilities/Misc.h"
 #include "HAL/Chars.h"
@@ -164,6 +164,9 @@ public:
 
 	FORCE_INLINE
 	bool IsClear() const { return Strings.CurrentNum() <= 1; }
+
+	FORCE_INLINE
+	uint32 SizePerElement() const { return Strings.TypeSize(); }
 
 	//Clear the string and allocation
 	FORCE_INLINE
@@ -542,6 +545,8 @@ public:
 	FORCE_INLINE
 	String Range(int32 StartIndex, int32 EndIndex)
 	{
+		if (EndIndex <= 0) EndIndex = Len();
+
 		int32 Length = Len();
 		StartIndex = Clamp(StartIndex, 0, Length);
 		EndIndex = Clamp(EndIndex, StartIndex, Length);
@@ -629,6 +634,74 @@ public:
 	int32 FindBySelector(const std::function<bool(const TChar&)>& Selector)
 	{
 		return Strings.FindBySelector(Selector);
+	}
+
+	//Return the replaced char number
+	int32 Replace(const TChar* Search, const TChar* Replacement)
+	{
+		int32 ReplaceNum = 0;
+
+		if (Len() > 0)
+		{
+			CHECK( (Search != nullptr) && (Replacement != nullptr) );
+			if (PlatformChars::Strcmp(Search, Replacement) == 0) return 0;
+
+			//Not ignore case
+			TChar* Address = (TChar*)PlatformChars::Strstr(Strings.Begin(), Search);
+			if (Address == nullptr) return 0;
+
+			const int32 SearchLen = (int32)PlatformChars::Strlen(Search);
+			const int32 ReplacementLen = (int32)PlatformChars::Strlen(Search);
+
+			if (SearchLen == ReplacementLen)
+			{
+				while (Address != nullptr)
+				{
+					ReplaceNum++;
+
+					//Replace
+					for (int32 i = 0; i < SearchLen; i++)
+					{
+						Address[i] = Replacement[i];
+					}
+
+					if (Address + SearchLen - Strings.Begin() < Len())
+						Address = (TChar*)PlatformChars::Strstr(Address + SearchLen, Search);
+					else
+						break;
+				}
+			}
+			else
+			{
+				//Make a copy and rebuild the string during replacement to advoid making the code too messy
+				String Copy(*this);
+				Clear();
+
+				TChar* CopyAdr = *Copy;
+				TChar* ReplaceAdr = *Copy + (Address - Strings.Begin());
+
+				while (ReplaceAdr != nullptr)
+				{
+					ReplaceNum++;
+
+					*ReplaceAdr = 0;  
+					(*this) += CopyAdr;//Added 0 behind, so += will stop at ReplaceAdr
+					(*this) += Replacement; //Replace
+
+					*ReplaceAdr = *Search;
+
+					CopyAdr = ReplaceAdr + SearchLen;
+					ReplaceAdr = (TChar*)PlatformChars::Strstr(CopyAdr, Search);
+
+				}
+
+				(*this) += CopyAdr;
+				
+			}
+
+		}
+
+		return ReplaceNum;
 	}
 
 

@@ -206,7 +206,6 @@ void Editor::Show()
 	{
 		PlatformEditorCore->ShowWindow(0);
 		PlatformEditorCore->FocusWindow(0);
-
 	}
 }
 
