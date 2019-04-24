@@ -416,7 +416,7 @@ struct IsEnumConvertibleToInt
 	static char(&Resolve(int))[2]; 
 	static char Resolve(...);
 
-	enum { Value = sizeof(Resolve(T())) - 1 };
+	enum { Value = sizeof(Resolve(Type())) - 1 };
 };
 
 template <typename Type>

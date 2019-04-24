@@ -22,7 +22,7 @@ public:
 
 
 	//Needed to be implement by concrete class
-	virtual void Serialize(void* Data, uint64 Length) {} //In bytes
+	virtual void Serialize(void* Data, int64 Length) {} //In bytes
 	
 	FORCE_INLINE
 	virtual void SerializeByteOrder(void* Data, uint32 Length)
@@ -38,12 +38,12 @@ public:
 
 	virtual int64 Size() { return 0; }
 	virtual int64 Pos() { return -1; }
-	virtual bool  End() { Pos() >= Size(); }
+	virtual bool  End() { return Pos() >= Size(); }
 	virtual void  Seek(int64 Pos) {}
-	
+	virtual void  Close() {}
 
 
-	virtual String GetArchiveName() const
+	virtual String GetSerializerName() const
 	{
 		return TEXTS("Serializer");
 	}
@@ -149,7 +149,7 @@ public:
     typename FuncTrigger< IsEnumClassType<EnumType>::Value, Serializer& > ::Type
 	operator<<(Serializer& In, EnumType& Data)
 	{
-		return In << (std::underlying_type<EnumType>::type &)Data;
+		return In << static_cast<typename std::underlying_type<EnumType>::type &> (Data);
 	}
 
 

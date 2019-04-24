@@ -23,20 +23,52 @@ File manager
 #endif
 
 
-
+//Cache buffer size need to be power of 2
 #ifndef FILE_WRITER_CACHEBUFFER_SIZE
 #define FILE_WRITER_CACHEBUFFER_SIZE 4096
 #endif
+#ifndef FILE_READER_CACHEBUFFER_SIZE
+#define FILE_READER_CACHEBUFFER_SIZE 4096
+#endif
+
+
+enum FileFlag
+{
+	//Read mode, opened when the file exists
+	READ = 0x01,
+
+	//Write mode
+	WRITE = 0x02,
+
+	//Do not overwrite the file in write mode when the file exists
+	APPEND = 0x04, 
+
+	//Async read mode
+	READASYNC = 0x08
+
+};
 
 
 
-class FileWriter : public Serializer
+
+struct FileMisc
+{
+	static Serializer* CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_WRITER_CACHEBUFFER_SIZE);
+	static Serializer* CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_READER_CACHEBUFFER_SIZE);
+
+};
+
+
+
+
+
+class FileReadSerializer : public Serializer
 {
 public:
-	FileWriter(const TChar* FileName, int64 Position, uint32 CacheBufferSize = FILE_WRITER_CACHEBUFFER_SIZE):
-		FileName(FileName),
-		Position(Position),
-		BufferCount(0),
+	FileReadSerializer(FileHandle* Filehandle, uint32 CacheBufferSize = FILE_READER_CACHEBUFFER_SIZE) :
+		HandlePtr(Filehandle),
+		CacheDataPos(0),
+		CacheSize(0),
 		BufferSize(CacheBufferSize),
 		BufferPtr(nullptr)
 	{
@@ -44,7 +76,7 @@ public:
 		CHECK(BufferPtr != nullptr);
 	}
 
-	~FileWriter()
+	~FileReadSerializer()
 	{
 		Close();
 		if (BufferPtr != nullptr)
@@ -54,28 +86,113 @@ public:
 	}
 
 
-	void Serialize(void* Data, uint64 Length) override;
+	void Serialize(void* Data, int64 Length) override;
 
-	void Close();
-	void Flush() override;
-	int64 Size() override;
-	int64 Pos() override { return Position; }
-	void  Seek(int64 Pos) override;
+	void Close() override { HandlePtr.reset(); }
+	int64 Size() override { return HandlePtr->Size(); }
+	int64 Pos() override { return HandlePtr->Pos(); }
+	
+	void  Seek(int64 Pos) override 
+	{ 
+		HandlePtr->Seek(Pos);
+
+		CacheDataPos = Pos;
+		CacheSize = 0;
+	}
 
 
-	String GetArchiveName() const override
+	String GetSerializerName() const override
 	{
-		return FileName;
-	} 
+		return HandlePtr->GetFileName();
+	}
 
 
 protected:
-	String FileName;
-	int64  Position;
+	bool PreCache(int64& CurrentFilePos, int64& CurrentFileSize, int64& PreCacheStartPos);
 
-	uint64  BufferCount;
-	uint32  BufferSize;
-	uint8*  BufferPtr;
+
+protected:
+	UniPTRFileHandle HandlePtr;
 	
+	//Pre-cached buffer
+	int64  CacheDataPos; //The pos of cached data in file 
+	int64  CacheSize; //Cached data size
+	uint32  BufferSize; //Total buffer size
+	uint8*  BufferPtr;
+
+};
+
+
+
+class FileWriteSerializer : public Serializer
+{
+public:
+	FileWriteSerializer(FileHandle* Filehandle, uint32 CacheBufferSize = FILE_WRITER_CACHEBUFFER_SIZE):
+		HandlePtr(Filehandle),
+		CacheDataPos(0),
+		CacheSize(0),
+		BufferSize(CacheBufferSize),
+		BufferPtr(nullptr),
+		GetLogError(false)
+	{
+		BufferPtr = new uint8[BufferSize];
+		CHECK(BufferPtr != nullptr);
+	}
+
+	~FileWriteSerializer()
+	{
+		Close();
+		if (BufferPtr != nullptr)
+		{
+			delete BufferPtr;
+		}
+	}
+
+
+	void Serialize(void* Data, int64 Length) override;
+
+	void Close() override { Flush(); HandlePtr.reset(); }
+	int64 Size() override { Flush(); return HandlePtr->Size(); }
+	int64 Pos() override { return HandlePtr->Pos(); }
+
+
+	void Flush() override;
+
+	void  Seek(int64 Pos) override
+	{
+		Flush();
+		HandlePtr->Seek(Pos);
+	}
+
+
+	String GetSerializerName() const override
+	{
+		return HandlePtr->GetFileName();
+	} 
+
+protected:
+	//LOG macro will call FileWriteSerializer->Serialize() to log to file
+	//Guarded Log prevent logging causes another log error which will lead to a stack overflow
+	void GuardedLog(const TChar* Message)
+	{
+		if (!GetLogError)
+		{
+			GetLogError = true;
+			//log
+			GetLogError = false;
+		}
+
+	}
+
+
+protected:
+	UniPTRFileHandle HandlePtr;
+
+	//Pre-cached buffer
+	int64  CacheDataPos; //The pos of cached data in file 
+	int64  CacheSize; //Cached data size
+	uint32  BufferSize; //Total buffer size
+	uint8*  BufferPtr;
+	bool GetLogError;
 };
 

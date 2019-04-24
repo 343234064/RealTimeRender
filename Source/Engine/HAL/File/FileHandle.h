@@ -8,6 +8,17 @@ File handle for platforms
 #include "Global/GlobalConfigs.h"
 #include "Global/GlobalType.h"
 
+#include <memory>
+
+
+enum class AccessType
+{
+	//This file handle mainly used for FileReader
+	FOR_READ = 0,
+
+	//This file handle mainly used for FileWriter
+	FOR_WRITE = 1
+};
 
 
 class FileHandle
@@ -23,13 +34,13 @@ public:
 	virtual bool  Read(uint8* Dest, int64 BytesToRead) = 0;
 	virtual bool  Write(const uint8* Src, int64 BytesToWrite) = 0;
 	virtual void  Flush() {}
-	virtual int64 Size();
-
+	virtual int64 Size() = 0;
+	virtual String GetFileName() const = 0;
 
 
 };
 
-
+typedef std::unique_ptr<FileHandle> UniPTRFileHandle;
 
 
 

@@ -281,6 +281,9 @@
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LoggerFile.cpp">
       <Filter>Source\Engine\Log\_Internals</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\FileManage.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -74,6 +74,7 @@
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocJemalloc.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocatorInterface.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\FileManage.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\MemoryInterface.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsMemory.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp" />

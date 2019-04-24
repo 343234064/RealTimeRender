@@ -13,11 +13,12 @@ File handle for Windows
 
 
 
-
+//Do not add LOG macro here
 class WindowsFileHandle : public FileHandle
 {
 public:
-	WindowsFileHandle(HANDLE Handle = NULL):
+	WindowsFileHandle(const TChar* Filename, HANDLE Handle = NULL):
+        FileName(Filename),
 		FileHandle(Handle),
 		FilePos(0),
 		FileSize(0)
@@ -51,8 +52,9 @@ public:
 	bool  Seek(int64 Position) override 
 	{ 
 		CHECK(IsInit());  
-		CHECK(Position >= 0 && Position <= FileSize);
+		CHECKF(Position >= 0 && Position <= FileSize, "Attempted to seek to a invalid location (%lld/%lld), file: %s.", Position, FileSize, *FileName);
 
+		//FilePos = Clamp(Position, 0ll, FileSize);
 		FilePos = Position;
 
 		ULARGE_INTEGER Int;
@@ -74,7 +76,7 @@ public:
 		CHECK(IsInit());
 		uint32 ReadCount = 0;
 
-		if (!::ReadFile(FileHandle, Dest, BytesToRead, (DWORD*)&ReadCount, &Overlapped))
+		if (!::ReadFile(FileHandle, Dest, (DWORD)BytesToRead, (DWORD*)&ReadCount, &Overlapped))
 		{
 			if (::GetLastError() != ERROR_IO_PENDING)
 				return false;
@@ -102,7 +104,7 @@ public:
 		CHECK(IsInit());
 		uint32 WriteCount = 0;
 
-		if (!::WriteFile(FileHandle, Src, BytesToWrite, (DWORD*)&WriteCount, NULL))
+		if (!::WriteFile(FileHandle, Src, (DWORD)BytesToWrite, (DWORD*)&WriteCount, NULL))
 		{
 			if (::GetLastError() != ERROR_IO_PENDING)
 				return false;
@@ -129,9 +131,11 @@ public:
 
 	void Flush() override {}
 	
-
+	FORCE_INLINE
+	String GetFileName() const override { return FileName; }
 
 protected:
+	String FileName;
 	HANDLE FileHandle;
 	OVERLAPPED Overlapped; //This only makes sense when FileHandle is created with FILE_FLAG_OVERLAPPED
 	int64 FilePos;
@@ -146,41 +150,50 @@ struct WindowsFile
 {
 public:
 	//Synchronous I/O 
-	static FileHandle* Open(const TChar* FileName, bool AllowWrite = true, bool AllowRead = true, bool OverWriteIfExist = false)
+	static FileHandle* Open(const TChar* FileName, AccessType Type, bool ShareWrite, bool ShareRead, bool OverWriteIfExist = false)
 	{
-		uint32 Access = (AllowWrite ? GENERIC_WRITE : 0) | (AllowRead ? GENERIC_READ : 0);
-		uint32 ShareMode = (AllowWrite ? FILE_SHARE_WRITE : 0) | (AllowRead ? FILE_SHARE_READ : 0);
-		uint32 CreationFlags = 0;
-
-		if (AllowRead && !AllowWrite)
-			CreationFlags = OPEN_EXISTING; //Opens a file or device, only if it exists
+		uint32 Access = (Type == AccessType::FOR_WRITE) ? GENERIC_WRITE : GENERIC_READ;
+		
+		uint32 ShareMode = 0;
+		if(Type == AccessType::FOR_WRITE)
+			ShareMode = FILE_SHARE_WRITE | (ShareRead ? FILE_SHARE_READ : 0);
 		else 
-			CreationFlags = OverWriteIfExist ? 
-			                CREATE_ALWAYS : //Creates a new file, always.  If the specified file exists and is writable, the function overwrites the file
-			                OPEN_ALWAYS; //Opens a file, always. If the specified file does not exist and is a valid path to a writable location, the function creates a file
+			ShareMode = FILE_SHARE_READ | (ShareWrite ? FILE_SHARE_WRITE : 0);
 
+		uint32 CreationFlags = 0;
+		if (Type == AccessType::FOR_WRITE)
+		{
+			CreationFlags = OverWriteIfExist ?
+				CREATE_ALWAYS : //Creates a new file, always.  If the specified file exists and is writable, the function overwrites the file
+				OPEN_ALWAYS; //Opens a file, always. If the specified file does not exist and is a valid path to a writable location, the function creates a file
+		}
+		else
+		{
+			CreationFlags = OPEN_EXISTING; //Opens a file or device, only if it exists
+		}
+		
 	
 		HANDLE Handle = CreateFileW(*Path::NormalizeFilePath(FileName), Access, ShareMode, NULL, CreationFlags, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (Handle != INVALID_HANDLE_VALUE)
 		{
-			return new WindowsFileHandle(Handle);
+			return new WindowsFileHandle(FileName, Handle);
 		}
 
 		return nullptr;
 	}
 
 	
-	static FileHandle* OpenReadAsync(const TChar* FileName, bool AllowWrite = false)
+	static FileHandle* OpenReadAsync(const TChar* FileName, bool ShareWrite = false)
 	{
 		uint32 Access = GENERIC_READ;
-		uint32 ShareMode = (AllowWrite ? FILE_SHARE_WRITE : 0) |  FILE_SHARE_READ ;
+		uint32 ShareMode = (ShareWrite ? FILE_SHARE_WRITE : 0) |  FILE_SHARE_READ ;
 		uint32 CreationFlags = OPEN_EXISTING;
 
 
 		HANDLE Handle = CreateFileW(*Path::NormalizeFilePath(FileName), Access, ShareMode, NULL, CreationFlags, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
 		if (Handle != INVALID_HANDLE_VALUE)
 		{
-			return new WindowsFileHandle(Handle);
+			return new WindowsFileHandle(FileName, Handle);
 		}
 
 		return nullptr;
