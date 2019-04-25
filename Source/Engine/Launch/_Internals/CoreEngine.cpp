@@ -1,8 +1,8 @@
 #include "Launch/CoreEngine.h"
 #include "Global/EngineVariables.h"
 #include "Editor/Editor.h"
-#include "HAL/Memory.h"
-#include "HAL/Thread.h"
+#include "HAL/Memory/Memory.h"
+#include "HAL/Thread/Thread.h"
 #include "HAL/Time.h"
 
 

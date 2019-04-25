@@ -12,10 +12,13 @@
   Atomic Counter
   Int32
 */
+template <typename Type>
 class AtomicCounter
 {
+	static_assert(IsIntegralType<Type>::Value, "None integral type is not allowed");
+
 public:
-	AtomicCounter(int32 InitValue = 0): Counter(InitValue) {}
+	AtomicCounter(Type InitValue = 0): Counter(InitValue) {}
 	AtomicCounter(const AtomicCounter& other)
 	{
 		Counter = other.GetCounter();
@@ -23,14 +26,22 @@ public:
 
 	~AtomicCounter() {}
 
+	AtomicCounter(AtomicCounter&&) = delete;
+	AtomicCounter& operator=(const AtomicCounter& Other) = delete;
+	AtomicCounter& operator=(AtomicCounter&&) = delete;
 
-	int32 GetCounter() const
+	Type operator=(Type Val)
+	{
+		return PlatformAtomics::InterlockedExchange(&Counter, Val);
+	}
+
+	Type GetCounter() const
 	{
 		return PlatformAtomics::InterlockedRead(&const_cast<AtomicCounter*>(this)->Counter);
 	}
 
 
-	void SetCounter(int32 Val)
+	void SetCounter(Type Val)
 	{
 		PlatformAtomics::InterlockedStore(&Counter, Val);
 	}
@@ -42,34 +53,34 @@ public:
 	}
 
 
-	int32 Increment()
+	Type Increment()
 	{
 		return PlatformAtomics::InterlockedIncrement(&Counter);
 	}
 
 
-	int32 Add(int32 AddValue)
+	Type Add(Type AddValue)
 	{
 		return PlatformAtomics::InterlockedAdd(&Counter, AddValue);
 	}
 
 
-	int32 Decrement()
+	Type Decrement()
 	{
 		return PlatformAtomics::InterlockedDecrement(&Counter);
 	}
 
 
-	int32 Sub(int32 SubValue)
+	Type Sub(Type SubValue)
 	{
 		return PlatformAtomics::InterlockedAdd(&Counter, -SubValue);
 	}
 
-	AtomicCounter& operator=(const AtomicCounter& Other) = delete;
+
 
 
 protected:
-	volatile int32 Counter;
+	volatile Type Counter;
 };
 
 

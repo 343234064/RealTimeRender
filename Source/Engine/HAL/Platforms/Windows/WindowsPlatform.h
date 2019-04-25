@@ -238,9 +238,9 @@ struct Platform
 	inline static void MemoryRWBarrier() { _mm_mfence(); }
 
 
-	inline static void RequestExit(bool ForceExit);
+	static void RequestExit(bool ForceExit);
 
-	inline static PlatformTypes::int32 ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo);
+	static PlatformTypes::int32 ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo);
 
 
 	inline static PlatformTypes::int32 GetCurrentThreadId()

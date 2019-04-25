@@ -42,20 +42,22 @@
     <ClInclude Include="..\..\Source\Engine\HAL\File\FileHandle.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\File\FileManage.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\File\Path.h" />
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocatorInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocDefault.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocIntelTBB.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocJemalloc.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocThreadSafeDecorator.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Memory\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\MemoryInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platform.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h" />
-    <ClInclude Include="..\..\Source\Engine\HAL\Thread.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread\Thread.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread\ThreadBase.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h" />
@@ -76,17 +78,16 @@
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocatorInterface.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\FileManage.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\MemoryInterface.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\ThreadBase.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsMemory.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsThread.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsTime.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\CoreEngine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\WindowsLaunch.cpp" />
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\Logger.cpp" />
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LoggerFile.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

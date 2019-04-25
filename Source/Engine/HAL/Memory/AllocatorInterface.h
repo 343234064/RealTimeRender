@@ -69,9 +69,9 @@ protected:
 	void TotalFreeCount() { TotalFreeCalls.Increment(); }
 
 protected:
-	static AtomicCounter TotalMallocCalls;
-	static AtomicCounter TotalReallocCalls;
-	static AtomicCounter TotalFreeCalls;
+	static AtomicCounter<int32> TotalMallocCalls;
+	static AtomicCounter<int32> TotalReallocCalls;
+	static AtomicCounter<int32> TotalFreeCalls;
 
 };
 

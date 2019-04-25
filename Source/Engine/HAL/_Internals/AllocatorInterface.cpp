@@ -1,11 +1,11 @@
 
 #include "HAL/Memory/AllocatorInterface.h"
-#include "HAL/Memory.h"
+#include "HAL/Memory/Memory.h"
 
 
-AtomicCounter MallocInterface::TotalMallocCalls(0);
-AtomicCounter MallocInterface::TotalReallocCalls(0);
-AtomicCounter MallocInterface::TotalFreeCalls(0);
+AtomicCounter<int32> MallocInterface::TotalMallocCalls(0);
+AtomicCounter<int32> MallocInterface::TotalReallocCalls(0);
+AtomicCounter<int32> MallocInterface::TotalFreeCalls(0);
 
 
 

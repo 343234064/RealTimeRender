@@ -8,7 +8,7 @@
 #include "Global/GlobalConfigs.h"
 #include "Global/GlobalType.h"
 #include "Global/Utilities/ContainerAllocator.h"
-#include "HAL/Memory.h"
+#include "HAL/Memory/Memory.h"
 
 
 /**

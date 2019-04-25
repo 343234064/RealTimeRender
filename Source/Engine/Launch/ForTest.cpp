@@ -14,7 +14,7 @@
 #include "HAL/Memory/AllocJemalloc.h"
 #include "HAL/Memory/AllocDefault.h"
 #include "HAL/Memory/AllocThreadSafeDecorator.h"
-#include "HAL/Memory.h"
+#include "HAL/Memory/Memory.h"
 #include "Global/Utilities/String.h"
 #include "HAL/Chars.h"
 #include "HAL/Time.h"

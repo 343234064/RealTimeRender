@@ -137,6 +137,27 @@ template<typename Type> struct IsReferenceType<Type&&> { enum { Value = true }; 
 
 
 
+/**************************
+Helper template to test if
+the type is trivial type
+****************************/
+template <typename Type>
+struct IsTrivialType
+{
+	enum { Value = std::is_trivial<Type>::value };
+};
+
+/**************************
+Helper template to test if
+the type is integral type
+****************************/
+template <typename Type>
+struct IsIntegralType
+{
+	enum { Value = std::is_integral<Type>::value };
+};
+
+
 /***************************
 Helper template to test if
 Type B can be memcopyed in order to get an instance of Type A, rather than using a constructor

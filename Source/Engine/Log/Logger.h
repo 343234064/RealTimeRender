@@ -8,6 +8,8 @@ Logger base interface
 #include "Global/GlobalType.h"
 #include "Global/Utilities/String.h"
 
+
+
 enum LogVerbosity : uint8
 {
 	None = 0,

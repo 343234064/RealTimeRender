@@ -91,13 +91,13 @@
     <Filter Include="Source\Engine\HAL\File">
       <UniqueIdentifier>{6fe85449-18e1-4ce9-99c8-0023708b58a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Engine\HAL\Thread">
+      <UniqueIdentifier>{b1a2c943-c5c3-4e81-825c-7cb445644702}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory.h">
-      <Filter>Source\Engine\HAL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
@@ -155,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h">
       <Filter>Source\Engine\Launch</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Thread.h">
-      <Filter>Source\Engine\HAL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
@@ -222,6 +219,18 @@
     <ClInclude Include="..\..\Source\Engine\HAL\File\Path.h">
       <Filter>Source\Engine\HAL\File</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread\ThreadBase.h">
+      <Filter>Source\Engine\HAL\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread\Thread.h">
+      <Filter>Source\Engine\HAL\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Memory\Memory.h">
+      <Filter>Source\Engine\HAL\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
@@ -284,8 +293,11 @@
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\FileManage.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\ThreadBase.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsThread.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -34,14 +34,13 @@ public:
 
 	}
 
-	virtual void Flush() {}
 
 	virtual int64 Size() { return 0; }
 	virtual int64 Pos() { return -1; }
 	virtual bool  End() { return Pos() >= Size(); }
 	virtual void  Seek(int64 Pos) {}
 	virtual void  Close() {}
-
+	virtual void  Flush() {}
 
 	virtual String GetSerializerName() const
 	{
@@ -162,6 +161,7 @@ public:
 	}
 
 
+	
 	friend 
 	Serializer& operator<<(Serializer& In, String& Data)
 	{

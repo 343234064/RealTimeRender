@@ -1,7 +1,7 @@
 
 #include "HAL/Memory/MemoryInterface.h"
 #include "HAL/Memory/AllocThreadSafeDecorator.h"
-#include "HAL/Memory.h"
+#include "HAL/Memory/Memory.h"
 
 
 /*
