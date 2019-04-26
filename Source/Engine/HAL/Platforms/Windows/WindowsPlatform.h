@@ -272,6 +272,7 @@ struct Platform
 		return NumOfCores;
 	}
 
+	//Second = 0 will switch to thread
 	inline static void Sleep(float Seconds)
 	{
 		PlatformTypes::uint32 MicroSeconds = (PlatformTypes::uint32)(Seconds * 1000.0);
@@ -337,6 +338,7 @@ public:
 	static_assert(sizeof(PlatformTypes::int16) == sizeof(signed short) && alignof(PlatformTypes::int16) == alignof(signed short), "size of int16 should be 16 bits, same as short type");
 	//long will be 32 bits in windows using visual studio(IL32P64) 
 	static_assert(sizeof(PlatformTypes::int32) == sizeof(long) && alignof(PlatformTypes::int32) == alignof(long), "size of int32 should be 32 bits, same as long type(WINDOWS)");
+	static_assert(sizeof(PlatformTypes::int64) == sizeof(long long) && alignof(PlatformTypes::int64) == alignof(long long), "size of int64 should be 64 bits, same as long type");
 
 	/**
 	  return the INITIAL value of Val
@@ -364,6 +366,16 @@ public:
 	}
 
 	/**
+       return the INITIAL value of Val
+    */
+	FORCE_INLINE
+	static PlatformTypes::int64 InterlockedIncrement(volatile PlatformTypes::int64* Val)
+	{
+		return (PlatformTypes::int64)_InterlockedIncrement64((long long*)Val);
+	}
+
+
+	/**
 	  return the INITIAL value of Val
 	*/
 	FORCE_INLINE
@@ -386,6 +398,15 @@ public:
 	static PlatformTypes::int32 InterlockedDecrement(volatile PlatformTypes::int32* Val)
 	{
 		return (PlatformTypes::int32)_InterlockedDecrement((long*)Val);
+	}
+
+	/**
+	  return the INITIAL value of Val
+	*/
+	FORCE_INLINE
+		static PlatformTypes::int64 InterlockedDecrement(volatile PlatformTypes::int64* Val)
+	{
+		return (PlatformTypes::int64)_InterlockedDecrement64((long long*)Val);
 	}
 
 
@@ -413,10 +434,18 @@ public:
 	{
 		return (PlatformTypes::int32)_InterlockedExchangeAdd((long*)Val, (long)Add);
 	}
+	/**
+	  return the FINAL value of Val
+	*/
+	FORCE_INLINE
+	static PlatformTypes::int64 InterlockedAdd(volatile PlatformTypes::int64* Val, PlatformTypes::int64 Add)
+	{
+		return (PlatformTypes::int64)_InterlockedExchangeAdd64((long long*)Val, (long long)Add);
+	}
 
 
 	/**
-	  return the FINAL value of Val
+	  return the INITIAL value of Val
 	*/
 	FORCE_INLINE
 	static PlatformTypes::int8 InterlockedExchange(volatile PlatformTypes::int8* Val, PlatformTypes::int8 Exchange)
@@ -424,7 +453,7 @@ public:
 		return (PlatformTypes::int8)_InterlockedExchange8((char*)Val, (char)Exchange);
 	}
 	/**
-	  return the FINAL value of Val
+	  return the INITIAL value of Val
 	*/
 	FORCE_INLINE
 	static PlatformTypes::int16 InterlockedExchange(volatile PlatformTypes::int16* Val, PlatformTypes::int16 Exchange)
@@ -432,12 +461,26 @@ public:
 		return (PlatformTypes::int16)_InterlockedExchange16((short*)Val, (short)Exchange);
 	}
 	/**
-	  return the FINAL value of Val
+	  return the INITIAL value of Val
 	*/
 	FORCE_INLINE
 	static PlatformTypes::int32 InterlockedExchange(volatile PlatformTypes::int32* Val, PlatformTypes::int32 Exchange)
 	{
 		return (PlatformTypes::int32)_InterlockedExchange((long*)Val, (long)Exchange);
+	}
+	/**
+	  return the INITIAL value of Val
+	*/
+	FORCE_INLINE
+	static PlatformTypes::int64 InterlockedExchange(volatile PlatformTypes::int64* Val, PlatformTypes::int64 Exchange)
+	{
+		return (PlatformTypes::int64)_InterlockedExchange64((long long*)Val, (long long)Exchange);
+	}
+	
+	FORCE_INLINE
+	static void* InterlockedExchangePtr(void** Dest, void* Exchange)
+	{
+		return (void*)_InterlockedExchange64((long long*)Dest, (long long)Exchange);
 	}
 
 
@@ -465,6 +508,21 @@ public:
 	{
 		return (PlatformTypes::int32)_InterlockedCompareExchange((long*)Dest, (long)Exchange, (long)Comparend);
 	}
+	/**
+	  return the INITIAL value of Dest
+	*/
+	FORCE_INLINE
+	static PlatformTypes::int64 InterlockedCompareExchange(volatile PlatformTypes::int64* Dest, PlatformTypes::int64 Exchange, PlatformTypes::int64 Comparend)
+	{
+		return (PlatformTypes::int64)_InterlockedCompareExchange64((long long*)Dest, (long long)Exchange, (long long)Comparend);
+	}
+
+	FORCE_INLINE
+	static void* InterlockedCompareExchangePtr(void** Dest, void* Exchange, void* Comparend)
+	{
+		return (void*)_InterlockedCompareExchange64((long long*)Dest, (long long)Exchange, (long long)Comparend);
+	}
+
 
 
 	FORCE_INLINE
@@ -486,6 +544,13 @@ public:
 	}
 
 	FORCE_INLINE
+	static PlatformTypes::int64 InterlockedRead(volatile const PlatformTypes::int64* Src)
+	{
+		return (PlatformTypes::int64)_InterlockedCompareExchange64((long long*)Src, 0, 0);
+	}
+
+
+	FORCE_INLINE
 	static void InterlockedStore(volatile PlatformTypes::int8* Dest, PlatformTypes::int8 Val)
 	{
 		_InterlockedExchange8((char*)Dest, (char)Val);
@@ -502,6 +567,15 @@ public:
 	{
 		_InterlockedExchange((long*)Dest, (long)Val);
 	}
+
+	FORCE_INLINE
+	static void InterlockedStore(volatile PlatformTypes::int64* Dest, PlatformTypes::int64 Val)
+	{
+		_InterlockedExchange64((long long*)Dest, (long long)Val);
+	}
+
+
+
 };
 
 typedef WindowsAtomics          PlatformAtomics;

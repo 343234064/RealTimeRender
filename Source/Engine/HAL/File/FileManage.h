@@ -51,7 +51,7 @@ enum FileFlag
 
 
 
-struct FileMisc
+struct FileManage
 {
 	static Serializer* CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_WRITER_CACHEBUFFER_SIZE);
 	static Serializer* CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_READER_CACHEBUFFER_SIZE);

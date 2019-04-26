@@ -32,7 +32,8 @@ public:
 
 	Type operator=(Type Val)
 	{
-		return PlatformAtomics::InterlockedExchange(&Counter, Val);
+		PlatformAtomics::InterlockedExchange(&Counter, Val);
+		return GetCounter();
 	}
 
 	Type GetCounter() const

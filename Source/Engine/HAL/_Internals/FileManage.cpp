@@ -3,7 +3,7 @@
 
 
 
-Serializer* FileMisc::CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
+Serializer* FileManage::CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
 {
 	FileHandle* Handle = nullptr;
 	if (!!(Flag & FileFlag::READASYNC))
@@ -26,7 +26,7 @@ Serializer* FileMisc::CreateFileReader(const TChar* FileName, uint32 Flag, uint3
 
 
 
-Serializer* FileMisc::CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
+Serializer* FileManage::CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
 {
 
 	FileHandle* Handle = PlatformFile::Open(FileName, AccessType::FOR_WRITE, true, !!(Flag & FileFlag::READ), !!(Flag & FileFlag::APPEND));

@@ -50,7 +50,7 @@ public:
 	virtual void Serialize(LogVerbosity Verbosity, const TChar* Data) = 0;
 	virtual void Flush() {}
 	virtual void Shutdown() {}
-	virtual bool IsThreadSafe() const { return false; }
+
 
 	void Logf(LogVerbosity Verbosity, const TChar* Format, ...);
 	void Log(LogVerbosity Verbosity, const TChar* Data) { Serialize(Verbosity, Data); }
