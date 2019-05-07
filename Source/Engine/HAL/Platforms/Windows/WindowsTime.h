@@ -92,6 +92,14 @@ public:
 		MicroSec = SystemTime.wMilliseconds;
 	}
 
+	static TChar* SystemTimeToStr(TChar* Dest, int32 DestSize)
+	{
+		int32 Year, Month, Week, Day, Hour, Min, Sec, MicroSec;
+
+		WindowsTime::SystemTime(Year, Month, Week, Day, Hour, Min, Sec, MicroSec);
+		String::Snprintf(Dest, DestSize, TEXTS("%02d/%02d/%02d %02d:%02d:%02d.%02d"), Year, Month, Day, Hour, Min, Sec, MicroSec);
+		return Dest;
+	}
 
 	static void UTCTime(int32& Year, int32& Month, int32& Week, int32& Day, int32& Hour, int32& Min, int32& Sec, int32& MicroSec)
 	{
@@ -107,6 +115,16 @@ public:
 		Sec = SystemTime.wSecond;
 		MicroSec = SystemTime.wMilliseconds;
 	}
+
+	static TChar* UTCTimeToStr(TChar* Dest, int32 DestSize)
+	{
+		int32 Year, Month, Week, Day, Hour, Min, Sec, MicroSec;
+
+		WindowsTime::UTCTime(Year, Month, Week, Day, Hour, Min, Sec, MicroSec);
+		String::Snprintf(Dest, DestSize, TEXTS("%02d/%02d/%02d %02d:%02d:%02d.%02d"), Year, Month, Day, Hour, Min, Sec, MicroSec);
+		return Dest;
+	}
+
 
 	static void UpdateCPUTime();
 

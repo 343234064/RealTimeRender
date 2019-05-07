@@ -5,7 +5,6 @@
 #include "HAL/Platform.h"
 
 
-
 //==============================
 //Data types
 //==============================
@@ -33,7 +32,7 @@ typedef PlatformTypes::CHAR32   CHAR32;     //UTF-32, for UNICODE
 typedef CHAR16                  TChar;      //basic char type used in string
 #elif PLATFORM_TEXT_IS_CHAR32
 typedef CHAR32                  TChar;      //basic char type used in string
-#else PLATFORM_TEXT_IS_WCHAR
+#elif PLATFORM_TEXT_IS_WCHAR
 typedef WIDECHAR                TChar;      //basic char type used in string
 #endif
 

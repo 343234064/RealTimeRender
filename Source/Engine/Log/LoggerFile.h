@@ -68,14 +68,17 @@ class LoggerFile : public Logger
 {
 public:
 	LoggerFile(const TChar* OutputFileName = nullptr, bool AppendIfExist = true);
-	virtual ~LoggerFile();
+	virtual ~LoggerFile()
+	{
+		Shutdown();
+	}
 
 
 	void Serialize(LogVerbosity Verbosity, const TChar* Data) override;
 	
 	void Flush() override 
 	{
-		if(!WriterPtr)
+		if(WriterPtr)
 		   WriterPtr->Flush(); 
 	}
 
@@ -97,4 +100,6 @@ protected:
 	bool FileOpened;
 
 };
+
+extern LoggerFile* gLogFile;
 

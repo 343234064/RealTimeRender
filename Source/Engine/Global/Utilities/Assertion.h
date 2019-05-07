@@ -9,8 +9,6 @@ Debug assertions
 #include "Global/GlobalType.h"
 #include "Global/EngineVariables.h"
 #include "Global/Utilities/Misc.h"
-#include "HAL/Platform.h"
-#include "HAL/Chars.h"
 
 #define DESCRIPTION_LENGTH 1024
 #define PREFIX_LENGTH 512

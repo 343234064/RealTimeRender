@@ -2,6 +2,8 @@
 #include "HAL/Time.h"
 #include "Global/Utilities/Misc.h"
 
+#include <stdio.h>
+
 ThreadWriter::ThreadWriter(Serializer* FileSerializer):
 	FileSerializerPtr(FileSerializer),
 	WriterThreadPtr(nullptr),
@@ -15,8 +17,8 @@ ThreadWriter::ThreadWriter(Serializer* FileSerializer):
 {
 	RingBuffer.AddUninitialize(INIT_RINGBUFFER_SIZE);
 
-    ANSICHAR ThreadName[64];
-	std::sprintf(ThreadName, "ThreadWriter_%s", *(FileSerializerPtr->GetSerializerName()));
+    ANSICHAR ThreadName[16] = "ThreadLogWriter";
+    //sprintf_s(ThreadName, "ThreadWriter_%s", (ANSICHAR*)*(FileSerializerPtr->GetSerializerName()));
 
 	PlatformAtomics::InterlockedExchangePtr((void**)&WriterThreadPtr, PlatformThread::Create(this, ThreadName, 0, ThreadPriority::BelowNormal));
 	CHECK(WriterThreadPtr != nullptr);
@@ -175,6 +177,7 @@ void ThreadWriter::Serialize(void* Data, int64 Length)
 
 void ThreadWriter::Flush()
 {
+
 	LockGuard<PlatformCriticalSection> Lock(CriticalSection);
 	
 	//Call Flush() means there is a flush request and alos a write request
@@ -217,11 +220,6 @@ LoggerFile::LoggerFile(const TChar* OutputFileName, bool AppendIfExist):
 	}
 }
 
-
-LoggerFile::~LoggerFile()
-{
-	Shutdown();
-}
 
 
 
@@ -278,7 +276,56 @@ void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
 
 		if (WriterPtr)
 		{
-			//Serialize
+			//Adding prefix
+			const TChar* Terminal = LINE_TERMINATOR;
+			const int32 TimeLength = 50;
+
+			String ToWrite;
+			
+			TChar TimeString[TimeLength];
+			
+			switch (gLogTimeType)
+			{
+			case LogTime::Local:
+			{
+				PlatformTime::SystemTimeToStr(TimeString, TimeLength);
+				ToWrite = String::Sprintf(TEXTS("[%s][%3llu]"), TimeString, gFrameCounter % 1000);
+				break;
+			}
+			case LogTime::UTC:
+			{				
+				PlatformTime::UTCTimeToStr(TimeString, TimeLength);
+				ToWrite = String::Sprintf(TEXTS("[%s][%3llu]"), TimeString, gFrameCounter % 1000);
+				break;
+			}
+			case LogTime::SinceStart:
+			{
+				const double TimeSecond = PlatformTime::Time_Seconds() - gStartTime;
+				ToWrite = String::Sprintf(TEXTS("[%07.2f][%3llu]"), TimeSecond, gFrameCounter % 1000);
+				break;
+			}
+			default:
+				break;
+			}
+
+			switch (Verbosity)
+			{
+			case LogVerbosity::Error:
+				ToWrite += TEXTS("[ERROR]");break;
+			case LogVerbosity::Warning:
+				ToWrite += TEXTS("[WARNING]");break;
+			default:
+				break;
+			}
+
+			ToWrite += Data;
+			
+			if (AutoInsertLineTerminator)
+			{
+				ToWrite += Terminal;
+			}
+
+			WriterPtr->Serialize(*ToWrite, ToWrite.Len() * sizeof(TChar));
 		}
 		
 	}
@@ -296,14 +343,13 @@ bool LoggerFile::InitWriterThread()
 	uint32 FileFlag = FileFlag::READ | (AppendExist ? FileFlag::APPEND : 0);
 	Serializer* FileSerializer = nullptr;
 
-	FileManage::CreateFileWriter(FileName, FileFlag);
+	FileSerializer = FileManage::CreateFileWriter(FileName, FileFlag);
 
-	ThreadWriter* Writer = nullptr;
 	if (FileSerializer != nullptr)
 	{
 		FilePtr = FileSerializer;
-		Writer = new ThreadWriter(FilePtr);
+		WriterPtr = new ThreadWriter(FilePtr);
 	}
 
-	return !!Writer;
+	return !!WriterPtr;
 }

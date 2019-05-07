@@ -67,7 +67,7 @@ Enable log and assertion for debug
 /*************************
 Just for test 
 *************************/
-#define USE_FOR_TEST_CPP 1
+#define USE_FOR_TEST_CPP 0
 #
 #if _DEBUG
 #  if USE_FOR_TEST_CPP

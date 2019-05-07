@@ -7,8 +7,7 @@ Universal Variables
 
 #include "Global/GlobalType.h"
 #include "HAL/Chars.h"
-
-
+#include "Log/LogEnum.h"
 
 //==============================
 //Version
@@ -56,4 +55,19 @@ extern uint32 gMainThreadId;
 
 /*The time process started*/
 extern double gStartTime;
+
+/*The Total frame count*/
+//uint64 is big enough for counting(e.g. 1000fps will has a maximum to almost 6k years)
+extern uint64 gFrameCounter; 
+
+
+/*Log time type*/
+extern LogTime gLogTimeType;
+
+
+
+
+
+
+
 

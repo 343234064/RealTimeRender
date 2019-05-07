@@ -6,29 +6,9 @@ Logger base interface
 #pragma once
 
 #include "Global/GlobalType.h"
-#include "Global/Utilities/String.h"
+#include "Log/LogEnum.h"
 
 
-
-enum LogVerbosity : uint8
-{
-	None = 0,
-
-	//Prints error to screen and file
-	Error,
-
-	//Prints warning to screen and file
-	Warning,
-
-	//Prints message to screen
-	ToScreen,
-
-	//Prints message to file
-	ToFile,
-
-	//Prints message to screen and file
-	ToAll
-};
 
 
 
@@ -53,8 +33,7 @@ public:
 
 
 	void Logf(LogVerbosity Verbosity, const TChar* Format, ...);
-	void Log(LogVerbosity Verbosity, const TChar* Data) { Serialize(Verbosity, Data); }
-	void Log(LogVerbosity Verbosity, const String& Data) { Serialize(Verbosity, *Data); }
+    void Log(LogVerbosity Verbosity, const TChar* Data) { Serialize(Verbosity, Data); }
 
 	FORCE_INLINE
 	bool IsAutoInsertLineTerminator() { return AutoInsertLineTerminator; }

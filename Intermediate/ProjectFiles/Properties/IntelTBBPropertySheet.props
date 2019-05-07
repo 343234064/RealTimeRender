@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>G:\coding\RealTimeRenderer\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\include;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\coding\RealTimeRenderer\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\lib\vc14;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\lib\vc14;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

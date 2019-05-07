@@ -198,9 +198,6 @@
     <ClInclude Include="..\..\Source\Engine\Log\Logger.h">
       <Filter>Source\Engine\Log</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h">
-      <Filter>Source\Engine\Log</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Log\LoggerFile.h">
       <Filter>Source\Engine\Log</Filter>
     </ClInclude>
@@ -230,6 +227,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\Memory.h">
       <Filter>Source\Engine\HAL\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\CharConversion.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogEnum.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h">
+      <Filter>Source\Engine\Log</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -298,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsThread.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogMacros.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

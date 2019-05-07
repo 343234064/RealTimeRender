@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>G:\coding\RealTimeRenderer\Source\ThirdPartyLibraries\jemalloc-5.1.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\coding\RealTimeRenderer\Source\ThirdPartyLibraries\jemalloc-5.1.0\lib\win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Source\ThirdPartyLibraries\jemalloc-5.1.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Source\ThirdPartyLibraries\jemalloc-5.1.0\lib\win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

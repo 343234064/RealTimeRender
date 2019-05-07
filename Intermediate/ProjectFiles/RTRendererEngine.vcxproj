@@ -38,6 +38,7 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Misc.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\CountedPtr.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\CharConversion.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Chars.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\File\FileHandle.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\File\FileManage.h" />
@@ -61,6 +62,7 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogEnum.h" />
     <ClInclude Include="..\..\Source\Engine\Log\Logger.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LoggerFile.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h" />
@@ -88,6 +90,7 @@
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\WindowsLaunch.cpp" />
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\Logger.cpp" />
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LoggerFile.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogMacros.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -151,7 +154,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\..\Binaries\</OutDir>
     <IntDir>..\Debug\</IntDir>
-    <IncludePath>G:\coding\RealTimeRenderer\Source\Engine;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\Source\Engine;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath);</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\Binaries\</OutDir>

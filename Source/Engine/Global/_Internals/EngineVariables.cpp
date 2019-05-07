@@ -3,7 +3,7 @@
 #include "HAL/Time.h"
 #include "Launch/CoreEngine.h"
 #include "Editor/Editor.h"
-
+#include "Log/LoggerFile.h"
 
 
 /************************************
@@ -36,7 +36,12 @@ uint32 gMainThreadId = 0;
 /*The time started*/
 double gStartTime = PlatformTime::InitTime();
 
+/*The Total frame count*/
+uint64 gFrameCounter = 0;
 
+
+/*Log output time type*/
+LogTime gLogTimeType = LogTime::Local;
 
 
 /********Global instance************/
@@ -49,3 +54,7 @@ MallocInterface* gMallocator = nullptr;
 
 /*Global editor*/
 Editor* gEditor = nullptr;
+
+/*Global Logger*/
+LoggerFile* gLogFile = nullptr;
+

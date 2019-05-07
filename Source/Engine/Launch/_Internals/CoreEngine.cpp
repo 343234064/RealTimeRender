@@ -4,7 +4,8 @@
 #include "HAL/Memory/Memory.h"
 #include "HAL/Thread/Thread.h"
 #include "HAL/Time.h"
-
+#include "Log/LoggerFile.h"
+#include "Log/LogMacros.h"
 
 
 int32 CoreEngine::PreInit()
@@ -17,6 +18,11 @@ int32 CoreEngine::PreInit()
 	gIsMainThreadIdCached = true;
 	Platform::SetCurrentThreadAffinityMask(PlatformAffinity::GetMainThreadMask());
 
+	//Init log
+	gLogFile = new LoggerFile(TEXTS("Log.txt"), true);
+	CHECK(gLogFile != nullptr);
+
+	
 	//Set random seed
 
 	//Cache executable's dir
@@ -24,8 +30,8 @@ int32 CoreEngine::PreInit()
 
 	//load core module
 	
-	//Init log
-	//Init output device
+
+
 	//load ini file
 	//Init file manager
 
@@ -37,6 +43,7 @@ int32 CoreEngine::PreInit()
 	//load and compile shader
 	//start render thread
 	
+	LOG(LogVerbosity::ToFile, TEXTS("%s"), TEXTS("PreInit finished"));
 
 	return 0;
 }
@@ -78,13 +85,19 @@ void CoreEngine::Tick()
 	//tick RHI
 	gEditor->Tick();
 
-
+	gFrameCounter++;
 }
 
 
 void CoreEngine::Exit()
 {
-   //Flush all Loading things
+	//Flush all logs and Loading things
+	if (gLogFile)
+	{
+		delete gLogFile;
+		gLogFile = nullptr;
+	}
+
 
    //save engine config and ini file
    //broadcast OnExit()

@@ -20,7 +20,13 @@ Variable Arguments
    if(Result >= BufferCount) Result = -1; \
 } 
 
-
+#define CALL_FUNC_VARARGS(Func, ArgBehind) \
+{ \
+   va_list Args; \
+   va_start(Args, ArgBehind); \
+   Func; \
+   va_end(Args); \
+}
 
 
 

@@ -5,10 +5,11 @@ String
 *****************************************/
 #pragma once
 
-#include "Global/Utilities/Assertion.h"
 #include "Global/Utilities/DynamicArray.h"
 #include "Global/Utilities/Misc.h"
 #include "HAL/Chars.h"
+#include "Global/Utilities/Assertion.h"
+
 
 #define UNKOWN_CHAR '?'
 #define PRINTF_BUFFER_INIT_SIZE 512
@@ -643,6 +644,7 @@ public:
 
 		if (Len() > 0)
 		{
+
 			CHECK( (Search != nullptr) && (Replacement != nullptr) );
 			if (PlatformChars::Strcmp(Search, Replacement) == 0) return 0;
 

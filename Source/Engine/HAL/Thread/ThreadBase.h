@@ -58,7 +58,7 @@ public:
 	virtual bool Init() { return true; }
 
 	//Return exit code
-	virtual uint32 Run() {}
+	virtual uint32 Run() { return 0; }
 
 	virtual void Stop() {}
 	virtual void Exit() {}

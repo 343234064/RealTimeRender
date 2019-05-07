@@ -187,7 +187,9 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 #define PLATFORM_ALLOC_SUPPORT_JEM 1
 #define PLATFORM_ALLOC_USE_TBB 1
 #define PLATFORM_ALLOC_USE_JEM 0
-//Other 
+
+//Using wchar_t
+//wchar_t will be utf-16/2Bytes in windows
 #define PLATFORM_TEXT_IS_WCHAR 1
 
 

@@ -20,22 +20,25 @@
 
 //==============================
 //Macro configs
-//Be redefined by different platforms
+//Redefined by different platforms
 //==============================
 /*
-   Use wchar as TEXT type
+   Use wchar_t as TEXTS/TChar type
+   Coding type is depending on platforms
 */
 #ifndef PLATFORM_TEXT_IS_WCHAR
    #define PLATFORM_TEXT_IS_WCHAR 0
 #endif
 /*
-   Use char16_t as TEXT type
+   Use char16_t as TEXTS/TChar type
+   Coding type is UTF-16
 */
 #ifndef PLATFORM_TEXT_IS_CHAR16
    #define PLATFORM_TEXT_IS_CHAR16 0
 #endif
 /*
-   Use char32_t as TEXT type
+   Use char32_t as TEXTS/TChar type
+   Coding type is UTF-32
 */
 #ifndef PLATFORM_TEXT_IS_CHAR32
 #define PLATFORM_TEXT_IS_CHAR32 0

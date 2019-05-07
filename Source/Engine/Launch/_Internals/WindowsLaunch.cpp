@@ -137,7 +137,7 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		{
 			ReleaseNamedMutex();
 			Error = 1;
-			gIsGetError = true;
+			gIsGetCriticalError = true;
 			//log dump error
 			//flush log
 
