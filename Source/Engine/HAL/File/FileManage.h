@@ -34,11 +34,11 @@ File manager
 
 enum FileFlag
 {
-	//Read mode, opened when the file exists
-	READ = 0x01,
+	//Shared Read mode
+	SHARED_READ = 0x01,
 
-	//Write mode
-	WRITE = 0x02,
+	//Shared Write mode
+	SHARED_WRITE = 0x02,
 
 	//Do not overwrite the file in write mode when the file exists
 	APPEND = 0x04, 

@@ -3,7 +3,10 @@
 #include "Global/Utilities/Misc.h"
 
 
-void LogInternal(LogVerbosity Verbosity, const TChar* Format, ...)
+
+
+
+void LogMisc::LogInternal(LogVerbosity Verbosity, const TChar* Format, ...)
 {
 	
 	switch (Verbosity)
@@ -15,7 +18,8 @@ void LogInternal(LogVerbosity Verbosity, const TChar* Format, ...)
 		
 		if (gLogFile)
 		{
-			CALL_FUNC_VARARGS(gLogFile->Logf(Verbosity, Format, Args), Format);
+			//Do not use gLogFile->Logf here, otherwise it will output garbled character
+			SRINTF_VARARGS(gLogFile->Log(Verbosity, BufferPtr));
 		}
 
 		/*
@@ -31,7 +35,7 @@ void LogInternal(LogVerbosity Verbosity, const TChar* Format, ...)
 		
 		if (gLogFile)
 		{
-			CALL_FUNC_VARARGS(gLogFile->Logf(Verbosity, Format, Args), Format);
+			SRINTF_VARARGS(gLogFile->Log(Verbosity, BufferPtr));
 		}
 		break;
 	}

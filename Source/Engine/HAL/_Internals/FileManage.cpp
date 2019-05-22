@@ -8,11 +8,11 @@ Serializer* FileManage::CreateFileReader(const TChar* FileName, uint32 Flag, uin
 	FileHandle* Handle = nullptr;
 	if (!!(Flag & FileFlag::READASYNC))
 	{
-		Handle = PlatformFile::OpenReadAsync(FileName, !!(Flag & FileFlag::WRITE));
+		Handle = PlatformFile::OpenReadAsync(FileName, !!(Flag & FileFlag::SHARED_WRITE));
 	}
 	else
 	{
-	    Handle = PlatformFile::Open(FileName, AccessType::FOR_READ, !!(Flag & FileFlag::WRITE), true, false);
+	    Handle = PlatformFile::Open(FileName, AccessType::FOR_READ, !!(Flag & FileFlag::SHARED_WRITE), true, false);
 	}
 	
 	if (Handle == nullptr)
@@ -29,7 +29,7 @@ Serializer* FileManage::CreateFileReader(const TChar* FileName, uint32 Flag, uin
 Serializer* FileManage::CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
 {
 
-	FileHandle* Handle = PlatformFile::Open(FileName, AccessType::FOR_WRITE, true, !!(Flag & FileFlag::READ), !!(Flag & FileFlag::APPEND));
+	FileHandle* Handle = PlatformFile::Open(FileName, AccessType::FOR_WRITE, true, !!(Flag & FileFlag::SHARED_READ), !!(Flag & FileFlag::APPEND));
 
 	if (Handle == nullptr)
 	{

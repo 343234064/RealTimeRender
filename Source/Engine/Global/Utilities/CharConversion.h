@@ -10,15 +10,16 @@ class UTF16ToUTF8
 #define UNKNOW_CODEPOINT '?'
 
 /*
- Ref:https://en.wikipedia.org/wiki/UTF-16
+ Ref:https://en.wikipedia.org/wiki/UTF-16 (2 Bytes)
  UTF16: 0x0000 ~ 0xD7FF and 0xE000 ~ 0xFFFF -> Unicode: U+0000 ~ U+D7FF and U+E000 ~ U+FFFF 
  UTF16: 0xD800 ~ 0xDFFF(Surrogate pair)     -> Unicode: U+010000 ~ U+10FFFF
  UTF16: None                                -> Unicode: U+D8FF ~ U+DFFF(No characters are encoded in this range)
 
- Ref:https://en.wikipedia.org/wiki/UTF-16
- UTF16: 0x0000 ~ 0xD7FF and 0xE000 ~ 0xFFFF -> Unicode: U+0000 ~ U+D7FF and U+E000 ~ U+FFFF
- UTF16: 0xD800 ~ 0xDFFF(Surrogate pair)     -> Unicode: U+010000 ~ U+10FFFF
- UTF16: None                                -> Unicode: U+D8FF ~ U+DFFF(No characters are encoded in this range)
+ Ref:https://en.wikipedia.org/wiki/UTF-8 (1~4 Bytes)
+ Unicode: U+0000 ~ U+007F -> UTF8: 0xxxxxxx
+ Unicode: U+0080 ~ U+07FF -> UTF8: 110xxxxx 10xxxxxx
+ Unicode: U+0800 ~ U+FFFF -> UTF8: 1110xxxx 10xxxxxx 10xxxxxx
+ Unicode: U+10000 ~ U+10FFFF -> UTF8: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 
 */
 
@@ -104,43 +105,43 @@ private:
 		}
 
 
-		if (UniCodepoint < 0x80)
+		if (UniCodepoint < 0x80) // U+0000 ~ U+007F
 		{
 			*(Dest++) = (ANSICHAR)UniCodepoint;
 		}
-		else if (UniCodepoint < 0x800)
+		else if (UniCodepoint < 0x800) // U+0080 ~ U+07FF
 		{
 			if (DestRemainByteSize >= 2)
 			{
-				*(Dest++) = (ANSICHAR)((UniCodepoint >> 6) | 128 | 64);
-				*(Dest++) = (ANSICHAR)(UniCodepoint & 0x3F) | 128;
+				*(Dest++) = (ANSICHAR)((UniCodepoint >> 6) | 128 | 64); //110 xxxxx
+				*(Dest++) = (ANSICHAR)(UniCodepoint & 0x3F) | 128; // 10 xxxxxx
 			}
 			else
 			{
 				*(Dest++) = (ANSICHAR)UNKNOW_CODEPOINT;
 			}
 		}
-		else if (UniCodepoint < 0x10000)
+		else if (UniCodepoint < 0x10000) // U+0800 ~ U+FFFF
 		{
 			if (DestRemainByteSize >= 3)
 			{
-				*(Dest++) = (ANSICHAR)((UniCodepoint >> 12) | 128 | 64 | 32);
-				*(Dest++) = (ANSICHAR)((UniCodepoint >> 6) & 0x3F) | 128;
-				*(Dest++) = (ANSICHAR)(UniCodepoint & 0x3F) | 128;
+				*(Dest++) = (ANSICHAR)((UniCodepoint >> 12) | 128 | 64 | 32); //1110 xxxx
+				*(Dest++) = (ANSICHAR)((UniCodepoint >> 6) & 0x3F) | 128; // 10 xxxxxx
+				*(Dest++) = (ANSICHAR)(UniCodepoint & 0x3F) | 128; // 10 xxxxxx
 			}
 			else
 			{
 				*(Dest++) = (ANSICHAR)UNKNOW_CODEPOINT;
 			}
 		}
-		else
+		else // U+10000 ~ U+10FFFF
 		{
 			if (DestRemainByteSize >= 4)
 			{
-				*(Dest++) = (ANSICHAR)((UniCodepoint >> 18) | 128 | 64 | 32 | 16);
-				*(Dest++) = (ANSICHAR)((UniCodepoint >> 12) & 0x3F) | 128;
-				*(Dest++) = (ANSICHAR)((UniCodepoint >> 6) & 0x3F) | 128;
-				*(Dest++) = (ANSICHAR)(UniCodepoint & 0x3F) | 128;
+				*(Dest++) = (ANSICHAR)((UniCodepoint >> 18) | 128 | 64 | 32 | 16); //11110 xxx
+				*(Dest++) = (ANSICHAR)((UniCodepoint >> 12) & 0x3F) | 128; // 10 xxxxxx
+				*(Dest++) = (ANSICHAR)((UniCodepoint >> 6) & 0x3F) | 128; // 10 xxxxxx
+				*(Dest++) = (ANSICHAR)(UniCodepoint & 0x3F) | 128; // 10 xxxxxx
 			}
 			else
 			{
@@ -211,7 +212,7 @@ private:
 
 
 	template <typename DestType>
-	static bool WriterToBuffer(const int32 CodePoint, DestType& Dest, int32& DestLen)
+	static bool WriteToBuffer(const int32 CodePoint, DestType& Dest, int32& DestLen)
 	{
 		int32 Wrote = CodepointToUtf8(CodePoint, Dest, DestLen);
 		if (Wrote < 1) return false;
@@ -222,3 +223,39 @@ private:
 	}
 };
 
+
+
+
+struct TCharToUTF8
+{
+	static FORCE_INLINE void Convert(ANSICHAR* Dest, int32 DestLen, const TChar* Src, int32 SrcLen)
+	{
+
+#if PLATFORM_WINDOWS
+		//wchar_t is encoded in utf-16 on windows platform
+		UTF16ToUTF8::Convert(Dest, DestLen, Src, SrcLen);
+#elif PLATFORM_LINUX
+#error Platform code needed
+#elif PLATFORM_MAC
+#error Platform code needed
+#else
+#error Unknown platform
+#endif
+		
+	}
+
+	static FORCE_INLINE int32 Length(const TChar* Src, int32 SrcLen)
+	{
+#if PLATFORM_WINDOWS
+		//wchar_t is encoded in utf-16 on windows platform
+		return UTF16ToUTF8::Length(Src, SrcLen);
+#elif PLATFORM_LINUX
+#error Platform code needed
+#elif PLATFORM_MAC
+#error Platform code needed
+#else
+#error Unknown platform
+#endif
+
+	}
+};

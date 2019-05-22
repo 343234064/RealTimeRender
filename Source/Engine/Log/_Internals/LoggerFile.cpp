@@ -1,6 +1,8 @@
 #include "Log/LoggerFile.h"
 #include "HAL/Time.h"
 #include "Global/Utilities/Misc.h"
+#include "Global/Utilities/CharConversion.h"
+
 
 #include <stdio.h>
 
@@ -325,7 +327,15 @@ void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
 				ToWrite += Terminal;
 			}
 
-			WriterPtr->Serialize(*ToWrite, ToWrite.Len() * sizeof(TChar));
+			//WriterPtr->Serialize(*ToWrite, ToWrite.Len() * sizeof(TChar));
+			//Convert to utf8, otherwise it will output garbled character while using unicode
+			const int32 ConvertedLength = TCharToUTF8::Length(*ToWrite, ToWrite.Len());
+			Array<ANSICHAR> ConvertedUTF8Text;
+			
+			ConvertedUTF8Text.AddUninitialize(ConvertedLength);
+			TCharToUTF8::Convert(ConvertedUTF8Text.Begin(), ConvertedLength, *ToWrite, ToWrite.Len());
+
+			WriterPtr->Serialize(ConvertedUTF8Text.Begin(), ConvertedUTF8Text.CurrentNum() * sizeof(ANSICHAR));
 		}
 		
 	}
@@ -340,7 +350,7 @@ void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
 
 bool LoggerFile::InitWriterThread()
 {
-	uint32 FileFlag = FileFlag::READ | (AppendExist ? FileFlag::APPEND : 0);
+	uint32 FileFlag = FileFlag::SHARED_READ | (AppendExist ? FileFlag::APPEND : 0);
 	Serializer* FileSerializer = nullptr;
 
 	FileSerializer = FileManage::CreateFileWriter(FileName, FileFlag);

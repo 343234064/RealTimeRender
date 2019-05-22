@@ -150,10 +150,10 @@ struct WindowsFile
 {
 public:
 	//Synchronous I/O 
-	static FileHandle* Open(const TChar* FileName, AccessType Type, bool ShareWrite, bool ShareRead, bool OverWriteIfExist = false)
+	static FileHandle* Open(const TChar* FileName, AccessType Type, bool ShareWrite, bool ShareRead, bool AppendIfExist = true)
 	{
 		uint32 Access = (Type == AccessType::FOR_WRITE) ? GENERIC_WRITE : GENERIC_READ;
-		
+		Access |= FILE_APPEND_DATA;
 		uint32 ShareMode = 0;
 		if(Type == AccessType::FOR_WRITE)
 			ShareMode = FILE_SHARE_WRITE | (ShareRead ? FILE_SHARE_READ : 0);
@@ -163,9 +163,10 @@ public:
 		uint32 CreationFlags = 0;
 		if (Type == AccessType::FOR_WRITE)
 		{
-			CreationFlags = OverWriteIfExist ?
-				CREATE_ALWAYS : //Creates a new file, always.  If the specified file exists and is writable, the function overwrites the file
-				OPEN_ALWAYS; //Opens a file, always. If the specified file does not exist and is a valid path to a writable location, the function creates a file
+			CreationFlags = AppendIfExist ?
+				OPEN_ALWAYS :  //Opens a file, always. If the specified file does not exist and is a valid path to a writable location, the function creates a file
+			    CREATE_ALWAYS; //Creates a new file, always.  If the specified file exists and is writable, the function overwrites the file
+				
 		}
 		else
 		{

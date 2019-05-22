@@ -39,7 +39,19 @@
 
 
 /********LOG*********/
-void LogInternal(LogVerbosity Verbosity, const TChar* Format, ...);
+struct LogMisc
+{
+public:
+	template <typename... Types>
+	static void LogWrapper(LogVerbosity Verbosity, const TChar* Format, Types... Args)
+	{
+		LogInternal(Verbosity, Format, Args...);
+	}
+
+private:
+	static void LogInternal(LogVerbosity Verbosity, const TChar* Format, ...);
+
+};
 
 
-#define LOG(Verbosity, Format, ...) { LogInternal(Verbosity, Format, ##__VA_ARGS__); } 
+#define LOG(Verbosity, Format, ...) { LogMisc::LogWrapper(Verbosity, Format, ##__VA_ARGS__); } 

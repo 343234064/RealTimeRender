@@ -14,9 +14,7 @@
 #endif
 
 
-#include <iostream>
-using std::cout;
-using std::endl;
+
 struct LoopWrapper
 {
 	static int32 PreInit()
