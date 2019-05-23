@@ -42,16 +42,10 @@
 struct LogMisc
 {
 public:
-	template <typename... Types>
-	static void LogWrapper(LogVerbosity Verbosity, const TChar* Format, Types... Args)
-	{
-		LogInternal(Verbosity, Format, Args...);
-	}
-
-private:
 	static void LogInternal(LogVerbosity Verbosity, const TChar* Format, ...);
 
 };
 
 
-#define LOG(Verbosity, Format, ...) { LogMisc::LogWrapper(Verbosity, Format, ##__VA_ARGS__); } 
+#define LOG(Verbosity, Format, ...) { LogMisc::LogInternal(Verbosity, Format, ##__VA_ARGS__); } 
+#define LOG_CHECK(Expression, Verbosity, Format, ...) { if(Expression) LogMisc::LogInternal(Verbosity, Format, ##__VA_ARGS__); }

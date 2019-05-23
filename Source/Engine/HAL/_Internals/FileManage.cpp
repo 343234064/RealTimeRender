@@ -13,6 +13,7 @@ Serializer* FileManage::CreateFileReader(const TChar* FileName, uint32 Flag, uin
 	else
 	{
 	    Handle = PlatformFile::Open(FileName, AccessType::FOR_READ, !!(Flag & FileFlag::SHARED_WRITE), true, false);
+		
 	}
 	
 	if (Handle == nullptr)

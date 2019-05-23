@@ -19,7 +19,7 @@ int32 CoreEngine::PreInit()
 	Platform::SetCurrentThreadAffinityMask(PlatformAffinity::GetMainThreadMask());
 
 	//Init log
-	gLogFile = new LoggerFile(TEXTS("Log.txt"), true);
+	gLogFile = new LoggerFile(TEXTS("Log.log"), true);
 	CHECK(gLogFile != nullptr);
 
 	
@@ -45,7 +45,7 @@ int32 CoreEngine::PreInit()
 	
 	LOG(LogVerbosity::ToFile, TEXTS("%s"), TEXTS("回答说科技的户口卡山东航空打算"));
 	LOG(LogVerbosity::ToFile, TEXTS("%s"), TEXTS("说山东航空打算"));
-	LOG(LogVerbosity::ToFile, TEXTS("%s"), TEXTS("空打算"));
+	LOG(LogVerbosity::Error, TEXTS("%s"), TEXTS("空打算"));
 	return 0;
 }
 

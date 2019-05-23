@@ -62,6 +62,8 @@ public:
 		Overlapped.Offset = Int.LowPart;
 		Overlapped.OffsetHigh = Int.HighPart;
 
+		SetFilePointer(FileHandle, Int.LowPart, (PLONG)&Int.HighPart, FILE_BEGIN);
+
 		return true;
 	}
 
@@ -103,7 +105,7 @@ public:
 	{
 		CHECK(IsInit());
 		uint32 WriteCount = 0;
-
+	    
 		if (!::WriteFile(FileHandle, Src, (DWORD)BytesToWrite, (DWORD*)&WriteCount, NULL))
 		{
 			if (::GetLastError() != ERROR_IO_PENDING)
@@ -177,6 +179,7 @@ public:
 		HANDLE Handle = CreateFileW(*Path::NormalizeFilePath(FileName), Access, ShareMode, NULL, CreationFlags, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (Handle != INVALID_HANDLE_VALUE)
 		{
+			SetFilePointer(Handle, 0, 0, AppendIfExist ? FILE_END : FILE_BEGIN);
 			return new WindowsFileHandle(FileName, Handle);
 		}
 

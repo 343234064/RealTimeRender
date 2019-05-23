@@ -261,7 +261,7 @@ void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
 		{
 			if (!FileName[0])
 			{
-				TChar DefaultName[] = TEXTS("LogFileOutput.txt");
+				TChar DefaultName[] = TEXTS("LogFileOutput.log");
 				PlatformChars::Strcpy(FileName, ARRAY_SIZE(FileName), DefaultName);
 			}
 
@@ -273,6 +273,7 @@ void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
 			else
 			{
 				//log
+				
 			}
 		}
 
