@@ -1,5 +1,5 @@
 /************************************
-Logger which output to file
+Log device which output to file
 
 
 *************************************/
@@ -9,7 +9,7 @@ Logger which output to file
 #include "Global/Utilities/AtomicCounter.h"
 #include "HAL/File/FileManage.h"
 #include "HAL/Thread/Thread.h"
-#include "Log/Logger.h"
+#include "Log/LogDevice.h"
 
 
 
@@ -64,17 +64,17 @@ private:
 
 
 
-class LoggerFile : public Logger
+class LogDeviceFile : public LogDevice
 {
 public:
-	LoggerFile(const TChar* OutputFileName = nullptr, bool AppendIfExist = true);
-	virtual ~LoggerFile()
+	LogDeviceFile(const TChar* OutputFileName = nullptr, bool AppendIfExist = true);
+	virtual ~LogDeviceFile()
 	{
 		Shutdown();
 	}
 
 
-	void Serialize(LogVerbosity Verbosity, const TChar* Data) override;
+	void Serialize(const TChar* Data) override;
 	
 	void Flush() override 
 	{
@@ -87,9 +87,10 @@ public:
 	void SetFileName(const TChar* OutputFileName); //Set file name will shutdown the file writer 
 	const TChar* GetFileName() const { return FileName; }
 
-
+	
 protected:
 	bool InitWriterThread();
+
 
 protected:
 	ThreadWriter* WriterPtr;
@@ -97,9 +98,9 @@ protected:
 
 	TChar FileName[512];
 	bool AppendExist;
-	bool FileOpened;
+	bool InitFailed;
 
 };
 
-extern LoggerFile* gLogFile;
+
 

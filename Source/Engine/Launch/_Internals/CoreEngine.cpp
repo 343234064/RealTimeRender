@@ -4,25 +4,21 @@
 #include "HAL/Memory/Memory.h"
 #include "HAL/Thread/Thread.h"
 #include "HAL/Time.h"
-#include "Log/LoggerFile.h"
 #include "Log/LogMacros.h"
-
+#include "Log/LogManager.h"
 
 int32 CoreEngine::PreInit()
 {
 	//Init the memory
 	PlatformMemory::Init();
-
+	PlatformMemory::OutputMemoryStatistics();
 
 	gMainThreadId = Platform::GetCurrentThreadId();
 	gIsMainThreadIdCached = true;
 	Platform::SetCurrentThreadAffinityMask(PlatformAffinity::GetMainThreadMask());
 
-	//Init log
-	gLogFile = new LoggerFile(TEXTS("Log.log"), true);
-	CHECK(gLogFile != nullptr);
 
-	
+
 	//Set random seed
 
 	//Cache executable's dir
@@ -43,9 +39,7 @@ int32 CoreEngine::PreInit()
 	//load and compile shader
 	//start render thread
 	
-	LOG(LogVerbosity::ToFile, TEXTS("%s"), TEXTS("回答说科技的户口卡山东航空打算"));
-	LOG(LogVerbosity::ToFile, TEXTS("%s"), TEXTS("说山东航空打算"));
-	LOG(LogVerbosity::Error, TEXTS("%s"), TEXTS("空打算"));
+
 	return 0;
 }
 
@@ -84,6 +78,7 @@ void CoreEngine::Tick()
 	//tick(world, game objects, etc.)
 
 	//tick RHI
+
 	gEditor->Tick();
 
 	gFrameCounter++;
@@ -93,11 +88,7 @@ void CoreEngine::Tick()
 void CoreEngine::Exit()
 {
 	//Flush all logs and Loading things
-	if (gLogFile)
-	{
-		delete gLogFile;
-		gLogFile = nullptr;
-	}
+	
 
 
    //save engine config and ini file
@@ -115,6 +106,8 @@ void CoreEngine::Exit()
    //terminate phys
    //stop render thread
    //RHI exit
+   
+   gLogger->Shutdown();
 
    PlatformMemory::UnInit();
 

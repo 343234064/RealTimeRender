@@ -8,8 +8,6 @@
 //==============================
 #if PLATFORM_TEXT_IS_WCHAR
 #  define TEXTS(x) L ## x//wchar_t, coding type is depending on platforms
-#elif PLATFORM_TEXT_IS_CHAR32
-#  define TEXTS(x) U ## x//char32_t, utf-32
 #elif PLATFORM_TEXT_IS_CHAR16
 #  define TEXTS(x) u ## x//char16_t, utf-16
 #else 

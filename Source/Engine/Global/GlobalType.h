@@ -30,8 +30,6 @@ typedef PlatformTypes::CHAR32   CHAR32;     //UTF-32, for UNICODE
 
 #if   PLATFORM_TEXT_IS_CHAR16
 typedef CHAR16                  TChar;      //basic char type used in string
-#elif PLATFORM_TEXT_IS_CHAR32
-typedef CHAR32                  TChar;      //basic char type used in string
 #elif PLATFORM_TEXT_IS_WCHAR
 typedef WIDECHAR                TChar;      //basic char type used in string
 #endif
@@ -83,6 +81,8 @@ static_assert(int16(ANSICHAR(-1)) == int16(-1), "ANSICHAR sign uncorrect");
 static_assert(sizeof(WIDECHAR) == 2 || sizeof(WIDECHAR) == 4, "WIDECHAR size uncorrect");
 static_assert(sizeof(CHAR16) == 2, "CHAR16 size uncorrect");
 static_assert(sizeof(CHAR32) == 4, "CHAR32 size uncorrect");
+
+static_assert(sizeof(TChar) == 2, "TChar must be 2 bytes");
 
 
 #define MIN_UINT8		((uint8) 0x00)

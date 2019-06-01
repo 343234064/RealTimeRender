@@ -7,7 +7,7 @@ Universal Variables
 
 #include "Global/GlobalType.h"
 #include "HAL/Chars.h"
-#include "Log/LogEnum.h"
+
 
 //==============================
 //Version
@@ -61,8 +61,6 @@ extern double gStartTime;
 extern uint64 gFrameCounter; 
 
 
-/*Log time type*/
-extern LogTime gLogTimeType;
 
 
 

@@ -63,6 +63,8 @@ Enable log and assertion for debug
 #define ENABLE_DEBUG_LOG 1
 #endif
 
+#define ENABLE_LOG 1
+
 
 /*************************
 Just for test 
@@ -74,7 +76,7 @@ Just for test
 #    define FOR_TEST_CPP 1
 #  else 
 #    //Show the console window when using MAIN_LAUNCH_CPP
-#    define SHOW_DEBUG_CONSOLE 0
+#    define SHOW_DEBUG_CONSOLE 1
 #    define MAIN_LAUNCH_CPP 1
 #  endif
 #else

@@ -1,4 +1,4 @@
-#include "Log/LoggerFile.h"
+#include "Log/LogDeviceFile.h"
 #include "HAL/Time.h"
 #include "Global/Utilities/Misc.h"
 #include "Global/Utilities/CharConversion.h"
@@ -143,7 +143,6 @@ void ThreadWriter::Serialize(void* Data, int64 Length)
 		WriteRequestCounter.Increment();
 		if (!WriterThreadPtr) InternalSerialize();
 
-		//Doesn't force the flush() call, just wait for writer thread to flush
 		while (WriteRequestCounter.GetCounter() != 0)
 		{
 			//Switch to thread
@@ -173,6 +172,10 @@ void ThreadWriter::Serialize(void* Data, int64 Length)
 
 	DataEndPos.SetCounter((ThisThreadDataEndPos + Length) % RingBuffer.CurrentNum());
 	WriteRequestCounter.Increment();
+
+	//If failed to create WriterThread, output to file immediately 
+	if (!WriterThreadPtr)
+		InternalSerialize();
 
 }
 
@@ -206,11 +209,11 @@ void ThreadWriter::Flush()
 
 
 
-LoggerFile::LoggerFile(const TChar* OutputFileName, bool AppendIfExist):
+LogDeviceFile::LogDeviceFile(const TChar* OutputFileName, bool AppendIfExist):
 	WriterPtr(nullptr),
 	FilePtr(nullptr),
 	AppendExist(AppendIfExist),
-    FileOpened(false)
+	InitFailed(false)
 {
 	if (OutputFileName != nullptr)
 	{
@@ -225,7 +228,7 @@ LoggerFile::LoggerFile(const TChar* OutputFileName, bool AppendIfExist):
 
 
 
-void LoggerFile::SetFileName(const TChar* OutputFileName)
+void LogDeviceFile::SetFileName(const TChar* OutputFileName)
 {
 	Shutdown();
 
@@ -233,7 +236,7 @@ void LoggerFile::SetFileName(const TChar* OutputFileName)
 }
 
 
-void LoggerFile::Shutdown()
+void LogDeviceFile::Shutdown()
 {
 	if (WriterPtr != nullptr)
 	{
@@ -248,16 +251,16 @@ void LoggerFile::Shutdown()
 	}
 
 	FileName[0] = 0;
-	FileOpened = false;
+	InitFailed = false;
 }
 
 
-void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
+void LogDeviceFile::Serialize(const TChar* Data)
 {
 	static bool ErrorEntry = false;
 	if (!gIsGetCriticalError || ErrorEntry)
 	{
-		if (!WriterPtr)
+		if (!WriterPtr && !InitFailed)
 		{
 			if (!FileName[0])
 			{
@@ -267,74 +270,25 @@ void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
 
 			if (InitWriterThread())
 			{
-				FileOpened = true;
-
+			
+				//log
 			}
 			else
 			{
+				InitFailed = true;
 				//log
-				
 			}
 		}
 
 		if (WriterPtr)
 		{
-			//Adding prefix
-			const TChar* Terminal = LINE_TERMINATOR;
-			const int32 TimeLength = 50;
-
-			String ToWrite;
-			
-			TChar TimeString[TimeLength];
-			
-			switch (gLogTimeType)
-			{
-			case LogTime::Local:
-			{
-				PlatformTime::SystemTimeToStr(TimeString, TimeLength);
-				ToWrite = String::Sprintf(TEXTS("[%s][%3llu]"), TimeString, gFrameCounter % 1000);
-				break;
-			}
-			case LogTime::UTC:
-			{				
-				PlatformTime::UTCTimeToStr(TimeString, TimeLength);
-				ToWrite = String::Sprintf(TEXTS("[%s][%3llu]"), TimeString, gFrameCounter % 1000);
-				break;
-			}
-			case LogTime::SinceStart:
-			{
-				const double TimeSecond = PlatformTime::Time_Seconds() - gStartTime;
-				ToWrite = String::Sprintf(TEXTS("[%07.2f][%3llu]"), TimeSecond, gFrameCounter % 1000);
-				break;
-			}
-			default:
-				break;
-			}
-
-			switch (Verbosity)
-			{
-			case LogVerbosity::Error:
-				ToWrite += TEXTS("[ERROR]");break;
-			case LogVerbosity::Warning:
-				ToWrite += TEXTS("[WARNING]");break;
-			default:
-				break;
-			}
-
-			ToWrite += Data;
-			
-			if (AutoInsertLineTerminator)
-			{
-				ToWrite += Terminal;
-			}
-
-			//WriterPtr->Serialize(*ToWrite, ToWrite.Len() * sizeof(TChar));
 			//Convert to utf8, otherwise it will output garbled character while using unicode
-			const int32 ConvertedLength = TCharToUTF8::Length(*ToWrite, ToWrite.Len());
+			const int32 DataLength = (int32)PlatformChars::Strlen(Data);
+			const int32 ConvertedLength = TCharToUTF8::Length(Data, DataLength);
 			Array<ANSICHAR> ConvertedUTF8Text;
 			
 			ConvertedUTF8Text.AddUninitialize(ConvertedLength);
-			TCharToUTF8::Convert(ConvertedUTF8Text.Begin(), ConvertedLength, *ToWrite, ToWrite.Len());
+			TCharToUTF8::Convert(ConvertedUTF8Text.Begin(), ConvertedLength, Data, DataLength);
 
 			WriterPtr->Serialize(ConvertedUTF8Text.Begin(), ConvertedUTF8Text.CurrentNum() * sizeof(ANSICHAR));
 		}
@@ -343,13 +297,13 @@ void LoggerFile::Serialize(LogVerbosity Verbosity, const TChar* Data)
 	else
 	{
 		ErrorEntry = true;
-		Serialize(Verbosity, Data);
+		Serialize(Data);
 		ErrorEntry = false;
 	}
 }
 
 
-bool LoggerFile::InitWriterThread()
+bool LogDeviceFile::InitWriterThread()
 {
 	uint32 FileFlag = FileFlag::SHARED_READ | (AppendExist ? FileFlag::APPEND : 0);
 	Serializer* FileSerializer = nullptr;

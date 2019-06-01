@@ -300,6 +300,12 @@ struct Platform
 	}
 
 
+	inline static void LocalPrintW(const PlatformTypes::WIDECHAR* Message)
+	{
+		OutputDebugStringW(Message);
+	}
+
+
 	inline static bool IsDebuggerPresent()
 	{
 		return ::IsDebuggerPresent();

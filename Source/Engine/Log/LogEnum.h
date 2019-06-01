@@ -2,22 +2,23 @@
 
 
 
-enum LogVerbosity
+enum LogType
 {
-	//Prints error to screen and file
-	Error = 0,
+	//Print to IDE and Console, only in debug mode
+	Debug = 0,
 
-	//Prints warning to screen and file
-	Warning,
+	//Print to screen and file
+	Info,
 
-	//Prints message to screen
-	ToScreen,
+	//Print to screen and file
+	Warn,
 
-	//Prints message to file
-	ToFile,
+	//Print to screen and file
+	Error,
 
-	//Prints message to screen and file
-	ToAll
+    //Print to file and IDE/Console
+	Fatal
+
 };
 
 
@@ -30,4 +31,5 @@ enum LogTime
 
 	//The time since the app start in seconds
 	SinceStart
+
 };

@@ -20,6 +20,14 @@ Variable Arguments Macros
    if(Result >= BufferCount) Result = -1; \
 } 
 
+#define GET_FORMAT_VARARGS_NORESULT(BufferPtr, BufferCount, MaxCountToWrite, ArgBehind, Format) \
+{ \
+   va_list ArgPtr; \
+   va_start(ArgPtr, ArgBehind); \
+   PlatformChars::VarArgSprintf(BufferPtr, BufferCount, MaxCountToWrite, Format, ArgPtr); \
+   va_end(ArgPtr); \
+} 
+
 #define CALL_FUNC_VARARGS(Func, ArgBehind) \
 { \
    va_list Args; \

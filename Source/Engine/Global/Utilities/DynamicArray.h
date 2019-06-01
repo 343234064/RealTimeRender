@@ -855,3 +855,23 @@ private:
 	int32 MaxElementNum;
 
 };
+
+
+
+//To add a new element to ArrayInstance -> "new(ArrayInstance) ElementType(Args)"
+template <typename ElementType, typename Allocator> 
+void* operator new(Size_T Size, Array<ElementType, Allocator>& Array)
+{
+	CHECK(Size == sizeof(ElementType));
+	const int32 Index = Array.AddUninitialized(1);
+	return &Array[Index];
+}
+
+
+template <typename ElementType, typename Allocator>
+void* operator new(Size_T Size, Array<ElementType, Allocator>& Array, int32 Index)
+{
+	CHECK(Size == sizeof(ElementType));
+	Array.InsertUninitialized(Index, 1);
+	return &Array[Index];
+}

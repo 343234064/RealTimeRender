@@ -57,15 +57,19 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\SystemDialog\SystemDialog.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Thread\Thread.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Thread\ThreadBase.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceConsole.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceEditor.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogEnum.h" />
-    <ClInclude Include="..\..\Source\Engine\Log\Logger.h" />
-    <ClInclude Include="..\..\Source\Engine\Log\LoggerFile.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDevice.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFile.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\Editor.cpp" />
@@ -88,9 +92,10 @@
     <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\CoreEngine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\_Internals\WindowsLaunch.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Log\_Internals\Logger.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LoggerFile.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDevice.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFile.cpp" />
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogMacros.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

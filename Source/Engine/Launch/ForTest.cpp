@@ -19,6 +19,7 @@
 #include "HAL/Chars.h"
 #include "HAL/Time.h"
 #include "Log/LogMacros.h"
+#include "Log/LogDeviceDebug.h"
 #include "HAL/File/FileMisc.h"
 #include "HAL/File/Path.h"
 
@@ -76,13 +77,9 @@ int main()
 {
 
 	PlatformMemory::Init();
-	setlocale(LC_ALL, "chs");
-
-	String path = TEXTS("E:\\MAX自动烘焙插件\\自动烘焙插件\\..\\file");
-
-	String NewPath = Path::NormalizeFilePath(*path);
-
-	PRINTEXT(*NewPath);
+	
+	LogDeviceDebug Logger;
+	Logger.Logf(L"%s", L"jdlsad四大叔大婶\n");
 
 
 

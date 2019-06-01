@@ -22,6 +22,9 @@
 //Macro configs
 //Redefined by different platforms
 //==============================
+//==============================
+//Only using 2 bytes char type as text type
+//==============================
 /*
    Use wchar_t as TEXTS/TChar type
    Coding type is depending on platforms
@@ -31,18 +34,17 @@
 #endif
 /*
    Use char16_t as TEXTS/TChar type
-   Coding type is UTF-16
 */
 #ifndef PLATFORM_TEXT_IS_CHAR16
    #define PLATFORM_TEXT_IS_CHAR16 0
 #endif
+
 /*
-   Use char32_t as TEXTS/TChar type
-   Coding type is UTF-32
+   char32_t is not use
 */
-#ifndef PLATFORM_TEXT_IS_CHAR32
-#define PLATFORM_TEXT_IS_CHAR32 0
-#endif
+//#ifndef PLATFORM_TEXT_IS_CHAR32
+//#define PLATFORM_TEXT_IS_CHAR32 0
+//#endif
 
 
 

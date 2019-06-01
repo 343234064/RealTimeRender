@@ -9,7 +9,7 @@ PlatformCriticalSection Debug::DebugCriticalSection;
 
 void Debug::OuputAssertionFailed(const ANSICHAR* Expression, const ANSICHAR* File, int32 Line, const ANSICHAR* Format, ...)
 {
-	if (!gIsGetCriticalError)
+	//if (!gIsGetCriticalError)
 	{
 
 		ANSICHAR DescriptionText[DESCRIPTION_LENGTH];

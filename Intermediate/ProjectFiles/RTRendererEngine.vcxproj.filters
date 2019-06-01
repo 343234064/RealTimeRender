@@ -94,6 +94,9 @@
     <Filter Include="Source\Engine\HAL\Thread">
       <UniqueIdentifier>{b1a2c943-c5c3-4e81-825c-7cb445644702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Engine\HAL\SystemDialog">
+      <UniqueIdentifier>{9d329cb0-6aca-4c2e-b883-b32e5237a91d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h">
@@ -195,12 +198,6 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Assertion.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Log\Logger.h">
-      <Filter>Source\Engine\Log</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Log\LoggerFile.h">
-      <Filter>Source\Engine\Log</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Serializer.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
@@ -236,6 +233,24 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h">
       <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDevice.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFile.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceEditor.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogManager.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceConsole.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\SystemDialog\SystemDialog.h">
+      <Filter>Source\Engine\HAL\SystemDialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -290,12 +305,6 @@
     <ClCompile Include="..\..\Source\Engine\Global\_Internals\Assertion.cpp">
       <Filter>Source\Engine\Global\_Internals</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Log\_Internals\Logger.cpp">
-      <Filter>Source\Engine\Log\_Internals</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LoggerFile.cpp">
-      <Filter>Source\Engine\Log\_Internals</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\FileManage.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
@@ -306,6 +315,15 @@
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogMacros.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFile.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDevice.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogManager.cpp">
       <Filter>Source\Engine\Log\_Internals</Filter>
     </ClCompile>
   </ItemGroup>

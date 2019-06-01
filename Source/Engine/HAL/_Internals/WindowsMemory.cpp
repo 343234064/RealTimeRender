@@ -23,9 +23,6 @@ void WindowsMemory::Init()
 	PlatformMemoryInterface::Init();
 
 	WindowsMemory::GetMemoryDesc();
-	//log
-
-	OutputMemoryStatistics();
 }
 
 
