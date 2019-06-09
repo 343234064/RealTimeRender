@@ -246,8 +246,6 @@ String LogManager::Formatter(LogType Type, const TChar* ClassName, const TChar* 
 		ToWrite += TEXTS("[WARNING]");break;
 	case LogType::Error:
 		ToWrite += TEXTS("[ERROR]");break;
-	case LogType::Fatal:
-		ToWrite += TEXTS("[FATAL]");break;
 	default:
 		break;
 	}

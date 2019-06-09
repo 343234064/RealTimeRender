@@ -42,9 +42,6 @@ private:
 
 #define DEBUG_BREAK {if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); }}
 
-//If we ouput the assertion failed message to console
-#define DEBUG_ASSERTION_TO_CONSOLE 0  
-
 
 //Debug assertion macros
 #if ENABLE_DEBUG_ASSERTION

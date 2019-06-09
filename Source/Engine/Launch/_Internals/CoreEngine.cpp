@@ -6,6 +6,8 @@
 #include "HAL/Time.h"
 #include "Log/LogMacros.h"
 #include "Log/LogManager.h"
+#include "Log/LogDeviceFatal.h"
+
 
 int32 CoreEngine::PreInit()
 {
@@ -108,6 +110,7 @@ void CoreEngine::Exit()
    //RHI exit
    
    gLogger->Shutdown();
+   gFatalLogger.FlushFatalHist();
 
    PlatformMemory::UnInit();
 

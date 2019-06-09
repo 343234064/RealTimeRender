@@ -4,7 +4,6 @@
 #include "Global/Utilities/CharConversion.h"
 
 
-#include <stdio.h>
 
 ThreadWriter::ThreadWriter(Serializer* FileSerializer):
 	FileSerializerPtr(FileSerializer),

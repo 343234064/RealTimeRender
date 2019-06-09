@@ -1,8 +1,7 @@
 #include "Global/Utilities/Assertion.h"
 
-#if DEBUG_ASSERTION_TO_CONSOLE
 #include <stdio.h>
-#endif
+
 
 PlatformCriticalSection Debug::DebugCriticalSection;
 
@@ -25,11 +24,9 @@ void Debug::OuputAssertionFailed(const ANSICHAR* Expression, const ANSICHAR* Fil
 		LockGuard<PlatformCriticalSection> DebugLock(DebugCriticalSection);
 
 		//In Debug mode
-#if DEBUG_ASSERTION_TO_CONSOLE
 		printf(FinalText);
-#else
 		Platform::LocalPrintA(FinalText);
-#endif
+
 		//else output to log file in release mode
 		//
 	}

@@ -17,8 +17,8 @@ struct FatalLog
 };
 
 
-//Helper macros
-//Compile-time selector
+
+//Compile-time helpers
 #define CONCATENATE_INNER(x, y) x##y
 #define CONCATENATE(x, y) CONCATENATE_INNER(x, y)
 #define CONCATENATE_TRI(x, y, z) CONCATENATE(CONCATENATE_INNER(x, y), z)

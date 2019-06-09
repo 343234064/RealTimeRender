@@ -4,6 +4,7 @@
 #include "Launch/CoreEngine.h"
 #include "Editor/Editor.h"
 #include "Log/LogManager.h"
+#include "Log/LogDeviceFatal.h"
 
 
 /************************************
@@ -42,6 +43,7 @@ uint64 gFrameCounter = 0;
 
 
 
+
 /********Global instance************/
 
 /*Global engine instance*/
@@ -56,3 +58,5 @@ Editor* gEditor = nullptr;
 /*Global Logger*/
 LogManager* gLogger = LogManager::Get();
 
+/*Fatal messages output device*/
+LogDeviceFatal gFatalLogger;

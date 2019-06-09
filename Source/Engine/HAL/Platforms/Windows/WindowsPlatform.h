@@ -232,7 +232,9 @@ typedef WindowsTypes            PlatformTypes;
 */
 struct Platform
 {
-	
+	static void PlatformPreInit();
+	static void PlatformInit();
+
 	inline static void MemoryWriteBarrier() { _mm_sfence(); }
 
 	inline static void MemoryReadBarrier() { _mm_lfence(); }

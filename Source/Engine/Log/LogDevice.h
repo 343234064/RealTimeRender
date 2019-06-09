@@ -28,8 +28,8 @@ public:
 	virtual void Flush() {}
 	virtual void Shutdown() {}
 
-	void Logf(const TChar* Format, ...);
-    void Log(const TChar* Data) { Serialize(Data); }
+	virtual void Logf(const TChar* Format, ...);
+    virtual void Log(const TChar* Data) { Serialize(Data); }
 
 
 protected:

@@ -94,7 +94,7 @@
     <Filter Include="Source\Engine\HAL\Thread">
       <UniqueIdentifier>{b1a2c943-c5c3-4e81-825c-7cb445644702}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\HAL\SystemDialog">
+    <Filter Include="Source\Engine\HAL\Dialog">
       <UniqueIdentifier>{9d329cb0-6aca-4c2e-b883-b32e5237a91d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -249,8 +249,17 @@
     <ClInclude Include="..\..\Source\Engine\Log\LogDeviceConsole.h">
       <Filter>Source\Engine\Log</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\SystemDialog\SystemDialog.h">
-      <Filter>Source\Engine\HAL\SystemDialog</Filter>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsDialog.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Dialog\DialogEnum.h">
+      <Filter>Source\Engine\HAL\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Dialog\Dialog.h">
+      <Filter>Source\Engine\HAL\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFatal.h">
+      <Filter>Source\Engine\Log</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +333,12 @@
       <Filter>Source\Engine\Log\_Internals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogManager.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsDialog.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFatal.cpp">
       <Filter>Source\Engine\Log\_Internals</Filter>
     </ClCompile>
   </ItemGroup>
