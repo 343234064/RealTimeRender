@@ -19,7 +19,6 @@
 #include "HAL/Chars.h"
 #include "HAL/Time.h"
 #include "Log/LogMacros.h"
-#include "Log/LogDeviceDebug.h"
 #include "HAL/File/FileMisc.h"
 #include "HAL/File/Path.h"
 
@@ -78,8 +77,7 @@ int main()
 
 	PlatformMemory::Init();
 	
-	LogDeviceDebug Logger;
-	Logger.Logf(L"%s", L"jdlsadÀƒ¥Û Â¥Û…Ù\n");
+
 
 
 

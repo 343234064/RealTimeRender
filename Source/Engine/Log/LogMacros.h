@@ -19,22 +19,17 @@ struct FatalLog
 
 
 //Compile-time helpers
-#define CONCATENATE_INNER(x, y) x##y
-#define CONCATENATE(x, y) CONCATENATE_INNER(x, y)
-#define CONCATENATE_TRI(x, y, z) CONCATENATE(CONCATENATE_INNER(x, y), z)
-
 #define LOG_TYPE_IS_Fatal(Block1, Block2) Block1
 #define LOG_TYPE_IS_Error(Block1, Block2) Block2
-#define LOG_TYPE_IS_Warn (Block1, Block2) Block2
-#define LOG_TYPE_IS_Info (Block1, Block2) Block2
+#define LOG_TYPE_IS_Warn(Block1, Block2)  Block2
+#define LOG_TYPE_IS_Info(Block1, Block2)  Block2
 #define LOG_TYPE_IS_Debug(Block1, Block2) Block2
+
 
 #define IF_LOG_TYPE_IS(Type, Block1, Block2) CONCATENATE(LOG_TYPE_IS_, Type)(Block1, Block2)
 #define GET_LOG_TYPE(Type) CONCATENATE(LogType::, Type)
 
-#define TEXT_BLOCK_START TEXTS("
-#define TEXT_BLOCK_END  ")
-#define GET_CLASS_NAME(Name) CONCATENATE_TRI(TEXT_BLOCK_START, Name, TEXT_BLOCK_END)
+#define GET_CLASS_NAME(Name) _TEXTS(Name)
 
 
 /****DEBUG LOG*********/
@@ -72,7 +67,7 @@ struct FatalLog
         { \
            gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
 	    } \
-    ) \
+    ); \
 } 
 
 #define LOGT(Type, ClassName, Time, Format, ...) \
@@ -80,7 +75,8 @@ struct FatalLog
     static_assert(GET_LOG_TYPE(Type) != LogType::Debug, "Please use DEBUG macro to output Debug log"); \
     IF_LOG_TYPE_IS(Type, \
         { \
-		   FatalLog::Handle(__FILE__, __LINE__, Format, ##__VA_ARGS__); \
+		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
+           if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
            gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
@@ -94,7 +90,8 @@ struct FatalLog
     if(Expression) \
     IF_LOG_TYPE_IS(Type, \
         { \
-		   FatalLog::Handle(__FILE__, __LINE__, Format, ##__VA_ARGS__); \
+		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
+           if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
            gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
@@ -108,7 +105,8 @@ struct FatalLog
     if(Expression) \
     IF_LOG_TYPE_IS(Type, \
         { \
-		   FatalLog::Handle(__FILE__, __LINE__, Format, ##__VA_ARGS__); \
+		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
+           if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
            gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \

@@ -67,7 +67,7 @@ void LogDeviceFatal::WriteFatalHistToFile()
 }
 
 
-void LogDeviceFatal::FlushFatalHist()
+void LogDeviceFatal::Flush()
 {
 	LockGuard<PlatformCriticalSection> Lock(FatalHistCriticalSection);
 
@@ -77,8 +77,10 @@ void LogDeviceFatal::FlushFatalHist()
 		WriteFatalHistToFile();
 	}
 
-	Flush();
+	if (Writer.is_open())
+		Writer.flush();
 }
+
 
 
 void LogDeviceFatal::Shutdown()

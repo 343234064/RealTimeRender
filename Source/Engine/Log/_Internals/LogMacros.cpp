@@ -35,7 +35,6 @@ void FatalLog::Output(const TChar* ClassName, const TChar* Format, ...)
 	//Show message box 
 	PlatformDialog::Open(DialogType::Ok, TEXTS("Fatal Error!"), StaticFatalMsgBuffer);
 
-	
 	//Output to local
 	OutputToLocal(TEXTS("[Fatal Error][%s]: %s"), ClassName, StaticFatalMsgBuffer);
 

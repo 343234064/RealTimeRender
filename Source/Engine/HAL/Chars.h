@@ -6,6 +6,8 @@
 //==============================
 //Text define
 //==============================
+#define _T(text) #text 
+
 #if PLATFORM_TEXT_IS_WCHAR
 #  define TEXTS(x) L ## x//wchar_t, coding type is depending on platforms
 #elif PLATFORM_TEXT_IS_CHAR16
@@ -13,6 +15,9 @@
 #else 
 #  error Text macro is not defined
 #endif
+
+#  define _TEXTS(x) TEXTS(#x)  //x -> L"x", x will not be expanded if x is macro
+#  define __TEXTS(x) TEXTS(#x)  //x -> L"x", x will be expanded if x is macro
 
 
 

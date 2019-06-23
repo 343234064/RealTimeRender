@@ -23,13 +23,7 @@ public:
 	void Log(const TChar* Data) override { Serialize(Data); }
 	void Serialize(const TChar* Data) override;
 
-	void Flush() override 
-	{
-		if (Writer.is_open())
-			Writer.flush();
-	}
-
-	void FlushFatalHist();
+	void Flush() override;
 	void Shutdown() override;
 
 protected:

@@ -6,6 +6,27 @@
 
 
 //==============================
+//Macros 
+//==============================
+#define CONCATENATE_INNER(x, y) x##y
+#define CONCATENATE(x, y) CONCATENATE_INNER(x, y)
+#define CONCATENATE_TRI(x, y, z) CONCATENATE(CONCATENATE_INNER(x, y), z)
+
+//x to char type, len(x)<5
+#define __CHAR(x)   #@x
+
+//x to string, x will not be expanded if x is macro
+#define __S(x)   #x
+
+//x to string, x will be expanded if x is macro
+#define _S(x)   __S(x)
+
+//Concatenate x and y to a string
+#define CAT_TO_STR(x, y) _S(x) "" _S(y)
+
+
+
+//==============================
 //Data types
 //==============================
 
@@ -33,6 +54,7 @@ typedef CHAR16                  TChar;      //basic char type used in string
 #elif PLATFORM_TEXT_IS_WCHAR
 typedef WIDECHAR                TChar;      //basic char type used in string
 #endif
+
 
 
 

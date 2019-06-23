@@ -44,7 +44,7 @@ int32 CoreEngine::PreInit()
 
 	return 0;
 }
-
+#include <assert.h>
 
 int32 CoreEngine::Init()
 {
@@ -65,6 +65,10 @@ int32 CoreEngine::Init()
 	
 
 	//broadcast OnInitComplete
+
+    LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal"));
+	LOG(Warn, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn"));
+
 	return 0;
 }
 
@@ -110,7 +114,7 @@ void CoreEngine::Exit()
    //RHI exit
    
    gLogger->Shutdown();
-   gFatalLogger.FlushFatalHist();
+   gFatalLogger.Flush();
 
    PlatformMemory::UnInit();
 
