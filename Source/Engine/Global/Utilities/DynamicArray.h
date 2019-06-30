@@ -863,7 +863,7 @@ template <typename ElementType, typename Allocator>
 void* operator new(Size_T Size, Array<ElementType, Allocator>& Array)
 {
 	CHECK(Size == sizeof(ElementType));
-	const int32 Index = Array.AddUninitialized(1);
+	const int32 Index = Array.AddUninitialize(1);
 	return &Array[Index];
 }
 

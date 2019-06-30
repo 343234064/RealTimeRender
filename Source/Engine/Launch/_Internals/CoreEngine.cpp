@@ -66,8 +66,10 @@ int32 CoreEngine::Init()
 
 	//broadcast OnInitComplete
 
-    LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal"));
-	LOG(Warn, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn"));
+    //LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal"));
+	LOG(Error, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn"));
+	LOG(Info, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn"));
+	DEBUG(TEXTS("This is a test:%s"), TEXTS("Debug"));
 
 	return 0;
 }

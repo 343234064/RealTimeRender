@@ -88,7 +88,7 @@ void LogManager::Redirector(LogType Type, const TChar* ClassName, const TChar* T
 			}
 
 			if (ConsoleLogger)
-				ConsoleLogger->Log(Data);
+				ConsoleLogger->Log(*ToWrite);
 
 			return;
 		}
@@ -97,7 +97,8 @@ void LogManager::Redirector(LogType Type, const TChar* ClassName, const TChar* T
 		if (Platform::GetCurrentThreadId() != MainThreadID)
 		{
 			//Cache the log message if current thread is not main thread or there is still no output device 
-			new(BufferedLogEvents) LogEvent(Type, Data);
+			//new(BufferedLogEvents) LogEvent(Type, Data);
+			BufferedLogEvents.Add(LogEvent(Type, *ToWrite));
 		}
 		else
 		{
@@ -122,13 +123,13 @@ void LogManager::Redirector(LogType Type, const TChar* ClassName, const TChar* T
 				//Output current log message
 				for (int32 DeviceIndex = 0; DeviceIndex < OutputDevices.CurrentNum(); DeviceIndex++)
 				{
-					OutputDevices[DeviceIndex]->Log(Data);
+					OutputDevices[DeviceIndex]->Log(*ToWrite);
 				}
 			}
 			else
 			{
 				//Cache the log message if current thread is not main thread or there is still no output device 
-				new(BufferedLogEvents) LogEvent(Type, Data);
+				BufferedLogEvents.Add(LogEvent(Type, *ToWrite));
 			}
 
 		}
@@ -231,9 +232,9 @@ String LogManager::Formatter(LogType Type, const TChar* ClassName, const TChar* 
 	String ToWrite;
 
 	if(TimeString)
-		ToWrite = String::Sprintf(TEXTS("[%s][%3llu f]"), TimeString, gFrameCounter % 1000);
+		ToWrite = String::Sprintf(TEXTS("[%s][%3lluf]"), TimeString, gFrameCounter % 1000);
 	else
-		ToWrite = String::Sprintf(TEXTS("[%07.2f s][%3llu f]"), TimeSecond, gFrameCounter % 1000);
+		ToWrite = String::Sprintf(TEXTS("[%07.2fs][%3lluf]"), TimeSecond, gFrameCounter % 1000);
 
 
 	switch (Type)

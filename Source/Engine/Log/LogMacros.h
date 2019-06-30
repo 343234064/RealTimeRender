@@ -35,14 +35,14 @@ struct FatalLog
 /****DEBUG LOG*********/
 #if ENABLE_DEBUG_LOG
 
-#define DEBUG(Format, ...) \
+#define DEBUG(ClassName, Format, ...) \
 { \
-     gLogger->Log(LogType::Debug, -1.0, Format, ##__VA_ARGS__); \
+     gLogger->Log(LogType::Debug, GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
 }
 
-#define DEBUGT(Time, Format, ...) \
+#define DEBUGT(ClassName, Time, Format, ...) \
 { \
-     gLogger->Log(LogType::Debug, Time, Format, ##__VA_ARGS__); \
+     gLogger->Log(LogType::Debug, GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
 }
 
 #else
@@ -62,7 +62,7 @@ struct FatalLog
     IF_LOG_TYPE_IS(Type, \
         { \
 		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
-           if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
+            \
         }, \
         { \
            gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \

@@ -6,8 +6,6 @@
 //==============================
 //Text define
 //==============================
-#define _T(text) #text 
-
 #if PLATFORM_TEXT_IS_WCHAR
 #  define TEXTS(x) L ## x//wchar_t, coding type is depending on platforms
 #elif PLATFORM_TEXT_IS_CHAR16
