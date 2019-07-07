@@ -3,7 +3,7 @@
 #include "Global/EngineVariables.h"
 #include "Global/Utilities/CharConversion.h"
 #include "Global/Utilities/DynamicArray.h"
-
+#include "Log/LogMacros.h"
 
 /*Total Fatal messages cache*/
 static TChar FatalHist[8192] = TEXTS("");
@@ -42,11 +42,12 @@ void LogDeviceFatal::WriteFatalHistToFile()
 {
 	if (!Writer.is_open() && !InitFailed)
 	{
-		Writer.open("Fatal.log", std::ios_base::in);
-
+		Writer.open("Fatal.log", std::ios_base::app);
+		
 		if (!Writer.is_open())
 		{
 			InitFailed = true;
+			DEBUG(LogDeviceFatal, TEXTS("Open Fatal.log file failed!"));
 		}
 	}
 
@@ -85,9 +86,11 @@ void LogDeviceFatal::Flush()
 
 void LogDeviceFatal::Shutdown()
 {
+	if(!FatalHistHasFlush)
+		Flush();
+
 	if (Writer.is_open())
 	{
-		Writer.flush();
 		Writer.close();
 	}
 

@@ -30,35 +30,30 @@ struct LogEvent
 class LogManager
 {
 public:
-	static LogManager* Get()
+	static LogManager& Get()
 	{
 		static LogManager Singleton;
-		return &Singleton;
+		return Singleton;
 	}
 
 	~LogManager();
 
 
-	void Log(LogType Type, const TChar* ClassName, double Time, const TChar* Format, ...);
+	void Redirector(LogType Type, const TChar* ClassName, const TChar* TimeString, const double TimeSecond, const TChar* Data);
 	void Flush();
 	void Shutdown();
-
 
 
 	FORCE_INLINE
 	bool IsAutoInsertLineTerminator() { return AutoInsertLineTerminator; }
 	FORCE_INLINE
 	void SetAutoInsertLineTerminator(bool ToSet) { AutoInsertLineTerminator = ToSet; }
-	FORCE_INLINE
-	void SetLogTimeType(LogTime ToSet) { TimeType = ToSet; }
-
 
 private:
 	LogManager();
 
 	void UnsynFlushBufferedLogs();
 	void SetupOutputDevice();
-	void Redirector(LogType Type, const TChar* ClassName, const TChar* TimeString, const double TimeSecond, const TChar* Data);
 	String Formatter(LogType Type, const TChar* ClassName, const TChar* TimeString, const double TimeSecond, const TChar* Data);
 
 
@@ -68,9 +63,6 @@ private:
 	//Main thread id
 	int32 MainThreadID;
 
-	//The time type that output to log file
-	//UTC, Local, TimeSinceStart
-	LogTime TimeType;
 
 	PlatformCriticalSection CriticalSection;
 
@@ -88,4 +80,4 @@ private:
 };
 
 
-extern LogManager* gLogger;
+extern LogManager& gLogger;

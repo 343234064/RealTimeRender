@@ -11,7 +11,6 @@
 LogManager::LogManager():
 	AutoInsertLineTerminator(true),
 	MainThreadID(Platform::GetCurrentThreadId()),
-	TimeType(LogTime::Local), 
 	ConsoleLogger(nullptr)
 {
 
@@ -27,36 +26,6 @@ LogManager::~LogManager()
 }
 
 
-void LogManager::Log(LogType Type, const TChar* ClassName, double Time, const TChar* Format, ...)
-{
-	//Get the time as early as possible
-	Time = (Time < 0.0) ? PlatformTime::Time_Seconds() - gStartTime : Time;
-
-	const int32 TimeLength = 50;
-	TChar TimeBuffer[TimeLength];
-	TChar* TimeString = nullptr;
-
-	switch (TimeType)
-	{
-	case LogTime::Local:
-	{
-		PlatformTime::SystemTimeToStr(TimeBuffer, TimeLength);
-		TimeString = TimeBuffer;
-		break;
-	}
-	case LogTime::UTC:
-	{
-		PlatformTime::UTCTimeToStr(TimeBuffer, TimeLength);
-		TimeString = TimeBuffer;
-		break;
-	}
-	default:
-		break;
-	}
-
-	SRINTF_VARARGS(Redirector(Type, ClassName, TimeString, Time, BufferPtr));
-	
-}
 
 
 void LogManager::SetupOutputDevice()
