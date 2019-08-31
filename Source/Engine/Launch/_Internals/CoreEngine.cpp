@@ -65,11 +65,14 @@ int32 CoreEngine::Init()
 	
 
 	//broadcast OnInitComplete
+	LOG(Info, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Info，这是一个测试"));
+	LOG(Warn, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn，这是一个测试"));
+	DEBUG(CoreEngine, TEXTS("This is a test:%s"), TEXTS("Debug，这是一个测试"));
 
-    //LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal"));
-	LOG(Error, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn"));
-	LOG(Info, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn"));
-	DEBUG(TEXTS("This is a test:%s"), TEXTS("Debug"));
+	LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal，这是一个测试"));
+	LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal2，这是一个测试2"));
+
+
 
 	return 0;
 }
@@ -115,8 +118,8 @@ void CoreEngine::Exit()
    //stop render thread
    //RHI exit
    
-   gLogger->Shutdown();
-   gFatalLogger.Flush();
+   LOG_SHUTDOWN;
+   FATALLOG_SHUTDOWN;
 
    PlatformMemory::UnInit();
 

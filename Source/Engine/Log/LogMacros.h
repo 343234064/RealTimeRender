@@ -8,13 +8,29 @@
 
 
 
-
 //To handle fatal message output
 struct FatalLog
 {
 	static void Output(const TChar* ClassName, const TChar* Format, ...);
 	static void OutputToLocal(const TChar* Format, ...);
+	static void Shutdown();
 };
+
+
+//To handle info message output
+struct MessageLog
+{
+	//The time type that output to log file
+    //UTC, Local, TimeSinceStart
+	static LogTime TimeType;
+
+	static void Output(LogType Type, const TChar* ClassName, double Time, const TChar* Format, ...);
+	static void Shutdown();
+};
+
+#define LOG_SHUTDOWN MessageLog::Shutdown()
+#define FATALLOG_SHUTDOWN FatalLog::Shutdown()
+
 
 
 
@@ -37,17 +53,17 @@ struct FatalLog
 
 #define DEBUG(ClassName, Format, ...) \
 { \
-     gLogger->Log(LogType::Debug, GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
+     MessageLog::Output(LogType::Debug, GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
 }
 
 #define DEBUGT(ClassName, Time, Format, ...) \
 { \
-     gLogger->Log(LogType::Debug, GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
+     MessageLog::Output(LogType::Debug, GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
 }
 
 #else
-#  define DEBUG(Format, ...)
-#  define DEBUGT(Time, Format, ...)
+#  define DEBUG(ClassName, Format, ...)
+#  define DEBUGT(ClassName, Time, Format, ...)
 
 #endif
 
@@ -65,7 +81,7 @@ struct FatalLog
             \
         }, \
         { \
-           gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
+           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
 	    } \
     ); \
 } 
@@ -79,7 +95,7 @@ struct FatalLog
            if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
-           gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
+           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
 	    } \
     ) \
 } 
@@ -94,7 +110,7 @@ struct FatalLog
            if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
-           gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
+           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
 	    } \
     ) \
 } 
@@ -109,16 +125,16 @@ struct FatalLog
            if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
-           gLogger->Log(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
+           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
 	    } \
     ) \
 } 
 
 #else
-#define LOG(Type, Format, ...)
-#define LOGT(Type, Time, Format, ...)
-#define LOG_CHECK(Expression, Time, Format, ...)
-#define LOGT_CHECK(Expression, Type, Time, Format, ...)
+#define LOG(Type, ClassName, Format, ...)
+#define LOGT(Type, ClassName, Time, Format, ...)
+#define LOG_CHECK(Expression, Type, ClassName, Format, ...)
+#define LOGT_CHECK(Expression, Type, ClassName, Time, Format, ...)
 
 #endif // ENABLE_LOG
 

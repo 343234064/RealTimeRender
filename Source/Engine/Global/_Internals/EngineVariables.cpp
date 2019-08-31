@@ -56,7 +56,7 @@ MallocInterface* gMallocator = nullptr;
 Editor* gEditor = nullptr;
 
 /*Global Logger*/
-LogManager* gLogger = LogManager::Get();
+LogManager& gLogger = LogManager::Get();
 
 /*Fatal messages output device*/
 LogDeviceFatal gFatalLogger;
