@@ -1,7 +1,7 @@
 
 Real Time Renderer
-	--> C++
-	--> VS2017 Build
+C++ Based
+Build with Visual Studio2019 
 
 TODO:
 log system, 
