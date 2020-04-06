@@ -9,7 +9,7 @@
   <ItemDefinitionGroup>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jemalloc-vc141-Release-static.lib;jemalloc-vc141-Debug-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>jemalloc-vc142-Release-static.lib;jemalloc-vc142-Debug-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>JEMALLOC_EXPORT=;JEMALLOC_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>

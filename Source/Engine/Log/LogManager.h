@@ -69,7 +69,7 @@ private:
 	//Log data on other thread will be bufferd and output in the main thread
 	Array<LogEvent> BufferedLogEvents;
 
-    //Output devices that can be used
+	//Output devices that can be used
 	Array<LogDevice*> OutputDevices;
 
 

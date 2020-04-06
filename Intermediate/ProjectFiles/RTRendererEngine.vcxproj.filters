@@ -261,6 +261,7 @@
     <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFatal.h">
       <Filter>Source\Engine\Log</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
@@ -341,5 +342,12 @@
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFatal.cpp">
       <Filter>Source\Engine\Log\_Internals</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RTRendererEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\Knight\Desktop\ii.png" />
+    <Image Include="icon1.ico" />
   </ItemGroup>
 </Project>

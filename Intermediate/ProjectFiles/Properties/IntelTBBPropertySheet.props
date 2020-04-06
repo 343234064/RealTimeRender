@@ -4,11 +4,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <IncludePath>..\..\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\lib\vc14;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\lib\vc142;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>G:\coding\RealTimeRenderer\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\lib\vc14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>G:\coding\RealTimeRenderer\Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN\lib\vc142;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

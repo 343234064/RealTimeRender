@@ -73,6 +73,7 @@
     <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFile.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogManager.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Editor\_Internals\Editor.cpp" />
@@ -102,36 +103,43 @@
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogMacros.cpp" />
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogManager.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RTRendererEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\Knight\Desktop\ii.png" />
+    <Image Include="icon1.ico" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{1C4366AC-CDA0-4B9C-9F0C-696F887C16DE}</ProjectGuid>
     <RootNamespace>RTRendererEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -170,7 +178,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\Binaries\</OutDir>
     <IntDir>..\Debug\</IntDir>
-    <IncludePath>G:\coding\RealTimeRenderer\Source\Engine;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\Source\Engine;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

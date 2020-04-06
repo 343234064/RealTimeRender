@@ -203,24 +203,24 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 class WindowsTypes
 {
 public:
-	typedef	signed char			int8;
-	typedef unsigned char 		uint8;
+	typedef	signed char		int8;
+	typedef unsigned char		uint8;
 
-	typedef signed short int	int16;
+	typedef signed short int		int16;
 	typedef unsigned short int	uint16;
 
 	typedef signed int	 		int32;
-	typedef unsigned int		uint32;
+	typedef unsigned int			uint32;
 
-	typedef signed long long	int64;
+	typedef signed long long		int64;
 	typedef unsigned long long	uint64;
 
-	typedef unsigned __int64    Size_T;
+	typedef unsigned __int64		Size_T;
 
-	typedef char                ANSICHAR;
-	typedef wchar_t             WIDECHAR;
-	typedef char16_t            CHAR16;
-	typedef char32_t            CHAR32;
+	typedef char				ANSICHAR;
+	typedef wchar_t			WIDECHAR;
+	typedef char16_t			CHAR16;
+	typedef char32_t			CHAR32;
 
 };
 

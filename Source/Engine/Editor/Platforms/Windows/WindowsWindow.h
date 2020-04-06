@@ -15,11 +15,12 @@ public:
 		//RegionWidth(0),
 		//RegionHeight(0),
 		//ActualWidth(0),
-	    //ActualHeight(0),
+	        //ActualHeight(0),
 		AspectRatio(1.0f),
 		IsVisibled(false),
 		IsInitialized(false),
-		HasNeverShow(false)
+		HasNeverShow(false),
+		Rgn()
 	{
 		Memory::Zero(&PreParentMinimizedWindowPlacement, sizeof(PreParentMinimizedWindowPlacement));
 		Memory::Zero(&PreBorderlessWindowPlacement, sizeof(PreBorderlessWindowPlacement));
