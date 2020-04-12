@@ -106,10 +106,6 @@
   <ItemGroup>
     <ResourceCompile Include="RTRendererEngine.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="C:\Users\Knight\Desktop\ii.png" />
-    <Image Include="icon1.ico" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{1C4366AC-CDA0-4B9C-9F0C-696F887C16DE}</ProjectGuid>

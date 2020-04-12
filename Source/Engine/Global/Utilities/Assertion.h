@@ -16,7 +16,7 @@ Debug assertions
 
 
 
-class Debug
+class Assertion
 {
 public:
 	template <typename... Types>
@@ -40,15 +40,15 @@ private:
 
 
 
-#define DEBUG_BREAK {if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); }}
+#define DEBUG_BREAK {if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } else {abort();}}
 
 
 //Debug assertion macros
-#if ENABLE_DEBUG_ASSERTION
+#if ENABLE_ASSERTION
 #define CHECK(Expression) { \
 	 if(UNLIKELY(!(Expression))) \
      { \
-         Debug::OnAssertionFailed( #Expression, __FILE__, __LINE__, ""); \
+         Assertion::OnAssertionFailed( #Expression, __FILE__, __LINE__, ""); \
          DEBUG_BREAK \
 	 } \
      }
@@ -56,7 +56,7 @@ private:
 #define CHECKF(Expression, Format, ...) { \
 	 if(UNLIKELY(!(Expression))) \
      { \
-         Debug::OnAssertionFailed( #Expression, __FILE__, __LINE__, Format, ##__VA_ARGS__ ); \
+         Assertion::OnAssertionFailed( #Expression, __FILE__, __LINE__, Format, ##__VA_ARGS__ ); \
          DEBUG_BREAK \
 	 } \
      }

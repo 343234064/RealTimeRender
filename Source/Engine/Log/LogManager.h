@@ -39,7 +39,7 @@ public:
 	~LogManager();
 
 
-	void Redirector(LogType Type, const TChar* ClassName, const TChar* TimeString, const double TimeSecond, const TChar* Data);
+	void Redirector(LogType Type, const TChar* ClassName, const TChar* TimeString, const int32 Line, const double TimeSecond, const TChar* Data);
 	void Flush();
 	void Shutdown();
 
@@ -54,7 +54,7 @@ private:
 
 	void UnsynFlushBufferedLogs();
 	void SetupOutputDevice();
-	String Formatter(LogType Type, const TChar* ClassName, const TChar* TimeString, const double TimeSecond, const TChar* Data);
+	String Formatter(LogType Type, const TChar* ClassName, const TChar* TimeString, const int32 Line, const double TimeSecond, const TChar* Data);
 
 
 private:

@@ -23,8 +23,8 @@ void LogDeviceFatal::Serialize(const TChar* Data)
 		LockGuard<PlatformCriticalSection> Lock(FatalHistCriticalSection);
 
 		//Copy to fatal message buffer, to wait for output to file
-		PlatformChars::Strncpy(FatalHist, Data, ARRAY_SIZE(FatalHist));
-		PlatformChars::Strcat(FatalHist, ARRAY_SIZE(FatalHist), TEXTS("\r\n"));
+		PlatformChars::Strncpy(FatalHist + PlatformChars::Strlen(FatalHist), Data, ARRAY_SIZE(FatalHist));
+		//PlatformChars::Strcat(FatalHist, ARRAY_SIZE(FatalHist), TEXTS("\r"));
 
 		FatalHistHasFlush = false;
 	}
@@ -40,6 +40,7 @@ void LogDeviceFatal::Serialize(const TChar* Data)
 
 void LogDeviceFatal::WriteFatalHistToFile()
 {
+#if ENABLE_LOG
 	if (!Writer.is_open() && !InitFailed)
 	{
 		Writer.open("Fatal.log", std::ios_base::app);
@@ -50,6 +51,7 @@ void LogDeviceFatal::WriteFatalHistToFile()
 			DEBUG(LogDeviceFatal, TEXTS("Open Fatal.log file failed!"));
 		}
 	}
+#endif
 
 	if (Writer.is_open())
 	{

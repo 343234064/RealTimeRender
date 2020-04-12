@@ -346,8 +346,4 @@
   <ItemGroup>
     <ResourceCompile Include="RTRendererEngine.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="C:\Users\Knight\Desktop\ii.png" />
-    <Image Include="icon1.ico" />
-  </ItemGroup>
 </Project>

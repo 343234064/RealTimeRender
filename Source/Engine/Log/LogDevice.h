@@ -29,7 +29,7 @@ public:
 	virtual void Shutdown() {}
 
 	virtual void Logf(const TChar* Format, ...);
-    virtual void Log(const TChar* Data) { Serialize(Data); }
+	virtual void Log(const TChar* Data) { Serialize(Data); }
 
 
 protected:

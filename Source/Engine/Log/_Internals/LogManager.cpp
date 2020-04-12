@@ -40,25 +40,25 @@ void LogManager::SetupOutputDevice()
 
 }
 
-void LogManager::Redirector(LogType Type, const TChar* ClassName, const TChar* TimeString, const double TimeSecond, const TChar* Data)
+void LogManager::Redirector(LogType Type, const TChar* ClassName, const TChar* TimeString, const int32 Line, const double TimeSecond, const TChar* Data)
 {
-	    String ToWrite = Formatter(Type, ClassName, TimeString, TimeSecond, Data);
+		String ToWrite = Formatter(Type, ClassName, TimeString, Line, TimeSecond, Data);
 
 		LockGuard<PlatformCriticalSection> Lock(CriticalSection);
 
 		//Output debug log immediately
-#ifdef _DEBUG
+#ifdef _DEBUG		
+		if (!ConsoleLogger)
+		{
+			ConsoleLogger = new LogDeviceConsole();
+			CHECK(ConsoleLogger != nullptr);
+		}
+
+		if (ConsoleLogger)
+			ConsoleLogger->Log(*ToWrite);
+		
 		if (Type == LogType::Debug)
 		{
-			if (!ConsoleLogger)
-			{
-				ConsoleLogger = new LogDeviceConsole();
-				CHECK(ConsoleLogger != nullptr);
-			}
-
-			if (ConsoleLogger)
-				ConsoleLogger->Log(*ToWrite);
-
 			return;
 		}
 #endif
@@ -97,7 +97,7 @@ void LogManager::Redirector(LogType Type, const TChar* ClassName, const TChar* T
 			}
 			else
 			{
-				//Cache the log message if current thread is not main thread or there is still no output device 
+				//Cache the log message if there is still no output device 
 				BufferedLogEvents.Add(LogEvent(Type, *ToWrite));
 			}
 
@@ -193,7 +193,7 @@ void LogManager::Shutdown()
 }
 
 
-String LogManager::Formatter(LogType Type, const TChar* ClassName, const TChar* TimeString, const double TimeSecond, const TChar* Data)
+String LogManager::Formatter(LogType Type, const TChar* ClassName, const TChar* TimeString, const int32 Line, const double TimeSecond, const TChar* Data)
 {
 	//Adding prefix
 	const TChar* Terminal = LINE_TERMINATOR;
@@ -209,19 +209,19 @@ String LogManager::Formatter(LogType Type, const TChar* ClassName, const TChar* 
 	switch (Type)
 	{
 	case LogType::Debug:
-		ToWrite += TEXTS("[DEBUG]");break;
+		ToWrite += TEXTS("[**DEBUG**]");break;
 	case LogType::Info:
-		ToWrite += TEXTS("[INFO]");break;
+		ToWrite += TEXTS("[**INFO**]");break;
 	case LogType::Warn:
-		ToWrite += TEXTS("[WARNING]");break;
+		ToWrite += TEXTS("[**WARN**]");break;
 	case LogType::Error:
-		ToWrite += TEXTS("[ERROR]");break;
+		ToWrite += TEXTS("[**ERROR**]");break;
 	default:
 		break;
 	}
 
-	ToWrite += ClassName;
-	ToWrite += TEXTS(": ");
+	ToWrite += String::Sprintf(TEXTS("%s, %d"), ClassName, Line);
+	ToWrite += TEXTS(": \n");
 	ToWrite += Data;
 
 	if (AutoInsertLineTerminator)

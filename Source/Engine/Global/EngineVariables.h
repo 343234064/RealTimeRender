@@ -12,15 +12,15 @@ Universal Variables
 //==============================
 //Version
 //==============================
-const TChar ApplicationIdentity[] =    TEXTS("_RTR_001");
+const TChar ApplicationIdentity[] =    TEXTS("_RTR_002");
 const TChar ApplicationName[] =        TEXTS("RT-Renderer");
-const TChar ApplicationVersionName[] = TEXTS("-ver-0.01");
+const TChar ApplicationVersionName[] = TEXTS("-ver-0.02");
 
 #define APPLICATION_IDENTITY ApplicationIdentity
 #define APPLICATION_NAME ApplicationName
 
 #define APPLICATION_VERSION_NAME ApplicationVersionName
-#define APPLICATION_VERSION_NUM 001
+#define APPLICATION_VERSION_NUM 002
 
 
 

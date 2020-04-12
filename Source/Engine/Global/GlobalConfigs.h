@@ -55,15 +55,16 @@ Enable log and assertion for debug
 *************************/
 //See Assertion.h
 #if _DEBUG
-#define ENABLE_DEBUG_ASSERTION 1
+#       define ENABLE_ASSERTION 1
 #endif
 
 //See LogMacros.h
-#if _DEBUG
-#define ENABLE_DEBUG_LOG 1
-#endif
-
 #define ENABLE_LOG 1
+#if ENABLE_LOG
+#  if _DEBUG
+#       define ENABLE_DEBUG_LOG 1
+#  endif
+#endif
 
 
 /*************************

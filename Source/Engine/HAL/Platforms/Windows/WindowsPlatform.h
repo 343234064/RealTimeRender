@@ -313,13 +313,9 @@ struct Platform
 		return ::IsDebuggerPresent();
 	}
 
-
 	inline static void DebugBreak()
 	{
-		//if (MessageBox(0, TEXT("Got error or assertion failed. Hit Yes to start Debug Break"), TEXT("Debug Break In"), MB_YESNO | MB_SYSTEMMODAL) == IDYES)
-		//{
-			::DebugBreak();
-		//}
+		::DebugBreak();
 	}
 
 	inline static void GetCurrentDirW(PlatformTypes::WIDECHAR* OutDir, PlatformTypes::uint32 DestSize)

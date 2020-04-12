@@ -30,7 +30,7 @@
 //Data types
 //==============================
 
-typedef	PlatformTypes::int8		int8;		//8-bit  signed.
+typedef PlatformTypes::int8	int8;			//8-bit  signed.
 typedef PlatformTypes::uint8 	uint8;		//8-bit  unsigned.
 
 typedef PlatformTypes::int16	int16;		//16-bit signed.
@@ -42,7 +42,7 @@ typedef PlatformTypes::uint32	uint32;		//32-bit unsigned.
 typedef PlatformTypes::int64	int64;		//64-bit signed.
 typedef PlatformTypes::uint64	uint64;		//64-bit unsigned.
 
-typedef PlatformTypes::Size_T   Size_T;     //unsigned int, has same size as pointer 
+typedef PlatformTypes::Size_T   Size_T;		//unsigned int, has same size as pointer 
 
 typedef PlatformTypes::ANSICHAR ANSICHAR;   //8-bit ANSI character
 typedef PlatformTypes::WIDECHAR WIDECHAR;   //wide character, for UNICODE
@@ -107,23 +107,23 @@ static_assert(sizeof(CHAR32) == 4, "CHAR32 size uncorrect");
 static_assert(sizeof(TChar) == 2, "TChar must be 2 bytes");
 
 
-#define MIN_UINT8		((uint8) 0x00)
-#define	MIN_UINT16		((uint16)0x0000)
-#define	MIN_UINT32		((uint32)0x00000000)
-#define MIN_UINT64		((uint64)0x0000000000000000)
-#define MIN_INT8		((int8)	 0x80)
-#define MIN_INT16		((int16) 0x8000)
-#define MIN_INT32		((int32) 0x80000000)
-#define MIN_INT64		((int64) 0x8000000000000000)
+#define MIN_UINT8		((uint8)  0x00)
+#define MIN_UINT16	((uint16)0x0000)
+#define MIN_UINT32	((uint32)0x00000000)
+#define MIN_UINT64	((uint64)0x0000000000000000)
+#define MIN_INT8		((int8)    0x80)
+#define MIN_INT16		((int16)  0x8000)
+#define MIN_INT32		((int32)  0x80000000)
+#define MIN_INT64		((int64)  0x8000000000000000)
 
-#define MAX_UINT8		((uint8) 0xff)
-#define MAX_UINT16		((uint16)0xffff)
-#define MAX_UINT32		((uint32)0xffffffff)
-#define MAX_UINT64		((uint64)0xffffffffffffffff)
-#define MAX_INT8		((int8)	 0x7f)
-#define MAX_INT16		((int16) 0x7fff)
-#define MAX_INT32		((int32) 0x7fffffff)
-#define MAX_INT64		((int64) 0x7fffffffffffffff)
+#define MAX_UINT8		((uint8)  0xff)
+#define MAX_UINT16	((uint16)0xffff)
+#define MAX_UINT32	((uint32)0xffffffff)
+#define MAX_UINT64	((uint64)0xffffffffffffffff)
+#define MAX_INT8		((int8)    0x7f)
+#define MAX_INT16		((int16)  0x7fff)
+#define MAX_INT32		((int32)  0x7fffffff)
+#define MAX_INT64		((int64)  0x7fffffffffffffff)
 
 
 

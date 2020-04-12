@@ -11,7 +11,7 @@
 //To handle fatal message output
 struct FatalLog
 {
-	static void Output(const TChar* ClassName, const TChar* Format, ...);
+	static void Output(const TChar* ClassName, int32 Line, const TChar* Format, ...);
 	static void OutputToLocal(const TChar* Format, ...);
 	static void Shutdown();
 };
@@ -24,7 +24,7 @@ struct MessageLog
     //UTC, Local, TimeSinceStart
 	static LogTime TimeType;
 
-	static void Output(LogType Type, const TChar* ClassName, double Time, const TChar* Format, ...);
+	static void Output(LogType Type, const TChar* ClassName, int32 Line, double Time, const TChar* Format, ...);
 	static void Shutdown();
 };
 
@@ -53,12 +53,12 @@ struct MessageLog
 
 #define DEBUG(ClassName, Format, ...) \
 { \
-     MessageLog::Output(LogType::Debug, GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
+     MessageLog::Output(LogType::Debug, GET_CLASS_NAME(ClassName), __LINE__, -1.0, Format, ##__VA_ARGS__); \
 }
 
 #define DEBUGT(ClassName, Time, Format, ...) \
 { \
-     MessageLog::Output(LogType::Debug, GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
+     MessageLog::Output(LogType::Debug, GET_CLASS_NAME(ClassName), __LINE__, Time, Format, ##__VA_ARGS__); \
 }
 
 #else
@@ -77,11 +77,11 @@ struct MessageLog
     static_assert(GET_LOG_TYPE(Type) != LogType::Debug, "Please use DEBUG macro to output Debug log"); \
     IF_LOG_TYPE_IS(Type, \
         { \
-		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
+                FatalLog::Output(GET_CLASS_NAME(ClassName), __LINE__, Format, ##__VA_ARGS__); \
             \
         }, \
         { \
-           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
+                MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), __LINE__, -1.0, Format, ##__VA_ARGS__); \
 	    } \
     ); \
 } 
@@ -91,11 +91,11 @@ struct MessageLog
     static_assert(GET_LOG_TYPE(Type) != LogType::Debug, "Please use DEBUG macro to output Debug log"); \
     IF_LOG_TYPE_IS(Type, \
         { \
-		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
-           if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
+                FatalLog::Output(GET_CLASS_NAME(ClassName), __LINE__, Format, ##__VA_ARGS__); \
+                if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
-           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
+                MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), __LINE__, Time, Format, ##__VA_ARGS__); \
 	    } \
     ) \
 } 
@@ -106,11 +106,11 @@ struct MessageLog
     if(Expression) \
     IF_LOG_TYPE_IS(Type, \
         { \
-		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
-           if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
+                FatalLog::Output(GET_CLASS_NAME(ClassName), __LINE__, Format, ##__VA_ARGS__); \
+                if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
-           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), -1.0, Format, ##__VA_ARGS__); \
+                MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), __LINE__, -1.0, Format, ##__VA_ARGS__); \
 	    } \
     ) \
 } 
@@ -121,11 +121,11 @@ struct MessageLog
     if(Expression) \
     IF_LOG_TYPE_IS(Type, \
         { \
-		   FatalLog::Output(GET_CLASS_NAME(ClassName), Format, ##__VA_ARGS__); \
-           if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
+                FatalLog::Output(GET_CLASS_NAME(ClassName), __LINE__, Format, ##__VA_ARGS__); \
+                if(Platform::IsDebuggerPresent()) { Platform::DebugBreak(); } \
         }, \
         { \
-           MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), Time, Format, ##__VA_ARGS__); \
+                MessageLog::Output(GET_LOG_TYPE(Type), GET_CLASS_NAME(ClassName), __LINE__, Time, Format, ##__VA_ARGS__); \
 	    } \
     ) \
 } 

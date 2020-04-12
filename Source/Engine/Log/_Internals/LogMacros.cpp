@@ -7,13 +7,13 @@
 #include "HAL/Time.h"
 
 //For fatal messages
-static TChar StaticFatalMsgBuffer[2048]; //4kb
+static TChar StaticFatalMsgBuffer[2048]; //2kb
 static PlatformCriticalSection FatalMsgBufferCriticalSection;
 
 LogTime MessageLog::TimeType = LogTime::Local;
 
 
-void MessageLog::Output(LogType Type, const TChar* ClassName, double Time, const TChar* Format, ...)
+void MessageLog::Output(LogType Type, const TChar* ClassName, int32 Line, double Time, const TChar* Format, ...)
 {
 	//Get the time as early as possible
 	Time = (Time < 0.0) ? PlatformTime::Time_Seconds() - gStartTime : Time;
@@ -40,7 +40,7 @@ void MessageLog::Output(LogType Type, const TChar* ClassName, double Time, const
 		break;
 	}
 
-	SRINTF_VARARGS(gLogger.Redirector(Type, ClassName, TimeString, Time, BufferPtr));
+	SRINTF_VARARGS(gLogger.Redirector(Type, ClassName, TimeString, Line, Time, BufferPtr));
 
 }
 
@@ -52,20 +52,7 @@ void MessageLog::Shutdown()
 
 
 
-void FatalLog::OutputToLocal(const TChar* Format, ...)
-{
-	int32 WriteCount = 0;
-	TChar Description[2048];
-	GET_FORMAT_VARARGS(Description, ARRAY_SIZE(Description), ARRAY_SIZE(Description) - 1, Format, Format, WriteCount);
-	Description[WriteCount] = '\0';
-
-	Platform::LocalPrintW(Description);
-
-	gFatalLogger.Log(Description);
-}
-
-
-void FatalLog::Output(const TChar* ClassName, const TChar* Format, ...)
+void FatalLog::Output(const TChar* ClassName, int32 Line, const TChar* Format, ...)
 {
 	{
 		LockGuard<PlatformCriticalSection> Lock(FatalMsgBufferCriticalSection);
@@ -89,11 +76,14 @@ void FatalLog::Output(const TChar* ClassName, const TChar* Format, ...)
 			StaticFatalMsgBuffer[ARRAY_SIZE(StaticFatalMsgBuffer) - 1] = '\0';
 	};
 
-	//Show message box 
-	PlatformDialog::Open(DialogType::Ok, TEXTS("Fatal Error!"), StaticFatalMsgBuffer);
+	//Show message box
+	String Description = String::Sprintf(TEXTS("[Fatal Error: %s, %d]\n"), ClassName, Line);
+	PlatformDialog::Open(DialogType::Ok, *Description, StaticFatalMsgBuffer);
 
 	//Output to local
-	OutputToLocal(TEXTS("[Fatal Error][%s]: %s"), ClassName, StaticFatalMsgBuffer);
+	Description += StaticFatalMsgBuffer;
+	Platform::LocalPrintW(*Description);
+	gFatalLogger.Log(*Description);
 
 }
 

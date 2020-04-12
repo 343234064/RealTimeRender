@@ -126,7 +126,7 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	else
 	{
 		//To catch any exceptions on threads that are not throw by the application code
-		SetUnhandledExceptionFilter(UnhandledException);
+		::SetUnhandledExceptionFilter(UnhandledException);
 
 		//Structured exception handling
 		__try

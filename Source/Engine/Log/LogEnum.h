@@ -16,7 +16,7 @@ enum LogType
 	//Print to screen and file
 	Error,
 
-    //Print to file and IDE/Console
+	//Print to file and IDE/Console
 	Fatal
 
 };

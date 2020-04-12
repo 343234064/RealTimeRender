@@ -1,33 +1,30 @@
 #include "Global/Utilities/Assertion.h"
-
+#include "HAL/Dialog/Dialog.h"
 #include <stdio.h>
 
 
-PlatformCriticalSection Debug::DebugCriticalSection;
+PlatformCriticalSection Assertion::DebugCriticalSection;
 
 
-void Debug::OuputAssertionFailed(const ANSICHAR* Expression, const ANSICHAR* File, int32 Line, const ANSICHAR* Format, ...)
+void Assertion::OuputAssertionFailed(const ANSICHAR* Expression, const ANSICHAR* File, int32 Line, const ANSICHAR* Format, ...)
 {
-	//if (!gIsGetCriticalError)
+	if (!gIsGetCriticalError)
 	{
-
 		ANSICHAR DescriptionText[DESCRIPTION_LENGTH];
 		ANSICHAR PrefixText[PREFIX_LENGTH];
 		ANSICHAR FinalText[PREFIX_LENGTH + DESCRIPTION_LENGTH + 10];//Leave a little space
 
 		int32 Result = 0;
 		GET_FORMAT_VARARGS(DescriptionText, sizeof(ANSICHAR) * DESCRIPTION_LENGTH, sizeof(ANSICHAR) * (DESCRIPTION_LENGTH - 1), Format, Format, Result);
-		PlatformChars::Sprintf(PrefixText, PREFIX_LENGTH, "Assertion Failed: %s", Expression);
+		PlatformChars::Sprintf(PrefixText, PREFIX_LENGTH, "Assertion Failed: %s \n", Expression);
 
 		PlatformChars::Sprintf(FinalText, PREFIX_LENGTH + DESCRIPTION_LENGTH + 10, "%s [File:%s][Line:%i]\n%s\n", PrefixText, File, Line, DescriptionText);
 
 		LockGuard<PlatformCriticalSection> DebugLock(DebugCriticalSection);
 
-		//In Debug mode
-		printf(FinalText);
+		fprintf(stderr, FinalText);
 		Platform::LocalPrintA(FinalText);
 
-		//else output to log file in release mode
-		//
+		PlatformDialog::Open(DialogType::Ok, "Assertion Failed", FinalText);
 	}
 }

@@ -65,12 +65,16 @@ int32 CoreEngine::Init()
 	
 
 	//broadcast OnInitComplete
+	CHECK(false);
 	LOG(Info, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Info，这是一个测试"));
 	LOG(Warn, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn，这是一个测试"));
+	LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal2，调偶家将军澳2"));
 	DEBUG(CoreEngine, TEXTS("This is a test:%s"), TEXTS("Debug，这是一个测试"));
+	LOG(Error, CoreEngine, TEXTS("ZZZZZZZZZZZZ:%s %d"), TEXTS("ZXXXXXXX大时代"), 678);
 
 	LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal，这是一个测试"));
-	LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal2，这是一个测试2"));
+	LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal2，大寺基调偶家将军澳2"));
+	
 
 
 
