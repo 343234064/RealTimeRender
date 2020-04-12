@@ -12,7 +12,6 @@
 struct FatalLog
 {
 	static void Output(const TChar* ClassName, int32 Line, const TChar* Format, ...);
-	static void OutputToLocal(const TChar* Format, ...);
 	static void Shutdown();
 };
 
@@ -21,7 +20,7 @@ struct FatalLog
 struct MessageLog
 {
 	//The time type that output to log file
-    //UTC, Local, TimeSinceStart
+        //UTC, Local, TimeSinceStart
 	static LogTime TimeType;
 
 	static void Output(LogType Type, const TChar* ClassName, int32 Line, double Time, const TChar* Format, ...);
