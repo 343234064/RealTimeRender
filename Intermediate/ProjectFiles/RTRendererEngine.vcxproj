@@ -36,7 +36,7 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\ContainerAllocator.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\DynamicArray.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Misc.h" />
-    <ClInclude Include="..\..\Source\Engine\Global\Utilities\CountedPtr.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\RefCount.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\CharConversion.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Chars.h" />

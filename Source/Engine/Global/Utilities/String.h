@@ -145,14 +145,15 @@ public:
 	FORCE_INLINE
 	TChar& operator[](int32 Index)
 	{
-		//check
+		CHECKF((Index >= 0 && Index < Len()), "String index out of bounds, current: %i, index: %i", Len(), Index);
 		return Strings[Index];
+		
 	}
 
 	FORCE_INLINE
 	const TChar& operator[](int32 Index) const
 	{
-		//check
+		CHECKF((Index >= 0 && Index < Len()), "String index out of bounds, current: %i, index: %i", Len(), Index);
 		return Strings[Index];
 	}
 
@@ -195,8 +196,7 @@ public:
 	FORCE_INLINE
 	void Append(const TChar* Src, int32 Num)
 	{
-		//check
-		if (!Num) return;
+		CHECK(Num >= 0);
 
 		int32 CurNum = Strings.CurrentNum();
 		Strings.AddUninitialize(CurNum > 0 ? Num : Num + 1);
@@ -213,7 +213,6 @@ public:
 	typename FuncTrigger<IsCharType<CharType>::Value>::Type
 	Append(CharType Char)
 	{
-		//check
 		if (Char != 0)
 		{
 			//TODO: if CharType is not fixed size
@@ -560,7 +559,7 @@ public:
 	//Return -1 if failed to search
 	int32 Find(const TChar* SubString, int32 SearchIndex, bool IgnoreCase = true)
 	{
-		//check substring == null **this
+		CHECK(SubString != nullptr);
 		const TChar* Begin = **this + Clamp(SearchIndex, 0, Len());
 		if (*Begin)
 		{
@@ -577,7 +576,7 @@ public:
     //Return -1 if failed to search
 	int32 FindFromEnd(const TChar* SubString, int32 SearchIndex, bool IgnoreCase = true)
 	{
-		//check substring == null **this
+		CHECK(SubString != nullptr);
 
 		//Ignore the first letter 
 		int32 SubLength = (int32)PlatformChars::Strlen(SubString) - 1;
@@ -846,7 +845,6 @@ public:
 	typename FuncTrigger<IsCharType<CharType>::Value, String>::Type
 	operator+(const String& Left, CharType Right)
 	{
-		//check
 		String Value(Left);
 		Value.Append(Right);
 
@@ -859,7 +857,6 @@ public:
 	typename FuncTrigger<IsCharType<CharType>::Value, String>::Type
 	operator+(String&& Left, CharType Right)
 	{
-		//check
 		String Value(std::move(Left));
 		Value.Append(Right);
 
@@ -935,7 +932,6 @@ protected:
 	FORCE_INLINE static
 	String Concat(typename ExplicitType<LeftType>::Type Left, typename ExplicitType<RightType>::Type Right)
 	{
-		//check
 		if (Left.IsClear())
 		{
 			return std::move(Right);
@@ -951,7 +947,6 @@ protected:
 	FORCE_INLINE static
 	String ConcatStringAndTChar(typename ExplicitType<LeftType>::Type Left, const TChar* Right)
 	{
-		//check
 		if (!Right || !*Right)
 		{
 			return std::move(Left);
@@ -967,7 +962,6 @@ protected:
 	FORCE_INLINE static
 	String ConcatTCharAndString(const TChar* Left, typename ExplicitType<RightType>::Type Right)
 	{
-		//check
 		if (!Left || !*Left)
 		{
 			return std::move(Right);

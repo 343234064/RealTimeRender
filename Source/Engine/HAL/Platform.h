@@ -39,12 +39,6 @@
    #define PLATFORM_TEXT_IS_CHAR16 0
 #endif
 
-/*
-   char32_t is not use
-*/
-//#ifndef PLATFORM_TEXT_IS_CHAR32
-//#define PLATFORM_TEXT_IS_CHAR32 0
-//#endif
 
 
 
@@ -66,7 +60,7 @@
    #endif
 #endif
 
-// Hints compiler that expression is unlikely to be true
+// Hints compiler that expression is unlikely to be true, useful on clang or gnuc complier
 #ifndef UNLIKELY	
 #if (PLATFORM_LINUX) && ( defined(__clang__) || defined(__GNUC__) ) 
 #define UNLIKELY(x)	__builtin_expect(!!(x), 0)

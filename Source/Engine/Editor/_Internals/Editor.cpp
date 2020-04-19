@@ -107,7 +107,7 @@ void Editor::Tick()
 
 
 
-    //Update time and statistics
+       //Update time and statistics
 	LastTickTime = CurrentTime;
 	CurrentTime = PlatformTime::Time_Seconds();
 

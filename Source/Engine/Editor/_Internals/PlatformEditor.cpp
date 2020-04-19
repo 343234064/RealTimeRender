@@ -19,7 +19,7 @@ int32 PlatformEditorInterface::GetWindowIndex(void* WindowHandle)
 
 const SharedPTRWindow& PlatformEditorInterface::GetWindow(int32 WinIndex)
 {
-	//check
+	CHECK(WinIndex < Windows.CurrentNum() && WinIndex >= 0);
 	return Windows[WinIndex];
 }
 
@@ -59,7 +59,6 @@ void PlatformEditorInterface::CloseSingleWindowImmediately(SharedPTRWindow& ToCl
 		}
 		else//Windows[0] is top window
 		{
-			//
 		}
 	}
 

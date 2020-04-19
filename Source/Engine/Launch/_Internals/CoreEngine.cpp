@@ -65,7 +65,7 @@ int32 CoreEngine::Init()
 	
 
 	//broadcast OnInitComplete
-	CHECK(false);
+	//CHECK(false);
 	LOG(Info, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Info，这是一个测试"));
 	LOG(Warn, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Warn，这是一个测试"));
 	LOG(Fatal, CoreEngine, TEXTS("This is a test:%s"), TEXTS("Fatal2，调偶家将军澳2"));

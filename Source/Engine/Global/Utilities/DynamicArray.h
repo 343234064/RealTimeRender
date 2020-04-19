@@ -8,6 +8,7 @@
 #include "Global/GlobalConfigs.h"
 #include "Global/GlobalType.h"
 #include "Global/Utilities/ContainerAllocator.h"
+#include "Global/Utilities/Assertion.h"
 #include "HAL/Memory/Memory.h"
 
 
@@ -46,12 +47,13 @@ struct IsArrayPointerCanBeMoved
   when calling function like Add()
   The output will be in range[4, MAX_INT32]
  */
-FORCEINLINE 
-int32 GrowPolicy(int32 CurrentElementNum, int32 MaxElementNum)
+FORCE_INLINE 
+int32 GrowPolicy(int32 CurrentElementNum, int32 AllocatedMaxElementNum)
 {
-	//check
+	CHECK(CurrentElementNum >= 0);
+
 	Size_T Grow = 4;
-	if (MaxElementNum || (Size_T(CurrentElementNum) > Grow))
+	if (AllocatedMaxElementNum || (Size_T(CurrentElementNum) > Grow))
 	{
 		Grow = Size_T(CurrentElementNum) + 3 * Size_T(CurrentElementNum) / 8 + 16;
 	}
@@ -69,10 +71,10 @@ int32 GrowPolicy(int32 CurrentElementNum, int32 MaxElementNum)
   Giving the number of current element slack and max element size then output the size that should be shrinked
   The output MUST be in range[0, ElementSlackNum]
  */
-FORCEINLINE
+FORCE_INLINE
 int32 ShrinkPolicy(int32 ElementSlackNum, int32 MaxElementNum, int32 BytesPerElement)
 {
-	//check
+	CHECK(ElementSlackNum >= 0);
 
 	int32 ShrinkedNum = 0;
 
@@ -112,7 +114,7 @@ public:
 	FORCE_INLINE
 	Array(const ElementType* InRawArrayPtr, int32 InElementNum)
 	{
-		//check
+		CHECK(InRawArrayPtr != nullptr || InElementNum > 0);
 		InitDataCopyFrom(InRawArrayPtr, InElementNum);
 	}
 
@@ -176,7 +178,7 @@ public:
 	FORCE_INLINE
 	ElementType& operator[](int32 Index)
 	{
-		//check
+		CHECKF((Index >= 0 && Index < CurrentElementNum), "Array index out of bounds, current: %i, index: %i", CurrentElementNum, Index);
 		return Begin()[Index];
 	}
 
@@ -184,7 +186,7 @@ public:
 	FORCE_INLINE
 	const ElementType& operator[](int32 Index) const
 	{
-		//check
+		CHECKF((Index >= 0 && Index < CurrentElementNum), "Array index out of bounds, current: %i, index: %i", CurrentElementNum, Index);
 		return Begin()[Index];
 	}
 
@@ -280,7 +282,7 @@ public:
 	FORCE_INLINE
 	ElementType Pop(bool AllowShrinking = true)
 	{
-		//check
+		CHECK(CurrentElementNum > 0 && MaxElementNum >= CurrentElementNum);
 		ElementType Element = std::move(Begin()[CurrentElementNum - 1]);
 		RemoveAt(CurrentElementNum - 1, 1, AllowShrinking);
 		return Element;
@@ -289,7 +291,7 @@ public:
 	FORCE_INLINE
 	ElementType& Top()
 	{
-		//check
+		CHECK(CurrentElementNum > 0 && MaxElementNum >= CurrentElementNum);
 		return Begin()[CurrentElementNum - 1];
 	}
 
@@ -358,35 +360,33 @@ public:
 
 
 	/*
-       Insert element, with its init arguments
-    */
+	 Insert element, with its init arguments
+	 */
 	template <typename... ArgsType>
 	FORCE_INLINE
 	void InsertWithInitArgs(const int32 InsertIndex, ArgsType&& ... Args)
 	{
-		//check address
+		CHECKF((InsertIndex >= 0 && InsertIndex < CurrentElementNum), "Array index out of bounds, current: %i, index: %i", CurrentElementNum, InsertIndex);
 		InsertUninitialize(InsertIndex);
 		new(Begin() + InsertIndex) ElementType(std::forward<ArgsType>(Args)...);
 	}
 	
 	/*
-       Insert element
-    */
+	Insert element
+	*/
 	FORCE_INLINE
 	void Insert(const int32 InsertIndex, const ElementType& InsertElement)
 	{
-		//check address
 		InsertWithInitArgs(InsertIndex, InsertElement);
 	}
 
 	/*
        Insert element
        Rvalue version
-    */
+	*/
 	FORCE_INLINE
 	void Insert(const int32 InsertIndex, ElementType&& InsertElement)
 	{
-		//check address
 		InsertWithInitArgs(InsertIndex, std::move(InsertElement));
 	}
 
@@ -395,8 +395,7 @@ public:
 	*/
 	void Insert(const int32 InsertIndex, std::initializer_list<ElementType> InsertList)
 	{
-		//check
-		
+		CHECKF((InsertIndex >= 0 && InsertIndex < CurrentElementNum), "Array index out of bounds, current: %i, index: %i", CurrentElementNum, InsertIndex);
 		int32 InsertNum = InsertList.size();
 		InsertUninitialize(InsertIndex, InsertNum);
 		Memory::ConstructItem(Begin() + InsertIndex, InsertList.begin(), InsertNum);
@@ -405,10 +404,10 @@ public:
 
 	/*
        Insert element using a raw array pointer
-    */
+	 */
 	void Insert(const int32 InsertIndex, const int32 InsertNum, const ElementType* InsertElementsPtr)
 	{
-		//check
+		CHECKF((InsertIndex >= 0 && InsertIndex < CurrentElementNum), "Array index out of bounds, current: %i, index: %i", CurrentElementNum, InsertIndex);
 		InsertUninitialize(InsertIndex, InsertNum);
 		Memory::ConstructItem(Begin() + InsertIndex, InsertElementsPtr, InsertNum);
 	}
@@ -649,9 +648,9 @@ public:
 
 	void RemoveAt(const int32 StartIndex, const int32 RemoveNum = 1, bool AllowShrinking = true)
 	{
-		if (RemoveNum && StartIndex >= 0)
+		if (RemoveNum >= 0 && StartIndex >= 0)
 		{
-			//check
+			CHECKF((RemoveNum <= CurrentElementNum - StartIndex), "Array index out of bounds, current: %i, index: %i, remove: %i", CurrentElementNum, StartIndex, RemoveNum);
 
 			Memory::DestructItem(Begin() + StartIndex, RemoveNum);
 
@@ -675,22 +674,22 @@ public:
 
 
 	/*
-      Force the array to fit the elements 
-    */
+	Force the array to fit the elements 
+	*/
 	FORCE_INLINE
 	void ForceShrink()
 	{
-		//check
+		CHECK(CurrentElementNum >= 0);
 		Resize(CurrentElementNum);
 	}
 
 	/*
 	  If the current element slack satisfies the conditions in ShrinkPolicy(),
 	  then resize the array to the best size 
-    */
+        */
 	void Shrink()
 	{
-		//check
+		CHECK(MaxElementNum >= CurrentElementNum);
 		int32 ShrinkNum = ShrinkPolicy(MaxElementNum - CurrentElementNum, MaxElementNum, sizeof(ElementType));
 		if (ShrinkNum)
 		{
@@ -706,8 +705,6 @@ public:
 	FORCE_INLINE
 	void ClearElements()
 	{
-		//check
-
 		if (CurrentElementNum)
 		{
 			Memory::DestructItem(Begin(), CurrentElementNum);
@@ -717,24 +714,23 @@ public:
 	}
 
 	/*
-       Clear all the elements and allocation
-    */
+		Clear all the elements and allocation
+	*/
 	FORCE_INLINE
 	void Empty()
 	{
-		//check
 		ClearElements();
 		Resize(0);
 	}
 
 
 	/*
-      Add Uninitialize element to the last
-      Return the element num that calling AddUninitialize() before
-    */
+	Add Uninitialize element to the last
+	Return the element num that calling AddUninitialize() before
+	*/
 	int32 AddUninitialize(int32 Num = 1)
 	{
-		//check
+		CHECK(Num >= 0);
 
 		int32 OldElementNum = CurrentElementNum;
 		if ((CurrentElementNum += Num) > MaxElementNum)
@@ -751,7 +747,8 @@ public:
 	*/
 	void InsertUninitialize(int32 Index, int32 Num = 1)
 	{
-		//check
+		CHECKF((Num >=0 && Index >= 0 && Index < CurrentElementNum), "Array index out of bounds, current: %i, index: %i", CurrentElementNum, Index);
+
 		int32 OldElementNum = CurrentElementNum;
 		if ((CurrentElementNum += Num) > MaxElementNum)
 		{
@@ -782,7 +779,8 @@ private:
 	FORCE_INLINE
 	void Resize(int32 NewMaxElementNum)
 	{
-		//check 
+		CHECK(NewMaxElementNum >= 0);
+
 		if (NewMaxElementNum != MaxElementNum)
 		{
 			Allocator.Resize(MaxElementNum, NewMaxElementNum);
@@ -794,11 +792,10 @@ private:
 
 	/*
 	   Call to init the array data
-       Assuming that the array is empty
-    */
+	   Assuming that the array is empty
+	*/
 	void InitDataCopyFrom(const ElementType* InOtherDataPtr, int32 InElementNum, int32 ExtraSlack = 0)
 	{
-		//check
 		if (InElementNum || ExtraSlack)
 		{
 			Resize(InElementNum + ExtraSlack);
