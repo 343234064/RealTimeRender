@@ -48,7 +48,7 @@ public:
 	}
 
 
-	void ResetCounter()
+	void Reset()
 	{
 		PlatformAtomics::InterlockedStore(&Counter, 0);
 	}

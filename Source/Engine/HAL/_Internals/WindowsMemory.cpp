@@ -1,6 +1,6 @@
 
-#include "HAL/Platforms/Windows/WindowsMemory.h"
 #include "Global/Utilities/Assertion.h"
+#include "HAL/Platforms/Windows/WindowsMemory.h"
 
 #include <Psapi.h>
 
@@ -73,11 +73,12 @@ void* WindowsMemory::AllocPageFromOS(Size_T Size)
 	return VirtualAlloc(NULL, Size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 }
 
-void WindowsMemory::FreePageFromOS(void* Dest, Size_T Size)
+bool WindowsMemory::FreePageFromOS(void* Dest, Size_T Size)
 {
 	//track
 	bool Result = VirtualFree(Dest, 0, MEM_RELEASE);
 	CHECK(Result);
+	return Result;
 }
 
 

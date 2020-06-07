@@ -53,7 +53,9 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Memory\MemoryInterface.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericPlatform.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsCrash.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsDialog.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h" />

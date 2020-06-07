@@ -4,13 +4,21 @@
 
 #include "HAL/Platform.h"
 #include "HAL/Chars.h"
+#include "Log/LogMacros.h"
 
 #include "Editor/Editor.h"
 
+#if _DEBUG
 #include <crtdbg.h>
+#endif
+
+//Request for high performance NVIDIA/AMD gpu if there are multiples gpus
+//http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf
+extern "C" { _declspec(dllexport) uint32 NvOptimusEnablement = 0x00000001; }
+extern "C" { _declspec(dllexport) uint32 AmdPowerXpressRequestHighPerformance = 0x00000001; }
 
 
-//Globals
+//To detect wheather this is the first instance
 HANDLE gNamedMutex = NULL;
 
 
@@ -49,13 +57,19 @@ bool CreateNemedMutex()
 
 void InvalidParameterHandler(const wchar_t* Expression, const wchar_t* Function, const wchar_t* File, uint32 Line, uintptr_t Reserved)
 {
-	//log
+	LOG(Fatal, WindowsMainEntrance, TEXTS("Invalid parameter detected:\n Expression: %s\n Function: %s\n File: %s\n Line: %d"), 
+		Expression ? Expression : TEXTS("Unknown"), 
+		Function ? Function : TEXTS("Unknown"),
+		File ? File : TEXTS("Unknown"),
+		Line);
 }
 
 
 LONG WINAPI UnhandledException(EXCEPTION_POINTERS* ExceptionInfo)
 {
 	Platform::ReportCrash(ExceptionInfo);
+	gIsGetCriticalError = true;
+	Platform::RequestExit(true);
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
@@ -65,7 +79,7 @@ LONG WINAPI UnhandledException(EXCEPTION_POINTERS* ExceptionInfo)
 int32 GuardedMainEntrance(HINSTANCE hInstance, HINSTANCE hPrevInstance, int nCmdShow)
 {
 	int32 Error = 0;
-	if (gEnableInnerException)
+
 	{
 		__try
 		{
@@ -77,10 +91,6 @@ int32 GuardedMainEntrance(HINSTANCE hInstance, HINSTANCE hPrevInstance, int nCmd
 			//This block do not run
 			;
 		}
-	}
-	else
-	{
-		Error = MAIN_ENTRANCE_CALL(hInstance, hPrevInstance, nCmdShow);
 	}
 
 	return Error;
@@ -108,18 +118,14 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 #endif
 
 	//Setup globals....
-	gIsAppRequestExit = false;
-	gReportCrashEvenDebugger = false;
-	gEnableInnerException = true;
 	gIsFirstInstance = CreateNemedMutex();
-
 
 	//Cache the hInstance
 	gMainInstanceHandle = hInstance;
 
 
 	int32 Error = 0;
-	if (::IsDebuggerPresent() && !gReportCrashEvenDebugger)
+	if (::IsDebuggerPresent())
 	{
 		Error = MAIN_ENTRANCE_CALL(hInstance, hPrevInstance, nCmdShow);
 	}
@@ -133,12 +139,12 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		{
 			Error = GuardedMainEntrance(hInstance, hPrevInstance, nCmdShow);
 		}
-		__except (gEnableInnerException ? EXCEPTION_EXECUTE_HANDLER : Platform::ReportCrash(GetExceptionInformation()))
+		__except (EXCEPTION_EXECUTE_HANDLER)
 		{
 			ReleaseNamedMutex();
 			Error = 1;
 			gIsGetCriticalError = true;
-			//log dump error
+			LOG(Fatal, WindowsMainEntrance, TEXTS("Program shutdown because some exceptions. See Log.log and Fatal.log"));
 			//flush log
 
 			//Kill process directly

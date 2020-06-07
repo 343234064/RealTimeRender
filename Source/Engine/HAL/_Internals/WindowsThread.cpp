@@ -115,7 +115,7 @@ uint32 WindowsThread::RunWrapper()
 
 	Platform::SetCurrentThreadAffinityMask(ThreadAffinityMask);
 
-	if (::IsDebuggerPresent() && !gReportCrashEvenDebugger)
+	if (::IsDebuggerPresent())
 	{
 		Result = Run();
 	}

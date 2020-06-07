@@ -25,7 +25,7 @@ public:
 	//Allocates pages from the OS
 	static void* AllocPageFromOS(Size_T Size);
 	//Free pages to the OS
-	static void  FreePageFromOS(void* Dest, Size_T Size);
+	static bool  FreePageFromOS(void* Dest, Size_T Size);
 
 	static void GetMemoryState(PlatformMemoryStates& State);
 

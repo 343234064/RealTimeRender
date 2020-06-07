@@ -262,6 +262,12 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\RefCount.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsCrash.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericPlatform.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">

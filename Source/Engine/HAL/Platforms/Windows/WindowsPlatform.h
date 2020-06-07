@@ -194,6 +194,7 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 
 
 #define FORCE_INLINE __forceinline
+#define FORCE_NO_INLINE 
 
 
 #include <intrin.h>

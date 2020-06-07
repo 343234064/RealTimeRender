@@ -54,9 +54,9 @@ No 32-bit application
 Enable log and assertion for debug 
 *************************/
 //See Assertion.h
-#if _DEBUG
+//#if _DEBUG
 #       define ENABLE_ASSERTION 1
-#endif
+//#endif
 
 //See LogMacros.h
 #define ENABLE_LOG 1

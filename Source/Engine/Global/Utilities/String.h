@@ -145,7 +145,7 @@ public:
 	FORCE_INLINE
 	TChar& operator[](int32 Index)
 	{
-		CHECKF((Index >= 0 && Index < Len()), "String index out of bounds, current: %i, index: %i", Len(), Index);
+		CHECKF((Index >= 0 && Index <= Len()), "String index out of bounds, current: %i, index: %i", Len(), Index);
 		return Strings[Index];
 		
 	}
@@ -153,7 +153,7 @@ public:
 	FORCE_INLINE
 	const TChar& operator[](int32 Index) const
 	{
-		CHECKF((Index >= 0 && Index < Len()), "String index out of bounds, current: %i, index: %i", Len(), Index);
+		CHECKF((Index >= 0 && Index <= Len()), "String index out of bounds, current: %i, index: %i", Len(), Index);
 		return Strings[Index];
 	}
 

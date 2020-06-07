@@ -30,6 +30,8 @@ struct LogEvent
 class LogManager
 {
 public:
+	typedef Array<LogDevice*> OutputDevicesArray;
+
 	static LogManager& Get()
 	{
 		static LogManager Singleton;
@@ -41,6 +43,7 @@ public:
 
 	void Redirector(LogType Type, const TChar* ClassName, const TChar* TimeString, const int32 Line, const double TimeSecond, const TChar* Data);
 	void Flush();
+	void FlushThreadedLogs();
 	void Shutdown();
 
 
@@ -52,10 +55,13 @@ public:
 private:
 	LogManager();
 
-	void UnsynFlushBufferedLogs();
 	void SetupOutputDevice();
+	void UnsynFlushBufferedLogs(OutputDevicesArray& InOutputDevices);
+	
 	String Formatter(LogType Type, const TChar* ClassName, const TChar* TimeString, const int32 Line, const double TimeSecond, const TChar* Data);
 
+	void LockOutputDevices(OutputDevicesArray& LocalOutputDevices);
+	void UnlockOutputDevices();
 
 private:
 	bool AutoInsertLineTerminator;
@@ -63,19 +69,15 @@ private:
 	//Main thread id
 	int32 MainThreadID;
 
-
-	PlatformCriticalSection CriticalSection;
-
 	//Log data on other thread will be bufferd and output in the main thread
 	Array<LogEvent> BufferedLogEvents;
+	PlatformCriticalSection BufferedLogEventsMutex;
 
 	//Output devices that can be used
-	Array<LogDevice*> OutputDevices;
+	OutputDevicesArray OutputDevices;
+	AtomicCounter<int32> OutputDevicesLockCounter;
+	PlatformCriticalSection OutputDevicesMutex;
 
-
-	//Logger output to console
-	//Output the debug messages and the messages that failed to output in other devices 
-	LogDevice* ConsoleLogger;
 
 };
 

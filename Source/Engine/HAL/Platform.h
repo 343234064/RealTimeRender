@@ -104,5 +104,7 @@ enum
 #define FORCE_INLINE inline
 #endif
 
-
+#ifndef FORCE_NO_INLINE
+#define FORCE_NO_INLINE 
+#endif
 

@@ -8,12 +8,11 @@ Universal Variables
 #include "Global/GlobalType.h"
 #include "HAL/Chars.h"
 
-
 //==============================
 //Version
 //==============================
-const TChar ApplicationIdentity[] =    TEXTS("_RTR_002");
-const TChar ApplicationName[] =        TEXTS("RT-Renderer");
+const TChar ApplicationIdentity[] =  TEXTS("_RTR_002");
+const TChar ApplicationName[] =  TEXTS("RT-Renderer");
 const TChar ApplicationVersionName[] = TEXTS("-ver-0.02");
 
 #define APPLICATION_IDENTITY ApplicationIdentity
@@ -34,12 +33,6 @@ extern bool gIsAppRequestExit;
 /*Is the application the first instance*/
 extern bool gIsFirstInstance;
 
-/*If the application should generate crash report even having a debugger attached*/
-extern bool gReportCrashEvenDebugger;
-
-/*If enable the inner exception handler within native C++*/
-extern bool gEnableInnerException;
-
 /*If we get critical error*/
 extern bool gIsGetCriticalError;
 
@@ -59,8 +52,6 @@ extern double gStartTime;
 /*The Total frame count*/
 //uint64 is big enough for counting(e.g. 1000fps will has a maximum to almost 6k years)
 extern uint64 gFrameCounter; 
-
-
 
 
 
