@@ -6,7 +6,7 @@ Windows Memory Interface
 #pragma once
 
 
-#include "HAL/MemoryInterface.h"
+#include "HAL/Platforms/GenericMemory.h"
 
 
 

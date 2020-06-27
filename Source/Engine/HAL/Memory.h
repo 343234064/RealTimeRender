@@ -19,7 +19,7 @@ Memory relatives
 #error Unknown platform
 #endif
 
-#include "HAL/MemoryInterface.h"
+#include "HAL/Platforms/GenericMemory.h"
 
 /*
   Memory Interfaces Entrance

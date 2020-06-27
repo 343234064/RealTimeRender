@@ -3,49 +3,6 @@
 
 
 
-Serializer* FileManage::CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
-{
-	FileHandle* Handle = nullptr;
-	if (!!(Flag & FileFlag::READASYNC))
-	{
-		Handle = PlatformFile::OpenReadAsync(FileName, !!(Flag & FileFlag::SHARED_WRITE));
-	}
-	else
-	{
-	    Handle = PlatformFile::Open(FileName, AccessType::FOR_READ, !!(Flag & FileFlag::SHARED_WRITE), true, false);
-		
-	}
-	
-	if (Handle == nullptr)
-	{
-		//log
-		return nullptr;
-	}
-	
-	return new FileReadSerializer(Handle, CachedBufferSize);
-}
-
-
-
-Serializer* FileManage::CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
-{
-
-	FileHandle* Handle = PlatformFile::Open(FileName, AccessType::FOR_WRITE, true, !!(Flag & FileFlag::SHARED_READ), !!(Flag & FileFlag::APPEND));
-
-	if (Handle == nullptr)
-	{
-		//log
-		return nullptr;
-	}
-
-	return new FileWriteSerializer(Handle, CachedBufferSize);
-}
-
-
-
-
-
-
 
 void FileReadSerializer::Serialize(void* Data, int64 Length)
 {
