@@ -8,8 +8,8 @@ File handle for Windows
 #include "Global/Utilities/String.h"
 #include "Global/Utilities/Assertion.h"
 #include "HAL/Platforms/Windows/WindowsPlatform.h"
-#include "HAL/File/FileHandle.h"
-#include "HAL/File/Path.h"
+#include "HAL/Platforms/GenericFile.h"
+#include "HAL/Path.h"
 
 
 

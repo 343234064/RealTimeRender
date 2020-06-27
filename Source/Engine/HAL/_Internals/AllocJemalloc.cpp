@@ -1,6 +1,6 @@
 
-#include "HAL/Memory/Memory.h"
-#include "HAL/Memory/AllocJemalloc.h"
+#include "HAL/Memory.h"
+#include "HAL/AllocJemalloc.h"
 
 
 //Third party lib

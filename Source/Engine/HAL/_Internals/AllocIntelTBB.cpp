@@ -1,5 +1,5 @@
 
-#include "HAL/Memory/AllocIntelTBB.h"
+#include "HAL/AllocIntelTBB.h"
 
 //Third party lib
 #include <tbb/scalable_allocator.h>

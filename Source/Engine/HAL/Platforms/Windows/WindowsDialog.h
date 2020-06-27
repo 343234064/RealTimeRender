@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "HAL/Dialog/DialogEnum.h"
+#include "HAL/Platforms/GenericDialog.h"
 #include "Global/GlobalType.h"
 
 

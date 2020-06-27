@@ -7,8 +7,8 @@ Log device which output to file
 
 #include "Global/Utilities/DynamicArray.h"
 #include "Global/Utilities/AtomicCounter.h"
-#include "HAL/File/FileManage.h"
-#include "HAL/Thread/Thread.h"
+#include "HAL/FileManage.h"
+#include "HAL/Thread.h"
 #include "Log/LogDevice.h"
 
 

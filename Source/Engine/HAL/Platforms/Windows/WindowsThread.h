@@ -6,7 +6,7 @@ Windows thread
 #pragma once
 
 
-#include "HAL/Thread/ThreadBase.h"
+#include "HAL/Platforms/GenericThread.h"
 #include "HAL/Platforms/Windows/WindowsPlatform.h"
 
 
