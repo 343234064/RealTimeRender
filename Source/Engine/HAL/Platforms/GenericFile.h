@@ -33,6 +33,31 @@ enum class AccessType
 
 
 
+class FileHandle
+{
+public:
+	FileHandle() {}
+	virtual ~FileHandle()
+	{}
+
+	virtual int64 Pos() = 0;
+	virtual bool  Seek(int64 Position) = 0;
+	virtual bool  SeekFromEnd(int64 PositionFromEnd = 0) = 0;
+	virtual bool  Read(uint8* Dest, int64 BytesToRead) = 0;
+	virtual bool  Write(const uint8* Src, int64 BytesToWrite) = 0;
+	virtual void  Flush() {}
+	virtual int64 Size() = 0;
+	virtual String GetFileName() const = 0;
+
+
+};
+
+typedef std::unique_ptr<FileHandle> UniPTRFileHandle;
+
+
+
+
+
 class FileReadSerializer : public Serializer
 {
 public:
@@ -167,28 +192,6 @@ protected:
 	bool GetLogError;
 };
 
-
-
-class FileHandle
-{
-public:
-	FileHandle() {}
-	virtual ~FileHandle()
-	{}
-
-	virtual int64 Pos() = 0;
-	virtual bool  Seek(int64 Position) = 0;
-	virtual bool  SeekFromEnd(int64 PositionFromEnd = 0) = 0;
-	virtual bool  Read(uint8* Dest, int64 BytesToRead) = 0;
-	virtual bool  Write(const uint8* Src, int64 BytesToWrite) = 0;
-	virtual void  Flush() {}
-	virtual int64 Size() = 0;
-	virtual String GetFileName() const = 0;
-
-
-};
-
-typedef std::unique_ptr<FileHandle> UniPTRFileHandle;
 
 
 

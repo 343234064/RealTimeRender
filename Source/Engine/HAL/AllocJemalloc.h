@@ -6,7 +6,7 @@ http://jemalloc.net/
 #pragma once
 
 #include "Global/GlobalType.h"
-#include "HAL/Memory/AllocatorInterface.h"
+#include "HAL/Platforms/GenericAllocator.h"
 
 
 class AllocJemalloc :public MallocInterface

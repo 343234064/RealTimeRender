@@ -5,14 +5,14 @@
 #include <Psapi.h>
 
 #if PLATFORM_ALLOC_SUPPORT_JEM
-#include "HAL/Memory/AllocJemalloc.h"
+#include "HAL/AllocJemalloc.h"
 #endif
 
 #if PLATFORM_ALLOC_SUPPORT_TBB
-#include "HAL/Memory/AllocIntelTBB.h"
+#include "HAL/AllocIntelTBB.h"
 #endif
 
-#include "HAL/Memory/AllocDefault.h"
+#include "HAL/AllocDefault.h"
 
 
 

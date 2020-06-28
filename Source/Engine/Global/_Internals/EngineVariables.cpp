@@ -1,5 +1,5 @@
 #include "Global/EngineVariables.h"
-#include "HAL/Memory/AllocatorInterface.h"
+#include "HAL/Platforms/GenericAllocator.h"
 #include "HAL/Time.h"
 #include "Launch/CoreEngine.h"
 #include "Editor/Editor.h"

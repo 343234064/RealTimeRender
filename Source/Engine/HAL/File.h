@@ -43,47 +43,43 @@ enum FileFlag
 
 struct FileManage
 {
-	static Serializer* CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_WRITER_CACHEBUFFER_SIZE);
-	static Serializer* CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_READER_CACHEBUFFER_SIZE);
+	static Serializer* CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_WRITER_CACHEBUFFER_SIZE)
+	{
+		FileHandle* Handle = PlatformFile::Open(FileName, AccessType::FOR_WRITE, true, !!(Flag & FileFlag::SHARED_READ), !!(Flag & FileFlag::APPEND));
+
+		if (Handle == nullptr)
+		{
+			//log
+			return nullptr;
+		}
+
+		return new FileWriteSerializer(Handle, CachedBufferSize);
+	}
+
+	static Serializer* CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize = FILE_READER_CACHEBUFFER_SIZE)
+	{
+		FileHandle* Handle = nullptr;
+		if (!!(Flag & FileFlag::READASYNC))
+		{
+			Handle = PlatformFile::OpenReadAsync(FileName, !!(Flag & FileFlag::SHARED_WRITE));
+		}
+		else
+		{
+			Handle = PlatformFile::Open(FileName, AccessType::FOR_READ, !!(Flag & FileFlag::SHARED_WRITE), true, false);
+
+		}
+
+		if (Handle == nullptr)
+		{
+			//log
+			return nullptr;
+		}
+
+		return new FileReadSerializer(Handle, CachedBufferSize);
+	}
 
 };
 
 
 
-Serializer* FileManage::CreateFileWriter(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
-{
-
-	FileHandle* Handle = PlatformFile::Open(FileName, AccessType::FOR_WRITE, true, !!(Flag & FileFlag::SHARED_READ), !!(Flag & FileFlag::APPEND));
-
-	if (Handle == nullptr)
-	{
-		//log
-		return nullptr;
-	}
-
-	return new FileWriteSerializer(Handle, CachedBufferSize);
-}
-
-
-Serializer* FileManage::CreateFileReader(const TChar* FileName, uint32 Flag, uint32 CachedBufferSize)
-{
-	FileHandle* Handle = nullptr;
-	if (!!(Flag & FileFlag::READASYNC))
-	{
-		Handle = PlatformFile::OpenReadAsync(FileName, !!(Flag & FileFlag::SHARED_WRITE));
-	}
-	else
-	{
-		Handle = PlatformFile::Open(FileName, AccessType::FOR_READ, !!(Flag & FileFlag::SHARED_WRITE), true, false);
-
-	}
-
-	if (Handle == nullptr)
-	{
-		//log
-		return nullptr;
-	}
-
-	return new FileReadSerializer(Handle, CachedBufferSize);
-}
 

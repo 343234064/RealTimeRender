@@ -46,9 +46,6 @@
     <Filter Include="Source\ThirdPartyLibraries\jemalloc-5.1.0">
       <UniqueIdentifier>{9c62c413-2043-498b-bb3e-10495671bf6b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\HAL\Memory">
-      <UniqueIdentifier>{cc1af065-ca45-4a6f-81a3-c8a43e5f8cc2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\Global">
       <UniqueIdentifier>{5924189f-7a10-46db-acd0-20100980b4d1}</UniqueIdentifier>
     </Filter>
@@ -88,15 +85,6 @@
     <Filter Include="Source\Engine\Log\_Internals">
       <UniqueIdentifier>{94ab1a99-0795-4715-bc4f-63333c436b10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\HAL\File">
-      <UniqueIdentifier>{6fe85449-18e1-4ce9-99c8-0023708b58a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\HAL\Thread">
-      <UniqueIdentifier>{b1a2c943-c5c3-4e81-825c-7cb445644702}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\HAL\Dialog">
-      <UniqueIdentifier>{9d329cb0-6aca-4c2e-b883-b32e5237a91d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h">
@@ -104,24 +92,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory\MemoryInterface.h">
-      <Filter>Source\Engine\HAL\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocatorInterface.h">
-      <Filter>Source\Engine\HAL\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocDefault.h">
-      <Filter>Source\Engine\HAL\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocIntelTBB.h">
-      <Filter>Source\Engine\HAL\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocJemalloc.h">
-      <Filter>Source\Engine\HAL\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory\AllocThreadSafeDecorator.h">
-      <Filter>Source\Engine\HAL\Memory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platform.h">
       <Filter>Source\Engine\HAL</Filter>
@@ -198,29 +168,11 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Serializer.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\File\FileManage.h">
-      <Filter>Source\Engine\HAL\File</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\File\FileHandle.h">
-      <Filter>Source\Engine\HAL\File</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\File\Path.h">
-      <Filter>Source\Engine\HAL\File</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Thread\ThreadBase.h">
-      <Filter>Source\Engine\HAL\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Thread\Thread.h">
-      <Filter>Source\Engine\HAL\Thread</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Memory\Memory.h">
-      <Filter>Source\Engine\HAL\Memory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\CharConversion.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
@@ -249,12 +201,6 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsDialog.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Dialog\DialogEnum.h">
-      <Filter>Source\Engine\HAL\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\HAL\Dialog\Dialog.h">
-      <Filter>Source\Engine\HAL\Dialog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFatal.h">
       <Filter>Source\Engine\Log</Filter>
     </ClInclude>
@@ -265,8 +211,53 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsCrash.h">
       <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocDefault.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocIntelTBB.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocJemalloc.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocThreadSafeDecorator.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Memory.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Dialog.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Path.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Crash.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericAllocator.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericDialog.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericMemory.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericPlatform.h">
       <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericThread.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericFile.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\File.h">
+      <Filter>Source\Engine\HAL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -280,12 +271,6 @@
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsMemory.cpp">
-      <Filter>Source\Engine\HAL\_Internals</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocatorInterface.cpp">
-      <Filter>Source\Engine\HAL\_Internals</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\MemoryInterface.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp">
@@ -321,12 +306,6 @@
     <ClCompile Include="..\..\Source\Engine\Global\_Internals\Assertion.cpp">
       <Filter>Source\Engine\Global\_Internals</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\FileManage.cpp">
-      <Filter>Source\Engine\HAL\_Internals</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\ThreadBase.cpp">
-      <Filter>Source\Engine\HAL\_Internals</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsThread.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
@@ -347,6 +326,18 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFatal.cpp">
       <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericThread.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericMemory.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericFile.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericAllocator.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

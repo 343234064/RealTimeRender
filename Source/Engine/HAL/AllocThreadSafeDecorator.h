@@ -6,7 +6,7 @@ Thread safe decorator
 
 #include "Global/Utilities/Misc.h"
 #include "Global/GlobalType.h"
-#include "HAL/Memory/AllocatorInterface.h"
+#include "HAL/Platforms/GenericAllocator.h"
 
 
 class AllocThreadSafeDecorator :public MallocInterface

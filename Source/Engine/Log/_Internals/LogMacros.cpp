@@ -3,7 +3,7 @@
 #include "Log/LogDeviceFile.h"
 #include "Log/LogDeviceFatal.h"
 #include "Global/Utilities/Misc.h"
-#include "HAL/Dialog/Dialog.h"
+#include "HAL/Dialog.h"
 #include "HAL/Time.h"
 
 //For fatal messages
