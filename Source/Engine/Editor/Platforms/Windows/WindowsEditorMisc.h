@@ -8,13 +8,6 @@
 
 
 
-
-//Main window instance handle
-extern HINSTANCE gMainInstanceHandle;
-
-
-
-  
 class WindowsEditor: public PlatformEditorInterface, public ActionCallback
 {
 public:

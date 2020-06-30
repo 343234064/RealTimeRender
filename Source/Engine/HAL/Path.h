@@ -6,7 +6,7 @@
 
 struct Path
 {
-	//e.g. C:/dir1/dir2/dir3/../../file -> C:/dir1/file
+	// e.g. C:/dir1/dir2/dir3/../../file -> C:/dir1/file
 	static bool CollapseRelativePath(String& Path)
 	{
 		const TChar ParentDir[] = TEXTS("/..");
@@ -78,7 +78,7 @@ struct Path
 		return Path;
 	}
 
-	//Exe dir, must be called before Current Directory changed
+	// Exe dir, must be called before Current Directory changed
 	static TChar* BaseDir()
 	{
 		static TChar Dir[512] = TEXTS("");
@@ -94,6 +94,47 @@ struct Path
 		return Dir;
 	}
 
+	// Return the filename with ext£¬without any path information
+	static String GetFileName(const String& InPath, bool WithExtension)
+	{
+		std::function<bool(const TChar&)> IsSlashOrBackslash = [](TChar C) { return C == TEXTS('/') || C == TEXTS('\\'); };
+		std::function<bool(const TChar&)> IsNotSlashOrBackslash = [](TChar C) { return C != TEXTS('/') && C != TEXTS('\\'); };
+
+		int32 StartPos = InPath.FindBySelectorFromEnd(IsSlashOrBackslash) + 1;
+		int32 EndPos = InPath.FindBySelectorFromEnd(IsNotSlashOrBackslash) + 1;
+
+		String Name = (StartPos <= EndPos) ? InPath.Range(StartPos, EndPos) : InPath;
+
+		if (!WithExtension)
+		{
+			int32 ExtPos = Name.FindFromEnd(TEXTS("."), Name.Len());
+			if (ExtPos > 0)
+			{
+				Name = Name.Left(ExtPos);
+			}
+		}
+
+		return Name;
+	}
+
+	// Returns the path information of the filename
+	static String GetFileDir(const String& InPath)
+	{
+		std::function<bool(const TChar&)> IsSlashOrBackslash = [](TChar C) { return C == TEXTS('/') || C == TEXTS('\\'); };
+
+		String Dir;
+		int32 Pos = InPath.FindBySelectorFromEnd(IsSlashOrBackslash);
+		if (Pos != -1)
+		{
+			Dir = InPath.Left(Pos);
+		}
+		else
+		{
+			Dir = InPath;
+		}
+
+		return Dir;
+	}
 };
 
 

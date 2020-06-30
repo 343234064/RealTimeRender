@@ -55,6 +55,7 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericFile.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericMemory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericPlatform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericProcess.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericThread.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsCrash.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsProcess.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Thread.h" />
@@ -95,6 +97,7 @@
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsDialog.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsMemory.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsProcess.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsThread.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsTime.cpp" />
     <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp" />

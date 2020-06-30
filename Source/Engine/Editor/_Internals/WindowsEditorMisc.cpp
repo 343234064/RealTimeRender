@@ -11,9 +11,6 @@
 
 
 
-HINSTANCE gMainInstanceHandle = NULL;
-
-
 HICON GetMainWindowIcon()
 {
 	return (HICON)LoadImage(nullptr, ICON_WINDOW_ADDRESS, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE);

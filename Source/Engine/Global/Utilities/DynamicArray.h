@@ -472,9 +472,10 @@ public:
        Return -1 when find nothing
 	   Selector function type: bool (const ElementType&)
     */
-	int32 FindBySelector(const std::function<bool(const ElementType&)>& Selector)
+	int32 FindBySelector(const std::function<bool(const ElementType&)>& Selector, int32 StartIndex = 0)  const
 	{
-		const ElementType* RESTRICT First = Begin();
+		CHECK(StartIndex >= 0 && StartIndex < CurrentElementNum);
+		const ElementType* RESTRICT First = Begin() + StartIndex;
 		for (const ElementType* RESTRICT Iter = First, *RESTRICT End = Iter + CurrentElementNum; Iter != End; ++Iter)
 		{
 			if (Selector(*Iter))
@@ -484,6 +485,44 @@ public:
 		}
 		return -1;
 	}
+
+	/*
+   Return the index of element
+   Return -1 when find nothing
+   Selector function type: bool (const ElementType&)
+	*/
+	int32 FindBySelectorFromEnd(const std::function<bool(const ElementType&)>& Selector, int32 StartIndex)  const
+	{
+		CHECK(StartIndex >= 0 && StartIndex < CurrentElementNum);
+		for (const ElementType* RESTRICT First = Begin(), *RESTRICT Iter = First + StartIndex; Data != First; )
+		{
+			--Iter;
+			if (Selector(*Iter))
+			{
+				return static_cast<int32>(Iter - Start);
+			}
+		}
+		return -1;
+	}
+
+	/*
+   Return the index of element
+   Return -1 when find nothing
+   Selector function type: bool (const ElementType&)
+	*/
+	int32 FindBySelectorFromEnd(const std::function<bool(const ElementType&)>& Selector)  const
+	{
+		for (const ElementType* RESTRICT First = Begin(), *RESTRICT Iter = First + CurrentElementNum; Data != First; )
+		{
+			--Iter;
+			if (Selector(*Iter))
+			{
+				return static_cast<int32>(Iter - Start);
+			}
+		}
+		return -1;
+	}
+
 
 	/*
 	   Return the address of element

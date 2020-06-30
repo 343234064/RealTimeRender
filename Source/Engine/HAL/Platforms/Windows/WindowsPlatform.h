@@ -199,6 +199,8 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 
 #include <intrin.h>
 
+//Current instance handle
+extern "C" HINSTANCE gMainInstanceHandle;
 
 
 class WindowsTypes
@@ -280,7 +282,7 @@ struct Platform
 	//Second = 0 will switch to thread
 	inline static void Sleep(float Seconds)
 	{
-		PlatformTypes::uint32 MicroSeconds = (PlatformTypes::uint32)(Seconds * 1000.0);
+		DWORD MicroSeconds = (DWORD)(Seconds * 1000.0);
 		if (MicroSeconds == 0)
 		{
 			::SwitchToThread();

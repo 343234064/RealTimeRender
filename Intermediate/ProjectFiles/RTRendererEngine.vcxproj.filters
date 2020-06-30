@@ -259,6 +259,12 @@
     <ClInclude Include="..\..\Source\Engine\HAL\File.h">
       <Filter>Source\Engine\HAL</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericProcess.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsProcess.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
@@ -337,6 +343,9 @@
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericAllocator.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsProcess.cpp">
       <Filter>Source\Engine\HAL\_Internals</Filter>
     </ClCompile>
   </ItemGroup>

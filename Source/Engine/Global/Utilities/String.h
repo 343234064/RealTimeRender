@@ -543,7 +543,7 @@ public:
 
 	//Get the characters(including '\0') from the given range [StartIndex, EndIndex)
 	FORCE_INLINE
-	String Range(int32 StartIndex, int32 EndIndex)
+	String Range(int32 StartIndex, int32 EndIndex)  const
 	{
 		if (EndIndex <= 0) EndIndex = Len();
 
@@ -554,10 +554,22 @@ public:
 		return String(**this + StartIndex, EndIndex - StartIndex);
 	}
 
+	FORCE_INLINE 
+	String Left(int32 EndIndex) const
+	{
+		return String(**this, Clamp(EndIndex, 0, Len()));
+	}
+
+	FORCE_INLINE
+	String Right(int32 StartIndex) const
+	{
+		return String(**this + Clamp(StartIndex, 0, Len()));
+	}
+
 	//Find the substring from the start, and return the index to the substring first found
 	//SearchIndex: The start point to begin searching
 	//Return -1 if failed to search
-	int32 Find(const TChar* SubString, int32 SearchIndex, bool IgnoreCase = true)
+	int32 Find(const TChar* SubString, int32 SearchIndex = 0, bool IgnoreCase = true)
 	{
 		CHECK(SubString != nullptr);
 		const TChar* Begin = **this + Clamp(SearchIndex, 0, Len());
@@ -574,7 +586,7 @@ public:
 	//Find the substring from the end, and return the index to the substring first found
     //SearchIndex: The start point to begin searching
     //Return -1 if failed to search
-	int32 FindFromEnd(const TChar* SubString, int32 SearchIndex, bool IgnoreCase = true)
+	int32 FindFromEnd(const TChar* SubString, int32 SearchIndex, bool IgnoreCase = true) const
 	{
 		CHECK(SubString != nullptr);
 
@@ -631,9 +643,23 @@ public:
 
 	//Return -1 if failed to search
 	FORCE_INLINE
-	int32 FindBySelector(const std::function<bool(const TChar&)>& Selector)
+	int32 FindBySelector(const std::function<bool(const TChar&)>& Selector, int32 StartIndex = 0) const
 	{
-		return Strings.FindBySelector(Selector);
+		return Strings.FindBySelector(Selector, StartIndex);
+	}
+
+	//Return -1 if failed to search
+	FORCE_INLINE
+	int32 FindBySelectorFromEnd(const std::function<bool(const TChar&)>& Selector) const
+	{
+		return Strings.FindBySelector(Selector, Len());
+	}
+
+	//Return -1 if failed to search
+	FORCE_INLINE
+	int32 FindBySelectorFromEnd(const std::function<bool(const TChar&)>& Selector, int32 StartIndex) const
+	{
+		return Strings.FindBySelector(Selector, StartIndex);
 	}
 
 	//Return the replaced char number

@@ -3,6 +3,11 @@
 #include "Global/GlobalType.h"
 
 
+extern "C"
+{
+	HINSTANCE gMainInstanceHandle = NULL;
+}
+
 void Platform::RequestExit(bool ForceExit)
 {
 	//log
