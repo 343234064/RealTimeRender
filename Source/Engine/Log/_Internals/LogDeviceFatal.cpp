@@ -56,12 +56,8 @@ void LogDeviceFatal::WriteFatalHistToFile()
 	if (Writer.is_open())
 	{
 		//Convert to utf8, otherwise it will output garbled character while using unicode
-		const int32 DataLength = (int32)PlatformChars::Strlen(FatalHist);
-		const int32 ConvertedLength = TCharToUTF8::Length(FatalHist, DataLength);
 		Array<ANSICHAR> ConvertedUTF8Text;
-
-		ConvertedUTF8Text.AddUninitialize(ConvertedLength);
-		TCharToUTF8::Convert(ConvertedUTF8Text.Begin(), ConvertedLength, FatalHist, DataLength);
+		TCharToUTF8::Convert(ConvertedUTF8Text, FatalHist);
 
 		Writer.write(ConvertedUTF8Text.Begin(), ConvertedUTF8Text.CurrentNum() * sizeof(ANSICHAR));
 	}

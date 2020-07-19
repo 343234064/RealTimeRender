@@ -82,7 +82,7 @@ bool WindowsMemory::FreePageFromOS(void* Dest, Size_T Size)
 }
 
 
-void WindowsMemory::GetMemoryState(PlatformMemoryStates& State)
+PlatformMemoryStates WindowsMemory::GetMemoryState()
 {
 	MEMORYSTATUSEX MSE;
 	WindowsMemory::Memzero(&MSE, sizeof(MEMORYSTATUSEX));
@@ -93,6 +93,8 @@ void WindowsMemory::GetMemoryState(PlatformMemoryStates& State)
 	WindowsMemory::Memzero(&PMC, sizeof(PROCESS_MEMORY_COUNTERS));
 	GetProcessMemoryInfo(GetCurrentProcess(), &PMC, sizeof(PROCESS_MEMORY_COUNTERS));
 
+	PlatformMemoryStates State;
+
 	State.PhysicalMemoryAvailable = MSE.ullAvailPhys;
 	State.VirtualMemoryAvailable = MSE.ullAvailVirtual;
 
@@ -101,6 +103,8 @@ void WindowsMemory::GetMemoryState(PlatformMemoryStates& State)
 
 	State.PeakPhysicalMemoryUsed = PMC.PeakWorkingSetSize;
 	State.PeakVirtualMemoryUsed = PMC.PeakPagefileUsage;
+
+	return State;
 }
 
 

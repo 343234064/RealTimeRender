@@ -282,12 +282,8 @@ void LogDeviceFile::Serialize(const TChar* Data)
 		if (WriterPtr)
 		{
 			//Convert to utf8, otherwise it will output garbled character while using unicode
-			const int32 DataLength = (int32)PlatformChars::Strlen(Data);
-			const int32 ConvertedLength = TCharToUTF8::Length(Data, DataLength);
 			Array<ANSICHAR> ConvertedUTF8Text;
-			
-			ConvertedUTF8Text.AddUninitialize(ConvertedLength);
-			TCharToUTF8::Convert(ConvertedUTF8Text.Begin(), ConvertedLength, Data, DataLength);
+			TCharToUTF8::Convert(ConvertedUTF8Text, Data);
 
 			WriterPtr->Serialize(ConvertedUTF8Text.Begin(), ConvertedUTF8Text.CurrentNum() * sizeof(ANSICHAR));
 		}

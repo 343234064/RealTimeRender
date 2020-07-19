@@ -254,7 +254,7 @@ struct Platform
 	{
 		return ::GetCurrentThreadId();
 	}
-	
+
 
 	inline static void SetCurrentThreadAffinityMask(PlatformTypes::uint64 AffinityMask)
 	{
@@ -331,6 +331,7 @@ struct Platform
 		::GetCurrentDirectoryA(DestSize, OutDir);
 	}
 
+	static const PlatformTypes::WIDECHAR* GetSystemErrorMessage(PlatformTypes::WIDECHAR* OutBuffer, PlatformTypes::int32 BufferCount, PlatformTypes::int32 Error);
 };
 
 

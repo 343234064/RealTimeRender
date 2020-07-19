@@ -65,6 +65,18 @@ public:
 		return Dest;
 	}
 
+	FORCE_INLINE 
+		static const PlatformTypes::WIDECHAR* Strchr(const PlatformTypes::WIDECHAR* String, PlatformTypes::WIDECHAR C)
+	{
+		return _tcschr(String, C);
+	}
+
+	FORCE_INLINE
+		static const PlatformTypes::ANSICHAR* Strchr(const PlatformTypes::ANSICHAR* String, PlatformTypes::ANSICHAR C)
+	{
+		return strchr(String, C);
+	}
+
 
 	FORCE_INLINE
 		static PlatformTypes::int32 Strcmp(const PlatformTypes::WIDECHAR* Dest1, const PlatformTypes::WIDECHAR* Dest2)
@@ -77,7 +89,6 @@ public:
 	{
 		return strcmp(Dest1, Dest2);
 	}
-
 
 
 

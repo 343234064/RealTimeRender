@@ -27,7 +27,7 @@ public:
 	//Free pages to the OS
 	static bool  FreePageFromOS(void* Dest, Size_T Size);
 
-	static void GetMemoryState(PlatformMemoryStates& State);
+	static PlatformMemoryStates GetMemoryState();
 
 protected:
 	static void GetMemoryDesc();
