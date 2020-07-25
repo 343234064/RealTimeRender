@@ -494,12 +494,12 @@ public:
 	int32 FindBySelectorFromEnd(const std::function<bool(const ElementType&)>& Selector, int32 StartIndex)  const
 	{
 		CHECK(StartIndex >= 0 && StartIndex < CurrentElementNum);
-		for (const ElementType* RESTRICT First = Begin(), *RESTRICT Iter = First + StartIndex; Data != First; )
+		for (const ElementType* RESTRICT First = Begin(), *RESTRICT Iter = First + StartIndex;  Iter != First; )
 		{
 			--Iter;
 			if (Selector(*Iter))
 			{
-				return static_cast<int32>(Iter - Start);
+				return static_cast<int32>(Iter - First);
 			}
 		}
 		return -1;
@@ -512,12 +512,12 @@ public:
 	*/
 	int32 FindBySelectorFromEnd(const std::function<bool(const ElementType&)>& Selector)  const
 	{
-		for (const ElementType* RESTRICT First = Begin(), *RESTRICT Iter = First + CurrentElementNum; Data != First; )
+		for (const ElementType* RESTRICT First = Begin(), *RESTRICT Iter = First + CurrentElementNum; Iter != First; )
 		{
 			--Iter;
 			if (Selector(*Iter))
 			{
-				return static_cast<int32>(Iter - Start);
+				return static_cast<int32>(Iter - First);
 			}
 		}
 		return -1;
@@ -760,6 +760,25 @@ public:
 	{
 		ClearElements();
 		Resize(0);
+	}
+
+
+	/**
+	 * Resizes array to given number of elements.
+	 *
+	 */
+	void SetNum(int32 NewNum, bool bAllowShrinking = true)
+	{
+		if (NewNum > CurrentElementNum)
+		{
+			const int32 Diff = NewNum - CurrentElementNum;
+			const int32 Index = AddUninitialize(Diff);
+			Memory::DefaultConstructItem((uint8*)Allocator.Address() + Index * sizeof(ElementType), Diff);
+		}
+		else if (NewNum < CurrentElementNum)
+		{
+			RemoveAt(NewNum, CurrentElementNum - NewNum, bAllowShrinking);
+		}
 	}
 
 

@@ -46,6 +46,7 @@ typedef PlatformTypes::Size_T   Size_T;		//unsigned int, has same size as pointe
 
 typedef PlatformTypes::ANSICHAR ANSICHAR;   //8-bit ANSI character
 typedef PlatformTypes::WIDECHAR WIDECHAR;   //wide character, for UNICODE
+typedef PlatformTypes::CHAR8     CHAR8;	   //UTF-8, for UNICODE
 typedef PlatformTypes::CHAR16   CHAR16;     //UTF-16, for UNICODE
 typedef PlatformTypes::CHAR32   CHAR32;     //UTF-32, for UNICODE
 
@@ -129,6 +130,72 @@ static_assert(sizeof(TChar) == 2, "TChar must be 2 bytes");
 
 
 //==============================
+//Type traits helpers
+//==============================
+template <typename... Types>
+struct AndTest;
+
+template <bool LHSValue, typename... RHS>
+struct AndValue
+{
+	enum { Value = AndTest<RHS...>::Value };
+};
+
+template <typename... RHS>
+struct AndValue<false, RHS...>
+{
+	enum { Value = false };
+};
+
+template <typename LHS, typename... RHS>
+struct AndTest<LHS, RHS...> : AndValue<LHS::Value, RHS...>
+{
+};
+
+template <>
+struct AndTest<>
+{
+	enum { Value = true };
+};
+
+
+template <typename... Types>
+struct OrTest;
+
+template <bool LHSValue, typename... RHS>
+struct OrValue
+{
+	enum { Value = OrTest<RHS...>::Value };
+};
+
+template <typename... RHS>
+struct OrValue<true, RHS...>
+{
+	enum { Value = true };
+};
+
+template <typename LHS, typename... RHS>
+struct OrTest<LHS, RHS...> : OrValue<LHS::Value, RHS...>
+{
+};
+
+template <>
+struct OrTest<>
+{
+	enum { Value = false };
+};
+
+
+template <typename Type>
+struct NotTest
+{
+	enum { Value = !Type::Value };
+};
+
+
+
+
+//==============================
 //Type traits
 //==============================
 //Returns the type T
@@ -138,7 +205,6 @@ struct ExplicitType
 {
 	typedef T Type;
 };
-
 
 
 //Return the size of array
@@ -178,6 +244,201 @@ struct IsIntegralType
 	enum { Value = std::is_integral<Type>::value };
 };
 
+/**************************
+Helper template to test if
+the type is numeric type
+****************************/
+template <typename T>
+struct IsArithmeticType
+{
+	enum { Value = false };
+};
+
+template <> struct IsArithmeticType<float> { enum { Value = true }; };
+template <> struct IsArithmeticType<double> { enum { Value = true }; };
+template <> struct IsArithmeticType<long double> { enum { Value = true }; };
+template <> struct IsArithmeticType<uint8> { enum { Value = true }; };
+template <> struct IsArithmeticType<uint16> { enum { Value = true }; };
+template <> struct IsArithmeticType<uint32> { enum { Value = true }; };
+template <> struct IsArithmeticType<uint64> { enum { Value = true }; };
+template <> struct IsArithmeticType<int8> { enum { Value = true }; };
+template <> struct IsArithmeticType<int16> { enum { Value = true }; };
+template <> struct IsArithmeticType<int32> { enum { Value = true }; };
+template <> struct IsArithmeticType<int64> { enum { Value = true }; };
+template <> struct IsArithmeticType<bool> { enum { Value = true }; };
+template <> struct IsArithmeticType<WIDECHAR> { enum { Value = true }; };
+template <> struct IsArithmeticType<ANSICHAR> { enum { Value = true }; };
+
+template <typename T> struct IsArithmeticType<const T> { enum { Value = IsArithmeticType<T>::Value }; };
+template <typename T> struct IsArithmeticType<volatile T> { enum { Value = IsArithmeticType<T>::Value }; };
+
+
+/**************************
+Helper template to test if
+the type is char type we defined
+
+****************************/
+template <typename T>
+struct IsCharType
+{
+	enum { Value = false };
+};
+
+template<> struct IsCharType<ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharType<CHAR16> { enum { Value = true }; };
+template<> struct IsCharType<CHAR32> { enum { Value = true }; };
+template<> struct IsCharType<WIDECHAR> { enum { Value = true }; };
+
+/**************************
+Helper template to test if
+the char type is fixed encoding
+
+****************************/
+template <typename T>
+struct IsCharFixedEncoding
+{
+	enum { Value = false };
+};
+
+template<> struct IsCharFixedEncoding<ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharFixedEncoding<CHAR32> { enum { Value = true }; };
+template<> struct IsCharFixedEncoding<WIDECHAR> { enum { Value = true }; };
+
+
+/**************************
+Helper template to test if
+the 2 char type is encoding ompatible
+
+****************************/
+template <typename CharTypeA, typename CharTypeB>
+struct IsCharEncodingCompatible
+{
+	enum {
+		Value = AndTest<IsCharFixedEncoding<CharTypeA>, IsCharFixedEncoding<CharTypeB>>::Value &&
+		sizeof(CharTypeA) == sizeof(CharTypeB)
+	};
+
+};
+
+
+/**************************
+Helper template to test if
+the 2 char type is compare compatible
+
+****************************/
+template<typename A, typename B>
+struct IsCharComparisonCompatible
+{
+	enum { Value = false };
+};
+template<> struct IsCharComparisonCompatible <WIDECHAR, ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR16, ANSICHAR> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR32, ANSICHAR> { enum { Value = true }; };
+
+template<> struct IsCharComparisonCompatible <WIDECHAR, WIDECHAR> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR16, CHAR16> { enum { Value = true }; };
+template<> struct IsCharComparisonCompatible <CHAR32, CHAR32> { enum { Value = true }; };
+
+
+
+
+/**************************
+Helper template to test if
+the type is enum type
+
+****************************/
+template <typename Type>
+struct IsEnumType
+{
+	enum { Value = std::is_enum<Type>::value };
+};
+
+
+/**************************
+Helper template to test if
+the type is enum class type
+
+****************************/
+template <typename Type>
+struct IsEnumConvertibleToInt
+{
+	//If Type can convert to int, return a char& type (size 2) array 
+	//else return a char type
+	static char(&Resolve(int))[2];
+	static char Resolve(...);
+
+	enum { Value = sizeof(Resolve(Type())) - 1 };
+};
+
+template <typename Type>
+struct IsEnumClassType
+{
+	enum { Value = AndTest<IsEnumType<Type>, NotTest<IsEnumConvertibleToInt<Type>>>::Value };
+};
+
+
+ /**************************
+ Helper template to test if
+ the type has no constructor
+ ****************************/
+template<typename Type>
+struct IsZeroConstructType
+{
+	enum { Value = OrTest<IsEnumType<Type>, IsArithmeticType<Type>, IsCharType<Type>>::Value };
+
+};
+
+
+/**************************
+Helper template to test if
+the type is a pointer.
+****************************/
+template <typename Type>
+struct IsPointerType
+{
+	enum { Value = false };
+};
+
+template <typename Type> struct IsPointerType<Type*> { enum { Value = true }; };
+
+template <typename Type> struct IsPointerType<const  Type> { enum { Value = IsPointerType<Type>::Value }; };
+template <typename Type> struct IsPointerType<volatile Type> { enum { Value = IsPointerType<Type>::Value }; };
+template <typename Type> struct IsPointerType<const volatile Type> { enum { Value = IsPointerType<Type>::Value }; };
+
+
+
+/**************************
+Helper template to test if
+the type is trivally copy constructible
+****************************/
+template <typename Type>
+struct IsTriviallyCopyConstructible
+{
+	enum { Value = std::is_trivially_copy_constructible<Type>::value };
+};
+
+
+/**************************
+Helper template to test if
+the type is pod type
+****************************/
+template <typename Type>
+struct IsPodType
+{
+	enum { Value = std::is_pod<Type>::value };
+};
+
+
+/**************************
+Helper template to test if
+the type is trivally assginable
+****************************/
+template <typename Type>
+struct IsTrivalAssginable
+{
+	enum { Value = __has_trivial_assign(Type) };
+};
+
 
 /***************************
 Helper template to test if
@@ -201,8 +462,8 @@ signed integers can be memcpy as unsigned integers, and so vice versa
 ****************************/
 template <typename TypeA, typename TypeB>
 struct IsBitwiseConstructible
-{
-	static_assert((!IsReferenceType<TypeA>::Value) && (!IsReferenceType<TypeB>::Value), "Do not cast reference type");
+{	
+	static_assert(AndTest<NotTest<IsReferenceType<TypeA>>, NotTest<IsReferenceType<TypeB>>>::Value, "Do not cast reference type");
 
 	enum { Value = false };
 };//Default set to false
@@ -210,7 +471,7 @@ struct IsBitwiseConstructible
 template <typename TypeA>
 struct IsBitwiseConstructible<TypeA, TypeA>
 {
-	enum { Value = (std::is_trivially_copy_constructible<TypeA>::value || std::is_pod<TypeA>::value) };
+	enum { Value = OrTest<IsTriviallyCopyConstructible<TypeA>, IsPodType<TypeA>>::Value };
 };
 
 template <typename TypeA, typename TypeB>
@@ -264,30 +525,6 @@ struct IsTypeEqual<TypeA, TypeA>
 
 
 
-/**************************
-Function trigger
-
-Example:
-typename FuncTrigger<SomeExpression, ReturnType>::Type AFunction(Argements...) {}
-
-if SomeExpression = true, FuncTrigger::Type will be ReturnType, the AFunction will be instantiated
-else if SomeExpression = false, FuncTrigger::Type will be nothing, the AFunction will not be instantiated
-****************************/
-template <bool IsEnable, typename ReturnType = void>
-class FuncTrigger;//declaration
-
-//If IsEnable = true
-template <typename ReturnType>
-class FuncTrigger<true, ReturnType>
-{
-public:
-	typedef ReturnType Type;
-};
-
-//If IsEnable = false
-template <typename ReturnType>
-class FuncTrigger<false, ReturnType>
-{};
 
 
 
@@ -315,11 +552,7 @@ struct IsBitwiseRelocatable
 	enum
 	{
 		Value = (
-			IsTypeEqual<DestType, SrcType>::Value ||
-			(
-				IsBitwiseConstructible<DestType, SrcType>::Value &&
-				IsTriviallyDestructible<SrcType>::Value
-			)
+			OrTest<IsTypeEqual<DestType, SrcType>,  AndTest<IsBitwiseConstructible<DestType, SrcType>, IsTriviallyDestructible<SrcType>>>::Value
 		)
 	};
 };
@@ -348,7 +581,7 @@ the type is bitwise comparable
 template <typename Type>
 struct IsBitwiseComparable
 {
-	enum { Value = std::is_enum<Type>::value || std::is_arithmetic<Type>::value || std::is_pointer<Type>::value };
+	enum { Value = OrTest<IsEnumType<Type>, IsArithmeticType<Type>, IsPointerType<Type>>::Value };
 };
 
 
@@ -361,109 +594,32 @@ the type is trivially copy assignable
 template <typename Type>
 struct IsTriviallyCopyAssignable
 {
-	enum { Value = __has_trivial_assign(Type) || std::is_pod<Type>::value };
+	enum { Value = OrTest<IsTrivalAssginable<Type>, IsPodType<Type>>::Value };
 };
-
-
-/**************************
-Helper template to test if
-the type is char type we defined
-
-****************************/
-template <typename T>
-struct IsCharType
-{
-	enum { Value = false };
-};
-
-template<> struct IsCharType<ANSICHAR> { enum { Value = true }; };
-template<> struct IsCharType<CHAR16>   { enum { Value = true }; };
-template<> struct IsCharType<CHAR32>   { enum { Value = true }; };
-template<> struct IsCharType<WIDECHAR> { enum { Value = true }; };
-
-/**************************
-Helper template to test if
-the char type is fixed encoding
-
-****************************/
-template <typename T>
-struct IsCharFixedEncoding
-{
-	enum { Value = false };
-};
-
-template<> struct IsCharFixedEncoding<ANSICHAR> { enum { Value = true }; };
-template<> struct IsCharFixedEncoding<CHAR32>   { enum { Value = true }; };
-template<> struct IsCharFixedEncoding<WIDECHAR> { enum { Value = true }; };
-
-
-/**************************
-Helper template to test if
-the 2 char type is encoding ompatible
-
-****************************/
-template <typename CharTypeA, typename CharTypeB>
-struct IsCharEncodingCompatible
-{
-	enum { Value = IsCharFixedEncoding<CharTypeA>::Value &&
-		           IsCharFixedEncoding<CharTypeB>::Value &&
-	               sizeof(CharTypeA) == sizeof(CharTypeB) };
-
-};
-
-
-/**************************
-Helper template to test if
-the 2 char type is compare compatible
-
-****************************/
-template<typename A, typename B>	
-struct IsCharComparisonCompatible 
-{ 
-	enum { Value = false }; 
-};
-template<> struct IsCharComparisonCompatible <WIDECHAR, ANSICHAR> { enum { Value = true }; };
-template<> struct IsCharComparisonCompatible <CHAR16, ANSICHAR> { enum { Value = true }; };
-template<> struct IsCharComparisonCompatible <CHAR32, ANSICHAR> { enum { Value = true }; };
-
-template<> struct IsCharComparisonCompatible <WIDECHAR, WIDECHAR> { enum { Value = true }; };
-template<> struct IsCharComparisonCompatible <CHAR16, CHAR16> { enum { Value = true }; };
-template<> struct IsCharComparisonCompatible <CHAR32, CHAR32> { enum { Value = true }; };
-
 
 
 
 /**************************
-Helper template to test if
-the type is enum type
+Function trigger
 
+Example:
+typename FuncTrigger<SomeExpression, ReturnType>::Type AFunction(Argements...) {}
+
+if SomeExpression = true, FuncTrigger::Type will be ReturnType, the AFunction will be instantiated
+else if SomeExpression = false, FuncTrigger::Type will be nothing, the AFunction will not be instantiated
 ****************************/
-template <typename Type>
-struct IsEnumType
+template <bool IsEnable, typename ReturnType = void>
+class FuncTrigger;//declaration
+
+//If IsEnable = true
+template <typename ReturnType>
+class FuncTrigger<true, ReturnType>
 {
-	enum { Value = std::is_enum<Type>::value };
+public:
+	typedef ReturnType Type;
 };
 
-
-/**************************
-Helper template to test if
-the type is enum class type
-
-****************************/
-template <typename Type>
-struct IsEnumConvertibleToInt
-{
-	//If Type can convert to int, return a char& type (size 2) array 
-	//else return a char type
-	static char(&Resolve(int))[2]; 
-	static char Resolve(...);
-
-	enum { Value = sizeof(Resolve(Type())) - 1 };
-};
-
-template <typename Type>
-struct IsEnumClassType
-{
-	enum { Value = std::is_enum<Type>::value &&  !IsEnumConvertibleToInt<Type>::Value };
-};
-
+//If IsEnable = false
+template <typename ReturnType>
+class FuncTrigger<false, ReturnType>
+{};

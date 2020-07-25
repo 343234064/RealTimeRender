@@ -104,6 +104,31 @@ namespace Memory
 	//////////////////////////////////////////////////////////////////////
     //ConstructItem
     //////////////////////////////////////////////////////////////////////
+	template <typename ElementType>
+	FORCE_INLINE 
+	typename FuncTrigger<!IsZeroConstructType<ElementType>::Value>::Type 
+	DefaultConstructItem(void* Address, int32 Count)
+	{
+		ElementType* Element = (ElementType*)Address;
+		while (Count)
+		{
+			new (Element) ElementType;
+			++Element;
+			--Count;
+		}
+	}
+
+
+	template <typename ElementType>
+	FORCE_INLINE 
+	typename FuncTrigger<IsZeroConstructType<ElementType>::Value>::Type 
+	DefaultConstructItem(void* Elements, int32 Count)
+	{
+		PlatformMemory::Memset(Elements, 0, sizeof(ElementType) * Count);
+	}
+
+
+
 	template <typename DestType, typename ItemType>
 	FORCE_INLINE
 	typename FuncTrigger<!IsBitwiseConstructible<DestType, ItemType>::Value, void>::Type

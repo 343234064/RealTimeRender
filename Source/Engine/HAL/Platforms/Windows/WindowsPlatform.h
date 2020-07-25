@@ -206,13 +206,13 @@ extern "C" HINSTANCE gMainInstanceHandle;
 class WindowsTypes
 {
 public:
-	typedef	signed char		int8;
+	typedef	signed char			int8;
 	typedef unsigned char		uint8;
 
 	typedef signed short int		int16;
 	typedef unsigned short int	uint16;
 
-	typedef signed int	 		int32;
+	typedef signed int	 			int32;
 	typedef unsigned int			uint32;
 
 	typedef signed long long		int64;
@@ -220,8 +220,9 @@ public:
 
 	typedef unsigned __int64		Size_T;
 
-	typedef char				ANSICHAR;
+	typedef char					ANSICHAR;
 	typedef wchar_t			WIDECHAR;
+	typedef uint8				CHAR8;
 	typedef char16_t			CHAR16;
 	typedef char32_t			CHAR32;
 
