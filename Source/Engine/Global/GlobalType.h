@@ -407,16 +407,6 @@ template <typename Type> struct IsPointerType<const volatile Type> { enum { Valu
 
 
 
-/**************************
-Helper template to test if
-the type is trivally copy constructible
-****************************/
-template <typename Type>
-struct IsTriviallyCopyConstructible
-{
-	enum { Value = std::is_trivially_copy_constructible<Type>::value };
-};
-
 
 /**************************
 Helper template to test if
@@ -437,6 +427,19 @@ template <typename Type>
 struct IsTrivalAssginable
 {
 	enum { Value = __has_trivial_assign(Type) };
+};
+
+
+/**************************
+Helper template to test if
+the type is trivially copy constructible
+
+****************************/
+//Just using std template
+template <typename Type>
+struct IsTriviallyCopyConstructible
+{
+	enum { Value = std::is_trivially_copy_constructible<Type>::value };
 };
 
 
@@ -558,17 +561,6 @@ struct IsBitwiseRelocatable
 };
 
 
-/**************************
-Helper template to test if
-the type is trivially copy constructible
-
-****************************/
-//Just using std template
-template <typename Type>
-struct IsTriviallyCopyConstructible
-{
-	enum { Value = std::is_trivially_copy_constructible<Type>::value };
-};
 
 
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Global/Utilities/Assertion.h"
+#include "Global/Utilities/DynamicArray.h"
 
 /*
  Ref:https://en.wikipedia.org/wiki/UTF-16 (2 Bytes)
@@ -70,8 +71,8 @@ FORCE_INLINE uint32 EncodeSurrogate(const uint16 HighSurrogate, const uint16 Low
 FORCE_INLINE void DecodeSurrogate(const uint32 Codepoint, uint16& OutHighSurrogate, uint16& OutLowSurrogate)
 {
 	const uint32 TmpCodepoint = Codepoint - 0x10000;
-	OutHighSurrogate = (TmpCodepoint >> 10) + HIGHSURROGATE_START;
-	OutLowSurrogate = (TmpCodepoint & 0x3FF) + LOWSURROGATE_START;
+	OutHighSurrogate = (uint16)(TmpCodepoint >> 10) + HIGHSURROGATE_START;
+	OutLowSurrogate = (uint16)(TmpCodepoint & 0x3FF) + LOWSURROGATE_START;
 }
 
 
@@ -565,7 +566,7 @@ private:
 		while (Src < SourceEnd && DestLen > 0)
 		{
 			// Read our codepoint, advancing the source pointer
-			uint32 Codepoint = CodepointFromUtf8(Src, SourceEnd - Src);
+			uint32 Codepoint = CodepointFromUtf8(Src, (uint32)(SourceEnd - Src));
 
 			if (!TCharIs32)
 			{
@@ -595,7 +596,7 @@ private:
 				}
 			}
 
-			* (ConvertedBuffer++) = Codepoint;
+			* (ConvertedBuffer++) = (TChar)Codepoint;
 			--DestLen;
 		}
 	}

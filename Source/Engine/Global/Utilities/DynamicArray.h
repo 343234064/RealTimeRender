@@ -773,7 +773,7 @@ public:
 		{
 			const int32 Diff = NewNum - CurrentElementNum;
 			const int32 Index = AddUninitialize(Diff);
-			Memory::DefaultConstructItem((uint8*)Allocator.Address() + Index * sizeof(ElementType), Diff);
+			Memory::DefaultConstructItem(Allocator.Address() + Index * sizeof(ElementType), Diff);
 		}
 		else if (NewNum < CurrentElementNum)
 		{

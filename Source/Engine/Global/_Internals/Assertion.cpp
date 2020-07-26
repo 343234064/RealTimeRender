@@ -1,5 +1,5 @@
 #include "Global/Utilities/Assertion.h"
-#include "HAL/Dialog/Dialog.h"
+#include "HAL/Dialog.h"
 #include <stdio.h>
 
 

@@ -74,8 +74,8 @@ void PlatformMemoryInterface::OutOfMemoryHandling(uint64 Size, uint32 Alignment)
 	}
 
 	//handling..
-	PlatformMemoryStates MemoryState;
-	PlatformMemory::GetMemoryState(MemoryState);
+	PlatformMemoryStates MemoryState = PlatformMemory::GetMemoryState();
+	
 	//log 
 	OutputMemoryStatistics();
 

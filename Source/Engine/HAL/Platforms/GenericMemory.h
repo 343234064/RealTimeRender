@@ -8,7 +8,7 @@ Do management of platform memory
 
 #include "Global/GlobalConfigs.h"
 #include "HAL/Platforms/GenericAllocator.h"
-
+#include "Log/LogMacros.h"
 
 
 
@@ -127,15 +127,35 @@ need to be implemented by different platforms
 *****************************************/
 public:
 	//Get global allocator, and assign to gMallocator 
-	static MallocInterface* Allocator() { /*log*/return nullptr; }
+	static MallocInterface* Allocator() 
+	{ 
+		LOG(Fatal, PlatformMemoryInterface, TEXTS("PlatformMemoryInterface::Allocator not implemented"));
+		return nullptr;
+	}
 	//Allocates pages from the OS
-	static void* AllocPageFromOS(Size_T Size) { /*log*/return nullptr; }
+	static void* AllocPageFromOS(Size_T Size) 
+	{ 
+		LOG(Fatal, PlatformMemoryInterface, TEXTS("PlatformMemoryInterface::AllocPageFromOS not implemented"));
+		return nullptr;
+	}
 	//Free pages to the OS
-	static void  FreePageFromOS(void* Dest, Size_T Size) { /*log*/return; }
-	static void GetMemoryState(PlatformMemoryStates& State) {/*log*/return; }
+	static void  FreePageFromOS(void* Dest, Size_T Size) 
+	{
+		LOG(Fatal, PlatformMemoryInterface, TEXTS("PlatformMemoryInterface::FreePageFromOS not implemented"));
+		return; 
+	}
+	static void GetMemoryState(PlatformMemoryStates& State) 
+	{ 
+		LOG(Fatal, PlatformMemoryInterface, TEXTS("PlatformMemoryInterface::GetMemoryState not implemented"));
+		return; 
+	}
 
 protected:
-	static void GetMemoryDesc() {/*log*/return; }
+	static void GetMemoryDesc()
+	{
+		LOG(Fatal, PlatformMemoryInterface, TEXTS("PlatformMemoryInterface::GetMemoryDesc not implemented"));
+		return;
+	}
 
 protected:
 	static uint32 BackupOOMMemorySize;
