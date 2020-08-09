@@ -8,12 +8,14 @@
 #include "Editor/Platforms/Windows/WindowsWindow.h"
 #include "Editor/Platforms/Windows/WindowsEditorMisc.h"
 #include "Editor/Editor.h"
-
+#include "HAL/Path.h"
 
 
 HICON GetMainWindowIcon()
 {
-	return (HICON)LoadImage(nullptr, ICON_WINDOW_ADDRESS, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	String IconPath = Path::Join(Path::GuiDir(), ICON_WINDOW_ADDRESS);
+
+	return (HICON)LoadImage(nullptr, *IconPath, IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 }
 
 

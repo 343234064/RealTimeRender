@@ -59,11 +59,11 @@ struct Path
 	{
 		String Path(FilePath);
 		Path.Replace(TEXTS("\\"), TEXTS("/"));
-		//Path.Replace(TEXTS("//"), TEXTS("/"));
+		Path.Replace(TEXTS("//"), TEXTS("/"));
 
 		if (IsRelativePath(Path))
 		{
-			String BasePath(Path::BaseDir());
+			String BasePath(Path::ExeDir());
 			BasePath.AppendPath(*Path, Path.Len());
 			Path = std::move(BasePath);
 		}
@@ -79,19 +79,76 @@ struct Path
 	}
 
 	// Exe dir, must be called before Current Directory changed
-	static TChar* BaseDir()
+	static String ExeDir()
 	{
-		static TChar Dir[512] = TEXTS("");
-		if (!Dir[0])
+		static String ExeDir = TEXTS("");
+		if (!ExeDir[0])
 		{
+			TChar Dir[512] = TEXTS("");
 			Platform::GetCurrentDirW(Dir, 512);
 
-			String Temp(Dir);
-			Temp.Replace(TEXTS("\\"), TEXTS("/"));
-			Temp += TEXTS('/');
-			PlatformChars::Strcpy(Dir, 512, *Temp);
+			ExeDir = Dir;
+			ExeDir.Replace(TEXTS("\\"), TEXTS("/"));
+			ExeDir += TEXTS('/');
+
+		}
+		return ExeDir;
+	}
+
+	// Gui dir
+	static String GuiDir()
+	{
+		static String Dir = TEXTS("");
+		if (!Dir[0])
+		{
+			Dir = Path::ExeDir() + TEXTS("Gui/");
 		}
 		return Dir;
+	}
+
+	// Shader dir
+	static String ShaderDir()
+	{
+		static String Dir = TEXTS("");
+		if (!Dir[0])
+		{
+			Dir = Path::ExeDir() + TEXTS("Shaders/");
+		}
+		return Dir;
+	}
+
+	// Script dir
+	static String ScriptDir()
+	{
+		static String Dir = TEXTS("");
+		if (!Dir[0])
+		{
+			Dir = Path::ExeDir() + TEXTS("Scripts/");
+		}
+		return Dir;
+	}
+
+	static String Join(const String& Left, const String& Right)
+	{
+		String Result;
+
+		TChar LastChar = Left[Left.Len() - 1];
+		TChar FirstChar = Right[0];
+		if ((LastChar == TEXTS('/') or LastChar == TEXTS('\\')) && (FirstChar == TEXTS('/') or FirstChar == TEXTS('\\')))
+		{
+			Result = Left + Right.Range(1, -1);
+		}
+		else if (LastChar != TEXTS('/') && LastChar != TEXTS('\\') && FirstChar != TEXTS('/') && FirstChar != TEXTS('\\'))
+		{
+			Result = Left + TEXTS("/") + Right;
+		}
+		else
+		{
+			Result = Left + Right;
+		}
+
+		Result = NormalizeFilePath(*Result);
+		return Result;
 	}
 
 	// Return the filename with ext£¬without any path information

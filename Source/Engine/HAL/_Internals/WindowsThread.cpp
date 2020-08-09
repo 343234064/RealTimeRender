@@ -1,8 +1,10 @@
+#include "Global/EngineVariables.h"
+#include "Global/Utilities/CharConversion.h"
 #include "HAL/Platforms/Windows/WindowsThread.h"
 
 
 bool WindowsThread::PlatformInit(Runnable* ObjectToRun,
-	                             const ANSICHAR* InitThreadName,
+	                             const TChar* InitThreadName,
 	                             uint32 InitStackSize,
 	                             ThreadPriority InitPriority,
 	                             uint64 AffinityMask)
@@ -19,6 +21,8 @@ bool WindowsThread::PlatformInit(Runnable* ObjectToRun,
 	RunObject = ObjectToRun;
 	ThreadAffinityMask = AffinityMask;
 
+	ThreadName = InitThreadName ? InitThreadName : TEXTS("RTR Unnamed Thread");
+
 	//Create auto reset sync event
 	SyncEvent = ::CreateEvent(NULL, false, 0, nullptr);
 	CHECK(SyncEvent != NULL);
@@ -28,17 +32,19 @@ bool WindowsThread::PlatformInit(Runnable* ObjectToRun,
 	if (ThreadHandle == NULL)
 	{
 		RunObject = nullptr;
-		//log
 	}
 	else
 	{
+		::SetThreadDescription(ThreadHandle, *ThreadName);
+
 		::ResumeThread(ThreadHandle);
 
 		//Here will wait for Runnable's Init() finish
 		::WaitForSingleObject(SyncEvent, INFINITE);
 
-		SetThreadName(ThreadID, InitThreadName);
-		this->SetThreadPriority(InitPriority);
+
+		SetThreadName(ThreadID, *ThreadName);
+		SetThreadPriority(InitPriority);
 	}
 
 	return ThreadHandle != NULL;
@@ -49,7 +55,7 @@ bool WindowsThread::PlatformInit(Runnable* ObjectToRun,
 //Set Thread Name
 //http://msdn.microsoft.com/en-us/library/xcb2z8hs.aspx
 *******************/
-void WindowsThread::SetThreadName(uint32 ThreadId, LPCSTR Name)
+void WindowsThread::SetThreadName(uint32 ThreadId, TChar* Name)
 {
 
 	const DWORD MS_VC_EXCEPTION = 0x406D1388;
@@ -62,15 +68,19 @@ void WindowsThread::SetThreadName(uint32 ThreadId, LPCSTR Name)
 		DWORD dwFlags; // Reserved for future use, must be zero.  
 	} THREADNAME_INFO;
 
+
+	Array<ANSICHAR> ConvertedChars;
+	TCharToUTF8::Convert(ConvertedChars, Name);
+
 	THREADNAME_INFO info;
 	info.dwType = 0x1000;
-	info.szName = Name;
+	info.szName = ConvertedChars.Begin();
 	info.dwThreadID = ThreadId;
 	info.dwFlags = 0;
 
 	__try {
 
-		RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+		::RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {
 	}
@@ -130,11 +140,15 @@ uint32 WindowsThread::RunWrapper()
 		__except (Platform::ReportCrash(GetExceptionInformation()))
 		{
 			Result = 1;
+			LOG(Error, WindowsThread, TEXTS("Runnable thread %s crashed."), *ThreadName);
+
 			//log dump error
 			//flush log
 
-			//
+			PlatformChars::Strncpy(gErrorHist, TEXTS("\nCrash in runnable thread"), ARRAY_SIZE(gErrorHist));
+			PlatformChars::Strncat(gErrorHist, TEXTS("\r\n\r\n"), ARRAY_SIZE(gErrorHist));
 			
+			//gFatal->HandleError()
 			Platform::RequestExit(true);
 		}
 	}

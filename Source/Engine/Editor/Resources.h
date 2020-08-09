@@ -10,7 +10,7 @@ GUI resources definations
 
 
 /***Main window icon***/
-const TChar Icon_Window_Address[] = TEXTS("Gui/Icons/icon_window_001.ico");
+const TChar Icon_Window_Address[] = TEXTS("Icons/icon_window_001.ico");
 #define ICON_WINDOW_ADDRESS Icon_Window_Address
 
 

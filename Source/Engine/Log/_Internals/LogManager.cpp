@@ -36,9 +36,6 @@ void LogManager::SetupOutputDevice()
 		CHECK(FileLogger != nullptr);
 		OutputDevices.Add(FileLogger);
 
-		//EditorLogger = new LogDeviceEditor();
-		//if (EditorLogger != nullptr) OutputDevices.Add(EditorLogger);
-		
 		CHECK(OutputDevices.CurrentNum() != 0);
 	}
 

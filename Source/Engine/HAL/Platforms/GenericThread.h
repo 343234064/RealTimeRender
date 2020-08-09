@@ -74,7 +74,7 @@ class Thread
 {
 public:
 	static Thread* Create(Runnable* ObjectToRun,
-		                  const ANSICHAR* InitThreadName,
+		                  const TChar* InitThreadName,
 		                  uint32 InitStackSize = 0,
 		                  ThreadPriority InitPriority = ThreadPriority::Normal,
 		                  uint64 AffinityMask = PlatformAffinity::GetNormalThradMask());
@@ -93,6 +93,10 @@ public:
 		return ThreadID;
 	}
 
+	virtual const String& GetThreadName() const
+	{
+		return ThreadName;
+	}
 
 protected:
 	Thread():
@@ -104,13 +108,15 @@ protected:
 
 
 	virtual bool PlatformInit(Runnable* ObjectToRun,
-		                      const ANSICHAR* InitThreadName,
+		                      const TChar* InitThreadName,
 		                      uint32 InitStackSize = 0,
 		                      ThreadPriority InitPriority = ThreadPriority::Normal,
 		                      uint64 AffinityMask = PlatformAffinity::GetNormalThradMask()) = 0;
 
 
 protected:
+	String ThreadName;
+
 	Runnable* RunObject;
 	
 	uint64 ThreadAffinityMask;

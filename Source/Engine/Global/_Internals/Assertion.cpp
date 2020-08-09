@@ -1,4 +1,6 @@
 #include "Global/Utilities/Assertion.h"
+#include "Global/Utilities/String.h"
+#include "Global/Utilities/CharConversion.h"
 #include "HAL/Dialog.h"
 #include <stdio.h>
 
@@ -22,8 +24,12 @@ void Assertion::OuputAssertionFailed(const ANSICHAR* Expression, const ANSICHAR*
 
 		LockGuard<PlatformCriticalSection> DebugLock(DebugCriticalSection);
 
-		fprintf(stderr, FinalText);
 		Platform::LocalPrintA(FinalText);
+
+		Array<TChar> ConvertedChars;
+		UTF8ToTChar::Convert(ConvertedChars, FinalText);
+		PlatformChars::Strncpy(gErrorHist, ConvertedChars.Begin(), ARRAY_SIZE(gErrorHist));
+		PlatformChars::Strncat(gErrorHist, TEXTS("\r\n\r\n"), ARRAY_SIZE(gErrorHist));
 
 		PlatformDialog::Open(DialogType::Ok, "Assertion Failed", FinalText);
 	}

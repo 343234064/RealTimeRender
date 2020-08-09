@@ -6,7 +6,7 @@
 
 
 Thread* Thread::Create(Runnable* ObjectToRun,
-	                   const ANSICHAR* InitThreadName,
+	                   const TChar* InitThreadName,
 	                   uint32 InitStackSize,
 	                   ThreadPriority InitPriority,
 	                   uint64 AffinityMask)

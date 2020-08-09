@@ -75,7 +75,7 @@ protected:
 	uint32 Run();
 
 	bool PlatformInit(Runnable* ObjectToRun,
-		              const ANSICHAR* InitThreadName,
+		              const TChar* InitThreadName,
 		              uint32 InitStackSize = 0,
 		              ThreadPriority InitPriority = ThreadPriority::Normal,
 		              uint64 AffinityMask = PlatformAffinity::GetNormalThradMask()) override;
@@ -86,7 +86,7 @@ protected:
 		return ((WindowsThread*)Object)->RunWrapper();
 	}
 
-	static void SetThreadName(uint32 ThreadId, LPCSTR Name);
+	static void SetThreadName(uint32 ThreadId, TChar* Name);
 
 
 protected:

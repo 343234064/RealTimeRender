@@ -54,3 +54,6 @@ LogManager& gLogger = LogManager::Get();
 
 /*Fatal messages output device*/
 LogDeviceFatal gFatalLogger;
+
+/* For building call stack text dump and other error descriptions. */
+TChar gErrorHist[16384] = TEXTS("");

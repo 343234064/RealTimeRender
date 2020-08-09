@@ -77,6 +77,31 @@ public:
 		return strchr(String, C);
 	}
 
+	
+	FORCE_INLINE
+	static PlatformTypes::WIDECHAR* Strncat(PlatformTypes::WIDECHAR* Dest, const PlatformTypes::WIDECHAR* Src, PlatformTypes::int32 MaxLen)
+	{
+		PlatformTypes::Size_T Len = Strlen(Dest);
+		PlatformTypes::WIDECHAR* NewDest = Dest + Len;
+		if ((MaxLen -= Len) > 0)
+		{
+			Strncpy(NewDest, Src, MaxLen);
+		}
+		return Dest;
+	}
+
+	FORCE_INLINE
+	static PlatformTypes::ANSICHAR* Strncat(PlatformTypes::ANSICHAR* Dest, const PlatformTypes::ANSICHAR* Src, PlatformTypes::int32 MaxLen)
+	{
+		PlatformTypes::Size_T Len = Strlen(Dest);
+		PlatformTypes::ANSICHAR* NewDest = Dest + Len;
+		if ((MaxLen -= Len) > 0)
+		{
+			Strncpy(NewDest, Src, MaxLen);
+		}
+		return Dest;
+	}
+
 
 	FORCE_INLINE
 		static PlatformTypes::int32 Strcmp(const PlatformTypes::WIDECHAR* Dest1, const PlatformTypes::WIDECHAR* Dest2)

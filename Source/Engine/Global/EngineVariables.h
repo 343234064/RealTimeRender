@@ -53,8 +53,8 @@ extern double gStartTime;
 //uint64 is big enough for counting(e.g. 1000fps will has a maximum to almost 6k years)
 extern uint64 gFrameCounter; 
 
-
-
+/** For building call stack text dump in guard/unguard mechanism. */
+extern TChar gErrorHist[16384];
 
 
 

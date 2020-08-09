@@ -6,7 +6,6 @@
 #include "Log/LogMacros.h"
 
 /*Total Fatal messages cache*/
-static TChar FatalHist[8192] = TEXTS("");
 static PlatformCriticalSection FatalHistCriticalSection;
 static bool FatalHistHasFlush = false;
 
@@ -23,8 +22,8 @@ void LogDeviceFatal::Serialize(const TChar* Data)
 		LockGuard<PlatformCriticalSection> Lock(FatalHistCriticalSection);
 
 		//Copy to fatal message buffer, to wait for output to file
-		PlatformChars::Strncpy(FatalHist + PlatformChars::Strlen(FatalHist), Data, ARRAY_SIZE(FatalHist));
-		//PlatformChars::Strcat(FatalHist, ARRAY_SIZE(FatalHist), TEXTS("\r"));
+		PlatformChars::Strncpy(gErrorHist, Data, ARRAY_SIZE(gErrorHist));
+		PlatformChars::Strncat(gErrorHist, TEXTS("\r\n\r\n"), ARRAY_SIZE(gErrorHist));
 
 		FatalHistHasFlush = false;
 	}
@@ -57,7 +56,7 @@ void LogDeviceFatal::WriteFatalHistToFile()
 	{
 		//Convert to utf8, otherwise it will output garbled character while using unicode
 		Array<ANSICHAR> ConvertedUTF8Text;
-		TCharToUTF8::Convert(ConvertedUTF8Text, FatalHist);
+		TCharToUTF8::Convert(ConvertedUTF8Text, gErrorHist);
 
 		Writer.write(ConvertedUTF8Text.Begin(), ConvertedUTF8Text.CurrentNum() * sizeof(ANSICHAR));
 	}
@@ -70,9 +69,9 @@ void LogDeviceFatal::Flush()
 {
 	LockGuard<PlatformCriticalSection> Lock(FatalHistCriticalSection);
 
-	if (ARRAY_SIZE(FatalHist) > 0 && !FatalHistHasFlush)
+	if (ARRAY_SIZE(gErrorHist) > 0 && !FatalHistHasFlush)
 	{
-		FatalHist[ARRAY_SIZE(FatalHist) - 1] = 0;
+		gErrorHist[ARRAY_SIZE(gErrorHist) - 1] = 0;
 		WriteFatalHistToFile();
 	}
 
