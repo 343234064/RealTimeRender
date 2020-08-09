@@ -10,6 +10,10 @@ complete all exception handler
   -> Launch Crash report process
     -> platform process
 
+Thread Manager
+
+Fatol log按照OutputDeviceError
+
 log system:
 add traceback to fatal log (generate by throw exception)
 

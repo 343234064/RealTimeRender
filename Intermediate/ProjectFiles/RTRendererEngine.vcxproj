@@ -66,12 +66,12 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsProcess.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Process.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Thread.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h" />
     <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogDeviceConsole.h" />
-    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceEditor.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFatal.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogEnum.h" />
     <ClInclude Include="..\..\Source\Engine\Log\LogDevice.h" />
@@ -94,6 +94,7 @@
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericFile.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericMemory.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericThread.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsCrash.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsDialog.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsMemory.cpp" />
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp" />
@@ -172,7 +173,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\..\Binaries\</OutDir>
+    <OutDir>..\..</OutDir>
     <IntDir>..\Debug\</IntDir>
     <IncludePath>..\..\Source\Engine;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath);</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
