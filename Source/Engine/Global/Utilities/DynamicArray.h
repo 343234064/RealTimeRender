@@ -12,6 +12,176 @@
 #include "HAL/Memory.h"
 
 
+
+
+template< typename ContainerType, typename ElementType, typename SizeType>
+class IndexedContainerIterator
+{
+public:
+	IndexedContainerIterator(ContainerType& InContainer, SizeType StartIndex = 0)
+		: Container(InContainer)
+		, Index(StartIndex)
+	{
+	}
+
+	/** Advances iterator to the next element in the container. */
+	IndexedContainerIterator& operator++()
+	{
+		++Index;
+		return *this;
+	}
+	IndexedContainerIterator operator++(int)
+	{
+		IndexedContainerIterator Tmp(*this);
+		++Index;
+		return Tmp;
+	}
+
+	/** Moves iterator to the previous element in the container. */
+	IndexedContainerIterator& operator--()
+	{
+		--Index;
+		return *this;
+	}
+	IndexedContainerIterator operator--(int)
+	{
+		TIndexedContainerIterator Tmp(*this);
+		--Index;
+		return Tmp;
+	}
+
+	/** iterator arithmetic support */
+	IndexedContainerIterator& operator+=(SizeType Offset)
+	{
+		Index += Offset;
+		return *this;
+	}
+
+	IndexedContainerIterator operator+(SizeType Offset) const
+	{
+		TIndexedContainerIterator Tmp(*this);
+		return Tmp += Offset;
+	}
+
+	IndexedContainerIterator& operator-=(SizeType Offset)
+	{
+		return *this += -Offset;
+	}
+
+	IndexedContainerIterator operator-(SizeType Offset) const
+	{
+		TIndexedContainerIterator Tmp(*this);
+		return Tmp -= Offset;
+	}
+
+	ElementType& operator* () const
+	{
+		return Container[Index];
+	}
+
+	ElementType* operator->() const
+	{
+		return &Container[Index];
+	}
+
+	/** conversion to "bool" returning true if the iterator has not reached the last element. */
+	FORCE_INLINE explicit operator bool() const
+	{
+		return Container.IsValidIndex(Index);
+	}
+
+	/** Returns an index to the current element. */
+	SizeType GetIndex() const
+	{
+		return Index;
+	}
+
+	/** Resets the iterator to the first element. */
+	void Reset()
+	{
+		Index = 0;
+	}
+
+	/** Sets iterator to the last element. */
+	void SetToEnd()
+	{
+		Index = Container.CurrentNum();
+	}
+
+	/** Removes current element in array. This invalidates the current iterator value and it must be incremented */
+	void RemoveCurrent()
+	{
+		Container.RemoveAt(Index);
+		Index--;
+	}
+
+	FORCEINLINE friend bool operator==(const IndexedContainerIterator& Lhs, const IndexedContainerIterator& Rhs) { return &Lhs.Container == &Rhs.Container && Lhs.Index == Rhs.Index; }
+	FORCEINLINE friend bool operator!=(const IndexedContainerIterator& Lhs, const IndexedContainerIterator& Rhs) { return &Lhs.Container != &Rhs.Container || Lhs.Index != Rhs.Index; }
+
+private:
+
+	ContainerType& Container;
+	SizeType      Index;
+};
+
+
+/** operator + */
+template <typename ContainerType, typename ElementType, typename SizeType>
+FORCE_INLINE IndexedContainerIterator<ContainerType, ElementType, SizeType> operator+(SizeType Offset, IndexedContainerIterator<ContainerType, ElementType, SizeType> RHS)
+{
+	return RHS + Offset;
+}
+
+
+template <typename ElementType, typename SizeType>
+struct CheckedPointerIterator
+{
+	explicit CheckedPointerIterator(const SizeType& InNum, ElementType* InPtr) :
+		Ptr(InPtr),
+		CurrentNum(InNum),
+		InitialNum(InNum)
+	{
+
+	}
+
+	FORCE_INLINE ElementType& operator*() const
+	{
+		return *Ptr;
+	}
+
+	FORCE_INLINE CheckedPointerIterator& operator++()
+	{
+		++Ptr;
+		return *this;
+	}
+
+	FORCE_INLINE CheckedPointerIterator& operator--()
+	{
+		--Ptr;
+		return *this;
+	}
+
+private:
+	ElementType* Ptr;
+	const SizeType& CurrentNum;
+	SizeType        InitialNum;
+
+	FORCE_INLINE friend bool operator!=(const CheckedPointerIterator& Lhs, const CheckedPointerIterator& Rhs)
+	{
+		// We only need to do the check in this operator, because no other operator will be
+		// called until after this one returns.
+		//
+		// Also, we should only need to check one side of this comparison - if the other iterator isn't
+		// even from the same array then the compiler has generated bad code.
+		CHECK(Lhs.CurrentNum == Lhs.InitialNum, TEXT("Array has changed during ranged-for iteration!"));
+		return Lhs.Ptr != Rhs.Ptr;
+	}
+};
+
+
+
+
+
 /**
   Test template for Dynamic Array List to test if two
   SrcArray can be moved to DestArray
@@ -773,7 +943,7 @@ public:
 		{
 			const int32 Diff = NewNum - CurrentElementNum;
 			const int32 Index = AddUninitialize(Diff);
-			Memory::DefaultConstructItem(Allocator.Address() + Index * sizeof(ElementType), Diff);
+			Memory::DefaultConstructItem((uint8*)Allocator.Address() + Index * sizeof(ElementType), Diff);
 		}
 		else if (NewNum < CurrentElementNum)
 		{
@@ -798,6 +968,13 @@ public:
 			MaxElementNum = NewMaxElementNum;
 		}
 		return OldElementNum;
+	}
+
+	int32 AddZeroed(int32 Num = 1)
+	{
+		const int32 Index = AddUninitialize(Num);
+		Memory::Zero((uint8*)Allocator.Address() + Index * sizeof(ElementType), Num * sizeof(ElementType));
+		return Index;
 	}
 
 	/*
@@ -828,6 +1005,52 @@ public:
 
 	FORCE_INLINE
 	const ElementType* Begin() const { return Allocator.Address(); }
+
+	FORCE_INLINE bool IsValidIndex(int32 Index) const
+	{
+		return Index >= 0 && Index < CurrentElementNum;
+	}
+
+
+
+public:
+	/* Iterators */
+	typedef IndexedContainerIterator<Array, ElementType, int32> Iterator;
+	typedef IndexedContainerIterator<const Array, const ElementType, int32> ConstIterator;
+
+	/**
+	 * Creates an iterator for the contents of this array
+	 *
+	 * @returns The iterator.
+	 */
+	Iterator CreateIterator()
+	{
+		return Iterator(*this);
+	}
+
+	/**
+	 * Creates a const iterator for the contents of this array
+	 *
+	 * @returns The const iterator.
+	 */
+	ConstIterator CreateConstIterator() const
+	{
+		return ConstIterator(*this);
+	}
+
+	/**
+	* Do not use directly
+	* STL-like iterators to enable range-based for loop support.
+	*/
+	typedef CheckedPointerIterator<      ElementType, int32> RangedForIteratorType;
+	typedef CheckedPointerIterator<const ElementType, int32> RangedForConstIteratorType;
+
+	FORCEINLINE RangedForIteratorType      begin() { return RangedForIteratorType(CurrentElementNum, Begin()); }
+	FORCEINLINE RangedForConstIteratorType begin() const { return RangedForConstIteratorType(CurrentElementNum, Begin()); }
+	FORCEINLINE RangedForIteratorType      end() { return RangedForIteratorType(CurrentElementNum, Begin() + CurrentNum()); }
+	FORCEINLINE RangedForConstIteratorType end() const { return RangedForConstIteratorType(CurrentElementNum, Begin() + CurrentNum()); }
+
+
 
 private:
 	/*
@@ -900,6 +1123,10 @@ private:
 		else
 			return Add(std::forward<ArgsType>(Args));
 	}
+
+
+
+
 
 private:
 	typedef AllocatorType AllocatorInstance;

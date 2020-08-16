@@ -72,6 +72,7 @@ int32 ReportCrashToReporterClient(
 	DWORD CrashingThreadID,
 	PlatformProcessHandle& CrashReporterHandle,
 	void* WritePipe,
+	void* ReadPipe,
 	SharedCrashContext* SharedContext
 )
 {
@@ -79,10 +80,11 @@ int32 ReportCrashToReporterClient(
 	SharedContext->CrashingThreadId = CrashingThreadID;
 	PlatformChars::Strcpy(SharedContext->ErrorMessage, MAX_ERROR_MESSAGE_CHARS - 1, ErrorMessage);
 
+	uint32 ThreadIdx = 0;
 	DWORD CurrentProcessId = ::GetCurrentProcessId();
 	DWORD CurrentThreadId = ::GetCurrentThreadId();
 	HANDLE ThreadSnapshot = ::CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-	Array<HANDLE> ThreadHandles;
+	Array<::HANDLE> ThreadHandles;
 	if (ThreadSnapshot != INVALID_HANDLE_VALUE)
 	{
 		::THREADENTRY32 ThreadEntry;
@@ -107,11 +109,12 @@ int32 ReportCrashToReporterClient(
 					{
 						ThreadName = TEXT("MainThread");
 					}
+					/* TODO
 					else if (bThreadManagerAvailable)
 					{
 						const String& TmThreadName = FThreadManager::Get().GetThreadName(ThreadEntry.th32ThreadID);
 						ThreadName = TmThreadName.Len() ? TEXT("Unknown") : *TmThreadName;
-					}
+					}*/
 					else
 					{
 						ThreadName = TEXT("Unavailable");
@@ -126,7 +129,42 @@ int32 ReportCrashToReporterClient(
 			} while (::Thread32Next(ThreadSnapshot, &ThreadEntry) && (ThreadIdx < MAX_THREADS));
 		}
 	}
+	SharedContext->NumThreads = ThreadIdx;
+	::CloseHandle(ThreadSnapshot);
 
+	const DWORD CrashReporterProcessId = ::GetProcessId(CrashReporterHandle.Get());
+	if (CrashReporterProcessId)
+	{
+		::AllowSetForegroundWindow(CrashReporterProcessId);
+	}
+
+	int32 OutDataWritten = 0;
+	PlatformProcess::WritePipe(WritePipe, (uint8*)SharedContext, sizeof(SharedCrashContext), &OutDataWritten);
+	CHECK(OutDataWritten == sizeof(SharedCrashContext));
+
+	bool CanContinueExecution = false;
+	int32 ExitCode = 0;
+	Array<uint8> ResponseBuffer;
+	ResponseBuffer.AddZeroed(16);
+	while (!PlatformProcess::GetProcReturnCode(CrashReporterHandle, &ExitCode) && !CanContinueExecution)
+	{
+		if (PlatformProcess::ReadPipeToArray(ReadPipe, ResponseBuffer))
+		{
+			if (ResponseBuffer[0] == 0xd && ResponseBuffer[1] == 0xe &&
+				ResponseBuffer[2] == 0xa && ResponseBuffer[3] == 0xd)
+			{
+				CanContinueExecution = true;
+			}
+		}
+	}
+
+	for (::HANDLE ThreadHandle : ThreadHandles)
+	{
+		::ResumeThread(ThreadHandle);
+		::CloseHandle(ThreadHandle);
+	}
+
+	return EXCEPTION_CONTINUE_EXECUTION;
 }
 
 
@@ -209,7 +247,8 @@ CrashReportThread::CrashReportThread() :
 	VectoredExceptionHandle(nullptr),
 	StopCounter(0),
 	CachedExceptionInfo(nullptr),
-	CrashClientWritePipe(nullptr)
+	CrashClientWritePipe(nullptr),
+	CrashClientReadPipe(nullptr)
 {
 	CrashEvent = CreateEvent(nullptr, true, false, nullptr);
 	CrashHandledEvent = CreateEvent(nullptr, true, false, nullptr);
@@ -221,7 +260,7 @@ CrashReportThread::CrashReportThread() :
 		VectoredExceptionHandle = AddVectoredExceptionHandler(1, UnhandledStaticInitializationException);
 	}
 
-	CrashClientHandle = LaunchCrashReportClient(nullptr, &CrashClientWritePipe);
+	CrashClientHandle = LaunchCrashReportClient(&CrashClientReadPipe, &CrashClientWritePipe);
 
 	ThreadHandle = CreateThread(NULL, 0, CrashReportingThreadProc, this, 0, &ThreadID);
 	if (ThreadHandle)
@@ -325,10 +364,16 @@ void CrashReportThread::HandleCrash()
 	// Run the crash reporter
 	if (CrashClientHandle.IsValid() && PlatformProcess::IsProcRunning(CrashClientHandle))
 	{
-		ReportCrashToReporterClient();
+		ReportCrashToReporterClient(
+			CachedExceptionInfo,
+			Type,
+			*Message,
+			CrashedThreadHandle,
+			CrashedThreadID,
+			CrashClientHandle,
+			CrashClientWritePipe,
+			CrashClientReadPipe,
+			&SharedContext
+		);
 	}
-
-
-
-
 }

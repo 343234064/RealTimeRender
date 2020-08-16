@@ -51,6 +51,7 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Path.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platform.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericAllocator.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericCrash.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericDialog.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericFile.h" />
     <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericMemory.h" />

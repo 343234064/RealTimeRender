@@ -62,6 +62,7 @@ private:
 	/* Process handle to crash reporter client */
 	PlatformProcessHandle CrashClientHandle;
 	void* CrashClientWritePipe;
+	void* CrashClientReadPipe;
 
 	SharedCrashContext SharedContext;
 };

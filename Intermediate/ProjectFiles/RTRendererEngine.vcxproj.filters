@@ -265,6 +265,9 @@
     <ClInclude Include="..\..\Source\Engine\HAL\Process.h">
       <Filter>Source\Engine\HAL</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericCrash.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
