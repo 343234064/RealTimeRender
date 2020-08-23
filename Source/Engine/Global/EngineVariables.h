@@ -42,6 +42,9 @@ extern bool gIsMainThreadIdCached;
 /*if messages are being pumped outside of main loop*/
 extern bool gIsPumpingMessagesOutOfMainLoop;
 
+/*If always report crash using platform crash handler even if the debugger is attached*/
+extern bool gAlwaysReportCrash;
+
 
 /*Main thread id*/
 extern uint32 gMainThreadId;

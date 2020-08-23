@@ -83,7 +83,8 @@ public:
 	{
 		PlatformTypes::Size_T Len = Strlen(Dest);
 		PlatformTypes::WIDECHAR* NewDest = Dest + Len;
-		if ((MaxLen -= Len) > 0)
+		PlatformTypes::Size_T Max = MaxLen;
+		if ((Max -= Len) > 0)
 		{
 			Strncpy(NewDest, Src, MaxLen);
 		}
@@ -95,7 +96,8 @@ public:
 	{
 		PlatformTypes::Size_T Len = Strlen(Dest);
 		PlatformTypes::ANSICHAR* NewDest = Dest + Len;
-		if ((MaxLen -= Len) > 0)
+		PlatformTypes::Size_T Max = MaxLen;
+		if ((Max -= Len) > 0)
 		{
 			Strncpy(NewDest, Src, MaxLen);
 		}

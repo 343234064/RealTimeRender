@@ -5,9 +5,6 @@
 #include "HAL/Platforms/Windows/WindowsProcess.h"
 
 
-const uint32 AssertExceptionCode = 0x4000;
-const uint32 GPUCrashExceptionCode = 0x8000;
-
 
 
 
@@ -24,6 +21,31 @@ public:
 	CrashReportThread();
 	~CrashReportThread();
 
+
+	int32 OnEnsure(LPEXCEPTION_POINTERS ExceptionInfo, const TChar* ErrorMessage);
+
+	void OnCrashed(LPEXCEPTION_POINTERS ExceptionInfo)
+	{
+		CachedExceptionInfo = ExceptionInfo;
+		CrashedThreadHandle = ::GetCurrentThread();
+		CrashedThreadID = ::GetCurrentThreadId();
+		::SetEvent(CrashEvent);
+	}
+
+	int32 OnCrashDuringStaticInit(LPEXCEPTION_POINTERS ExceptionInfo);
+
+	bool WaitUntilCrashIsHandled()
+	{
+		// Wait 60s
+		return ::WaitForSingleObject(CrashHandledEvent, 60000) == WAIT_OBJECT_0;
+	}
+
+	bool IsValid() const { return Valid; }
+
+	CrashReportThread(CrashReportThread&&) = delete;
+	CrashReportThread& operator=(const CrashReportThread& Other) = delete;
+	CrashReportThread& operator=(CrashReportThread&&) = delete;
+
 private:
 	static DWORD CrashReportingThreadProc(LPVOID pThis)
 	{
@@ -39,6 +61,8 @@ private:
 	}
 
 	void HandleCrash();
+
+
 
 private:
 	DWORD ThreadID;
@@ -65,11 +89,20 @@ private:
 	void* CrashClientReadPipe;
 
 	SharedCrashContext SharedContext;
+
+	bool Valid;
 };
 
 
 
-struct PlatformCrash
+struct WindowsCrash
 {
-
+	static int32 Report(EXCEPTION_POINTERS* ExceptionInfo);
+	static int32 ReportEnsureUsingCrashReportClient(EXCEPTION_POINTERS* ExceptionInfo, const TChar* ErrorMessage);
+	static void ReportEnsure(const TChar* ErrorMessage);
+	static void ReportAssert(const TChar* ErrorMessage);
+	static void ReportGPUCrash(const TChar* ErrorMessage);
+	//static void ReportHang(const TChar* ErrorMessage, uint32 HungThreadId);
 };
+
+typedef WindowsCrash PlatformCrash;

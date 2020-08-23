@@ -25,6 +25,9 @@ bool gIsMainThreadIdCached = false;
 /*if messages are being pumped outside of main loop*/
 bool gIsPumpingMessagesOutOfMainLoop = false;
 
+/*If always report crash using platform crash handler even if the debugger is attached*/
+bool gAlwaysReportCrash = false;
+
 /*Main thread id*/
 uint32 gMainThreadId = 0;
 

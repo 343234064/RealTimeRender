@@ -45,7 +45,7 @@ public:
 	}
 	IndexedContainerIterator operator--(int)
 	{
-		TIndexedContainerIterator Tmp(*this);
+		IndexedContainerIterator Tmp(*this);
 		--Index;
 		return Tmp;
 	}
@@ -59,7 +59,7 @@ public:
 
 	IndexedContainerIterator operator+(SizeType Offset) const
 	{
-		TIndexedContainerIterator Tmp(*this);
+		IndexedContainerIterator Tmp(*this);
 		return Tmp += Offset;
 	}
 
@@ -70,7 +70,7 @@ public:
 
 	IndexedContainerIterator operator-(SizeType Offset) const
 	{
-		TIndexedContainerIterator Tmp(*this);
+		IndexedContainerIterator Tmp(*this);
 		return Tmp -= Offset;
 	}
 
@@ -173,7 +173,7 @@ private:
 		//
 		// Also, we should only need to check one side of this comparison - if the other iterator isn't
 		// even from the same array then the compiler has generated bad code.
-		CHECK(Lhs.CurrentNum == Lhs.InitialNum, TEXT("Array has changed during ranged-for iteration!"));
+		CHECKF(Lhs.CurrentNum == Lhs.InitialNum, "Array has changed during ranged-for iteration!");
 		return Lhs.Ptr != Rhs.Ptr;
 	}
 };

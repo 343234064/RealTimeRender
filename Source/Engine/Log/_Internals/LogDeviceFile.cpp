@@ -19,9 +19,11 @@ ThreadWriter::ThreadWriter(Serializer* FileSerializer):
 	RingBuffer.AddUninitialize(INIT_RINGBUFFER_SIZE);
 
     ANSICHAR ThreadName[16] = "ThreadLogWriter";
-    //sprintf_s(ThreadName, "ThreadWriter_%s", (ANSICHAR*)*(FileSerializerPtr->GetSerializerName()));
 
-	PlatformAtomics::InterlockedExchangePtr((void**)&WriterThreadPtr, PlatformThread::Create(this, ThreadName, 0, ThreadPriority::BelowNormal));
+	Array<TChar> ConvertedChars;
+	UTF8ToTChar::Convert(ConvertedChars, ThreadName);
+
+	PlatformAtomics::InterlockedExchangePtr((void**)&WriterThreadPtr, PlatformThread::Create(this, ConvertedChars.Begin(), 0, ThreadPriority::BelowNormal));
 	CHECK(WriterThreadPtr != nullptr);
 }
 

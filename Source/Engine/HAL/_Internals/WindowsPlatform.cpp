@@ -25,13 +25,6 @@ void Platform::RequestExit(bool ForceExit)
 	}
 }
 
-int32 Platform::ReportCrash(LPEXCEPTION_POINTERS ExceptionInfo)
-{
-	//handle crash
-
-	return EXCEPTION_EXECUTE_HANDLER;
-}
-
 const PlatformTypes::WIDECHAR* Platform::GetSystemErrorMessage(PlatformTypes::WIDECHAR* OutBuffer, PlatformTypes::int32 BufferCount, PlatformTypes::int32 Error)
 {
 	if (OutBuffer == nullptr || BufferCount == 0)

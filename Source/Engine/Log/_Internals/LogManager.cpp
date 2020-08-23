@@ -2,7 +2,6 @@
 #include "Global/Utilities/Misc.h"
 #include "Log/LogManager.h"
 #include "Log/LogDeviceFile.h"
-#include "Log/LogDeviceEditor.h"
 
 
 

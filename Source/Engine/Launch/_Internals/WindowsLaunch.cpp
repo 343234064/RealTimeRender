@@ -4,8 +4,8 @@
 
 #include "HAL/Platform.h"
 #include "HAL/Chars.h"
+#include "HAL/Crash.h"
 #include "Log/LogMacros.h"
-
 #include "Editor/Editor.h"
 
 #if _DEBUG
@@ -65,13 +65,6 @@ void InvalidParameterHandler(const wchar_t* Expression, const wchar_t* Function,
 }
 
 
-LONG WINAPI UnhandledException(EXCEPTION_POINTERS* ExceptionInfo)
-{
-	Platform::ReportCrash(ExceptionInfo);
-	gIsGetCriticalError = true;
-	Platform::RequestExit(true);
-	return EXCEPTION_CONTINUE_SEARCH;
-}
 
 
 //This is to get the correct callstack when running as 64bit exe
@@ -86,9 +79,8 @@ int32 GuardedMainEntrance(HINSTANCE hInstance, HINSTANCE hPrevInstance, int nCmd
 			Error = MAIN_ENTRANCE_CALL(hInstance, hPrevInstance, nCmdShow);
 		}
 		//Inner exception handler
-		__except (Platform::ReportCrash(GetExceptionInformation()), EXCEPTION_CONTINUE_SEARCH)
+		__except (PlatformCrash::Report(GetExceptionInformation()), EXCEPTION_CONTINUE_SEARCH)
 		{
-			//This block do not run
 			;
 		}
 	}
@@ -123,16 +115,19 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	//Cache the hInstance
 	gMainInstanceHandle = hInstance;
 
+	//If report crash even if a debugger is attached
+	gAlwaysReportCrash = false;
+
 
 	int32 Error = 0;
-	if (::IsDebuggerPresent())
+	if (::IsDebuggerPresent() && !gAlwaysReportCrash)
 	{
 		Error = MAIN_ENTRANCE_CALL(hInstance, hPrevInstance, nCmdShow);
 	}
 	else
 	{
 		//To catch any exceptions on threads that are not throw by the application code
-		::SetUnhandledExceptionFilter(UnhandledException);
+		//::SetUnhandledExceptionFilter(UnhandledException);
 
 		//Structured exception handling
 		__try
@@ -145,6 +140,7 @@ int32 WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			Error = 1;
 			gIsGetCriticalError = true;
 			LOG(Fatal, WindowsMainEntrance, TEXTS("Program shutdown because some exceptions. See Log.log and Fatal.log"));
+
 			//flush log
 
 			//Kill process directly

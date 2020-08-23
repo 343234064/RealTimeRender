@@ -7,8 +7,14 @@
 
 #include <TlHelp32.h>
 
-#define CRASH_CLIENT_MAX_PATH_LEN 265
 #define CRASH_CLIENT_MAX_ARGS_LEN 256
+
+const uint32 AssertExceptionCode = 0x4000;
+const uint32 GPUCrashExceptionCode = 0x8000;
+
+
+LONG WINAPI UnhandledException(EXCEPTION_POINTERS* ExceptionInfo);
+LONG WINAPI UnhandledStaticInitializationException(LPEXCEPTION_POINTERS ExceptionInfo);
 
 
 String GetExceptionInfoString(EXCEPTION_RECORD* ExceptionRecord)
@@ -168,29 +174,9 @@ int32 ReportCrashToReporterClient(
 }
 
 
-LONG WINAPI UnhandledStaticInitializationException(LPEXCEPTION_POINTERS ExceptionInfo)
-{
-	// Report fatal exceptions
-	if ((ExceptionInfo->ExceptionRecord->ExceptionCode & 0x80000000L) != 0)
-	{
-		// Using another thread solely for the purpose of handling crashes
-		// https://peteronprogramming.wordpress.com/2016/08/10/crashes-you-cant-handle-easily-2-stack-overflows-on-windows/
-
-		if (gCrashReportThread.)
-		{
-			return gCrashReportThread->OnCrashDuringStaticInitialization(ExceptionInfo);
-		}
-
-	}
-
-	return EXCEPTION_CONTINUE_SEARCH;
-}
-
-
 
 PlatformProcessHandle LaunchCrashReportClient(void** OutReadPipe, void** OutWritePipe)
 {
-	TChar ClientPath[CRASH_CLIENT_MAX_PATH_LEN] = { 0 };
 	TChar ClientArgs[CRASH_CLIENT_MAX_ARGS_LEN] = { 0 };
 
 	void* PipeInRead = nullptr;
@@ -262,10 +248,21 @@ CrashReportThread::CrashReportThread() :
 
 	CrashClientHandle = LaunchCrashReportClient(&CrashClientReadPipe, &CrashClientWritePipe);
 
+	if (!CrashClientHandle.IsValid())
+	{
+		LOG(Error, CrashReportThread, TEXTS("Launch Crash Report Client Failed!!"));
+	}
+
 	ThreadHandle = CreateThread(NULL, 0, CrashReportingThreadProc, this, 0, &ThreadID);
 	if (ThreadHandle)
 	{
 		SetThreadPriority(ThreadHandle, THREAD_PRIORITY_BELOW_NORMAL);
+		Valid = true;
+	}
+	else
+	{
+		LOG(Error, CrashReportThread, TEXTS("Create Crash Report Thread Failed!!"));
+		Valid = false;
 	}
 	
 	Memory::Zero(&SharedContext, sizeof(SharedCrashContext));
@@ -377,3 +374,167 @@ void CrashReportThread::HandleCrash()
 		);
 	}
 }
+
+
+int32 CrashReportThread::OnEnsure(LPEXCEPTION_POINTERS ExceptionInfo, const TChar* ErrorMessage)
+{
+	if (CrashClientHandle.IsValid() && PlatformProcess::IsProcRunning(CrashClientHandle))
+	{
+		return ReportCrashToReporterClient(
+			CachedExceptionInfo,
+			CrashType::Ensure,
+			ErrorMessage,
+			::GetCurrentThread(),
+			::GetCurrentThreadId(),
+			CrashClientHandle,
+			CrashClientWritePipe,
+			CrashClientReadPipe,
+			&SharedContext
+		);
+	}
+
+	return EXCEPTION_CONTINUE_EXECUTION;
+}
+
+int32 CrashReportThread::OnCrashDuringStaticInit(LPEXCEPTION_POINTERS ExceptionInfo)
+{
+	if (CrashClientHandle.IsValid() && PlatformProcess::IsProcRunning(CrashClientHandle))
+	{
+		const TChar* ErrorMessage = TEXTS("Crashed during static initialization");
+
+		return 	ReportCrashToReporterClient(
+			ExceptionInfo,
+			CrashType::Crash,
+			ErrorMessage,
+			CrashedThreadHandle,
+			CrashedThreadID,
+			CrashClientHandle,
+			CrashClientWritePipe,
+			CrashClientReadPipe,
+			&SharedContext
+		);
+	}
+
+	return EXCEPTION_CONTINUE_EXECUTION;
+}
+
+
+
+CrashReportThread gCrashReportThread;
+static int32 ReportCrashCallCount = 0;
+
+static PlatformCriticalSection EnsureLock;
+static bool EnsureEntranceGurad = false;
+
+LONG WINAPI UnhandledStaticInitializationException(LPEXCEPTION_POINTERS ExceptionInfo)
+{
+	// Report fatal exceptions
+	if ((ExceptionInfo->ExceptionRecord->ExceptionCode & 0x80000000L) != 0)
+	{
+		// Using another thread solely for the purpose of handling crashes
+		// https://peteronprogramming.wordpress.com/2016/08/10/crashes-you-cant-handle-easily-2-stack-overflows-on-windows/
+
+		if (gCrashReportThread.IsValid())
+		{
+			return gCrashReportThread.OnCrashDuringStaticInit(ExceptionInfo);
+		}
+
+	}
+
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+LONG WINAPI UnhandledException(EXCEPTION_POINTERS* ExceptionInfo)
+{
+	PlatformCrash::Report(ExceptionInfo);
+	gIsGetCriticalError = true;
+	Platform::RequestExit(true);
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+
+int32 WindowsCrash::Report(EXCEPTION_POINTERS* ExceptionInfo)
+{
+	if (gCrashReportThread.IsValid())
+	{
+		if (PlatformAtomics::InterlockedIncrement(&ReportCrashCallCount) == 1)
+		{
+			gCrashReportThread.OnCrashed(ExceptionInfo);
+		}
+
+		gCrashReportThread.WaitUntilCrashIsHandled();
+	}
+
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+
+int32 WindowsCrash::ReportEnsureUsingCrashReportClient(EXCEPTION_POINTERS* ExceptionInfo, const TChar* ErrorMessage)
+{
+	if (gCrashReportThread.IsValid())
+	{
+		return gCrashReportThread.OnEnsure(ExceptionInfo, ErrorMessage);
+	}
+
+	return EXCEPTION_CONTINUE_EXECUTION;
+}
+
+
+FORCE_INLINE void ReportEnsureInternal(const TChar* ErrorMessage)
+{
+	//SetMemoryStats(FPlatformMemory::GetStats());
+
+	__try
+	{
+		::RaiseException(1, 0, 0, nullptr);
+	}
+	__except (WindowsCrash::ReportEnsureUsingCrashReportClient(GetExceptionInformation(), ErrorMessage))
+	{
+		;
+	}
+}
+
+void WindowsCrash::ReportEnsure(const TChar* ErrorMessage)
+{
+	if (ReportCrashCallCount > 0)
+	{
+		return;
+	}
+
+	EnsureLock.Lock();
+
+	if (EnsureEntranceGurad)
+	{
+		EnsureLock.UnLock();
+		return;
+	}
+
+	EnsureEntranceGurad = true;
+
+	ReportEnsureInternal(ErrorMessage);
+
+	EnsureEntranceGurad = false;
+	EnsureLock.UnLock();
+}
+
+void WindowsCrash::ReportAssert(const TChar* ErrorMessage)
+{
+	//SetMemoryStats(FPlatformMemory::GetStats());
+
+	CrashInfo Info(ErrorMessage);
+
+	::ULONG_PTR Arguments[] = { (ULONG_PTR)&Info };
+	::RaiseException(AssertExceptionCode, 0, ARRAY_SIZE(Arguments), Arguments);
+}
+
+
+void WindowsCrash::ReportGPUCrash(const TChar* ErrorMessage)
+{
+	//SetMemoryStats(FPlatformMemory::GetStats());
+
+	CrashInfo Info(ErrorMessage);
+	::ULONG_PTR Arguments[] = { (ULONG_PTR)&Info };
+	::RaiseException(GPUCrashExceptionCode, 0, ARRAY_SIZE(Arguments), Arguments);
+}
+
+
