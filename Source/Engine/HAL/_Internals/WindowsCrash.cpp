@@ -208,7 +208,8 @@ PlatformProcessHandle LaunchCrashReportClient(void** OutReadPipe, void** OutWrit
 		}
 	}
 
-	String::Sprintf(ClientArgs, TEXTS(" -READ=%0u -WRITE=%0u -MAINPROCID=%u"), PipeInRead, PipeOutWrite, PlatformProcess::GetCurrentProcessId());
+	const TChar* CommandLine = TEXTS(" -READ=%0u -WRITE=%0u -MAINPROCID=%u");
+	String::Snprintf(ClientArgs, CRASH_CLIENT_MAX_ARGS_LEN, CommandLine, PipeInRead, PipeOutWrite, PlatformProcess::GetCurrentProcessId());
 	String CrashReporterPath = TEXTS("CrashReporter_Win64.exe");
 	
 	return PlatformProcess::CreateProc(
@@ -343,7 +344,7 @@ void CrashReportThread::HandleCrash()
 	// Generate crash callstack
 	{
 		const Size_T StackTraceSize = 65535;
-		ANSICHAR* StackTrace = (ANSICHAR*)gMallocator->Malloc(StackTraceSize);
+		ANSICHAR* StackTrace = (ANSICHAR*)Memory::Malloc(StackTraceSize);
 		StackTrace[0] = 0;
 
 		PlatformChars::Strncpy(gErrorHist, *Message, ARRAY_SIZE(gErrorHist));
@@ -355,7 +356,7 @@ void CrashReportThread::HandleCrash()
 		UTF8ToTChar::Convert(ConvertedChars, StackTrace);
 		PlatformChars::Strncat(gErrorHist, ConvertedChars.Begin(), ARRAY_SIZE(gErrorHist));
 
-		gMallocator->Free(StackTrace);
+		Memory::Free(StackTrace);
 	}
 
 	// Run the crash reporter

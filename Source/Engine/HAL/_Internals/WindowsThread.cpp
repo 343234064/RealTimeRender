@@ -1,5 +1,6 @@
 #include "Global/EngineVariables.h"
 #include "Global/Utilities/CharConversion.h"
+#include "HAL/Platforms/Windows/WindowsCrash.h"
 #include "HAL/Platforms/Windows/WindowsThread.h"
 
 
@@ -42,8 +43,11 @@ bool WindowsThread::PlatformInit(Runnable* ObjectToRun,
 		//Here will wait for Runnable's Init() finish
 		::WaitForSingleObject(SyncEvent, INFINITE);
 
+		Array<ANSICHAR> ConvertedChars;
+		TCharToUTF8::Convert(ConvertedChars, *ThreadName);
+		WindowsChars::Strncpy(CachedThreadNameUTF8, ConvertedChars.Begin(), WINDOWS_THREAD_NAME_MAX_LEN);
 
-		SetThreadName(ThreadID, *ThreadName);
+		SetThreadName(ThreadID, CachedThreadNameUTF8);
 		SetThreadPriority(InitPriority);
 	}
 
@@ -65,24 +69,22 @@ typedef struct tagTHREADNAME_INFO
 } THREADNAME_INFO;
 #pragma pack(pop) 
 
-void WindowsThread::SetThreadName(uint32 ThreadId, TChar* Name)
+
+void WindowsThread::SetThreadName(uint32 ThreadId, const ANSICHAR* Name)
 {
 	const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
-	Array<ANSICHAR> ConvertedChars;
-	TCharToUTF8::Convert(ConvertedChars, Name);
-
-	THREADNAME_INFO info;
-	info.dwType = 0x1000;
-	info.szName = ConvertedChars.Begin();
-	info.dwThreadID = ThreadId;
-	info.dwFlags = 0;
+	THREADNAME_INFO Info;
+	Info.dwType = 0x1000;
+	Info.szName = Name;
+	Info.dwThreadID = ThreadId;
+	Info.dwFlags = 0;
 
 #pragma warning(push)  
 #pragma warning(disable: 6320 6322)  
 	__try {
 
-		::RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+		::RaiseException(MS_VC_EXCEPTION, 0, sizeof(Info) / sizeof(ULONG_PTR), (ULONG_PTR*)&Info);
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {
 	}
@@ -140,7 +142,7 @@ uint32 WindowsThread::RunWrapper()
 		{
 			Result = Run();
 		}
-		__except (Platform::ReportCrash(GetExceptionInformation()))
+		__except (PlatformCrash::Report(GetExceptionInformation()))
 		{
 			Result = 1;
 			LOG(Error, WindowsThread, TEXTS("Runnable thread %s crashed."), *ThreadName);

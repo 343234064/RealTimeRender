@@ -32,5 +32,7 @@ void Assertion::OuputAssertionFailed(const ANSICHAR* Expression, const ANSICHAR*
 		PlatformChars::Strncat(gErrorHist, TEXTS("\r\n\r\n"), ARRAY_SIZE(gErrorHist));
 
 		PlatformDialog::Open(DialogType::Ok, "Assertion Failed", FinalText);
+
+		//dump log
 	}
 }

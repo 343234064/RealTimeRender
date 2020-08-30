@@ -82,7 +82,7 @@ struct Path
 	static String ExeDir()
 	{
 		static String ExeDir = TEXTS("");
-		if (!ExeDir[0])
+		if (ExeDir.Len() <= 0)
 		{
 			TChar Dir[512] = TEXTS("");
 			Platform::GetCurrentDirW(Dir, 512);
@@ -99,7 +99,7 @@ struct Path
 	static String GuiDir()
 	{
 		static String Dir = TEXTS("");
-		if (!Dir[0])
+		if (Dir.Len() <= 0)
 		{
 			Dir = Path::ExeDir() + TEXTS("Gui/");
 		}
@@ -110,7 +110,7 @@ struct Path
 	static String ShaderDir()
 	{
 		static String Dir = TEXTS("");
-		if (!Dir[0])
+		if (Dir.Len() <= 0)
 		{
 			Dir = Path::ExeDir() + TEXTS("Shaders/");
 		}
@@ -121,7 +121,7 @@ struct Path
 	static String ScriptDir()
 	{
 		static String Dir = TEXTS("");
-		if (!Dir[0])
+		if (Dir.Len() <= 0)
 		{
 			Dir = Path::ExeDir() + TEXTS("Scripts/");
 		}

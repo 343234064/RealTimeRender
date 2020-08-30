@@ -63,6 +63,11 @@ namespace Memory
 	FORCE_INLINE
 	void* Malloc(Size_T Size, uint32 Align = ALIGNMENT_DEFAULT)
 	{
+		if (!gMallocator)
+		{
+			PlatformMemory::Init();
+		}
+
 		void* NewMemory = nullptr;
 		NewMemory = gMallocator->Malloc(Size, Align);
 		//track
@@ -72,6 +77,11 @@ namespace Memory
 	FORCE_INLINE
 	void* Realloc(void* Dest, Size_T Size, uint32 Align = ALIGNMENT_DEFAULT)
 	{
+		if (!gMallocator)
+		{
+			PlatformMemory::Init();
+		}
+
 		void* NewMemory = nullptr;
 		NewMemory = gMallocator->Realloc(Dest, Size, Align);
 		//track
@@ -81,6 +91,11 @@ namespace Memory
 	FORCE_INLINE
 	void Free(void* Dest)
 	{
+		if (!gMallocator)
+		{
+			PlatformMemory::Init();
+		}
+
 		//track
 		gMallocator->Free(Dest);
 	}

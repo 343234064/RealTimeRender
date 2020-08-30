@@ -11,8 +11,7 @@
 
 int32 CoreEngine::PreInit()
 {
-	//Init the memory
-	PlatformMemory::Init();
+	//Init the memory statistics
 	PlatformMemory::OutputMemoryStatistics();
 
 	gMainThreadId = Platform::GetCurrentThreadId();
@@ -51,7 +50,7 @@ int32 CoreEngine::Init()
 	InitTime();
 
 	//load module
-	//e.g phys..
+	//e.g phys, animation, python...
 
 	//Creat Editor
 	gEditor = Editor::CreateEditor();

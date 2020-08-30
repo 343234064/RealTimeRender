@@ -10,6 +10,8 @@ Windows thread
 #include "HAL/Platforms/Windows/WindowsPlatform.h"
 
 
+#define WINDOWS_THREAD_NAME_MAX_LEN 256
+
 class WindowsThread: public Thread
 {
 public:
@@ -65,6 +67,7 @@ public:
 		::WaitForSingleObject(ThreadHandle, INFINITE);
 	}
 
+
 protected:
 	WindowsThread() :
 		ThreadHandle(NULL),
@@ -86,12 +89,13 @@ protected:
 		return ((WindowsThread*)Object)->RunWrapper();
 	}
 
-	static void SetThreadName(uint32 ThreadId, TChar* Name);
-
+	static void SetThreadName(uint32 ThreadId, const ANSICHAR* Name);
 
 protected:
 	HANDLE ThreadHandle;
 	HANDLE SyncEvent;
+
+	ANSICHAR CachedThreadNameUTF8[WINDOWS_THREAD_NAME_MAX_LEN];
 };
 
 
