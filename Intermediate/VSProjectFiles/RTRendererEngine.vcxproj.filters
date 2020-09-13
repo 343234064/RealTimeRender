@@ -1,0 +1,361 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{7cd21a76-899b-4e99-8871-d3dd7f50d25f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine">
+      <UniqueIdentifier>{d3da155b-2603-4f71-be81-d06f45cd839f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{252aeb01-72dd-4d61-8070-c86467d55144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gui">
+      <UniqueIdentifier>{0521bc1e-7771-4a4f-9ea8-192e4194963c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{1d5a91f3-de7f-4611-b828-0a87108236e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\HAL">
+      <UniqueIdentifier>{b7e5ccac-2dca-4868-9e5e-fcdea807c5c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\HAL\Platforms">
+      <UniqueIdentifier>{0f58dcdb-e21b-4c6e-9eb9-a2cb6acc5bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\HAL\Platforms\Linux">
+      <UniqueIdentifier>{06854b9a-f6fa-40c5-b797-f970c2fbe06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\HAL\Platforms\Mac">
+      <UniqueIdentifier>{c39fe321-eee6-4ccd-ab6b-92cd61a0390c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\HAL\Platforms\Windows">
+      <UniqueIdentifier>{0e0146a4-8323-4696-9741-a728e13e295b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\HAL\_Internals">
+      <UniqueIdentifier>{25e6aacb-1099-4185-81d8-f7e254ecda10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ThirdPartyLibraries">
+      <UniqueIdentifier>{a6fa56de-ead4-4a05-97c1-57e12f7f0b93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ThirdPartyLibraries\IntelTBB">
+      <UniqueIdentifier>{fea8cf3d-0689-4066-b489-166ec8a873eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ThirdPartyLibraries\IntelTBB\TBB_2019_Update_4_WIN">
+      <UniqueIdentifier>{74efd418-c943-4b5d-b671-c35f42ea212a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ThirdPartyLibraries\jemalloc-5.1.0">
+      <UniqueIdentifier>{9c62c413-2043-498b-bb3e-10495671bf6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Global">
+      <UniqueIdentifier>{5924189f-7a10-46db-acd0-20100980b4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Global\Utilities">
+      <UniqueIdentifier>{fde4cc32-9fea-46e8-bfcd-a0931813092d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Launch">
+      <UniqueIdentifier>{60f107d1-1909-48da-89b3-6de3ab40057b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Launch\_Internals">
+      <UniqueIdentifier>{daefbdb6-2d66-4229-b645-391019e3c015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Global\_Internals">
+      <UniqueIdentifier>{aef2a59f-a30c-46a5-9810-d99f9ae43196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor">
+      <UniqueIdentifier>{9192414d-422f-4067-8f42-2c7e66a59d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms">
+      <UniqueIdentifier>{d5174c82-e4c5-4e07-bb24-fd94d2f9acc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\_Internals">
+      <UniqueIdentifier>{88e91dc8-f734-4087-934f-390c8412a011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms\Windows">
+      <UniqueIdentifier>{2ad92ce6-0f9d-459c-a5bb-39fe4ee8e5be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms\Linux">
+      <UniqueIdentifier>{99e992a6-fe25-44e7-8bd1-0bc35a86efad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Editor\Platforms\Mac">
+      <UniqueIdentifier>{2ad12020-5fa3-4113-a975-a5190ae5482a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Log">
+      <UniqueIdentifier>{f9a64564-6586-48f3-9b56-99b62617e761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Log\_Internals">
+      <UniqueIdentifier>{94ab1a99-0795-4715-bc4f-63333c436b10}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platform.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Chars.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\GlobalConfigs.h">
+      <Filter>Source\Engine\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\AtomicCounter.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\ContainerAllocator.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\DynamicArray.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Misc.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\EngineVariables.h">
+      <Filter>Source\Engine\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\GlobalType.h">
+      <Filter>Source\Engine\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h">
+      <Filter>Source\Engine\Launch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Time.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Editor.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsEditorMisc.h">
+      <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsWindow.h">
+      <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Resources.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h">
+      <Filter>Source\Engine\Launch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Window.h">
+      <Filter>Source\Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\PlatformEditor.h">
+      <Filter>Source\Engine\Editor\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsMessage.h">
+      <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Assertion.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Serializer.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\CharConversion.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogEnum.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDevice.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFile.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogManager.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceConsole.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsDialog.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFatal.h">
+      <Filter>Source\Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\RefCount.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsCrash.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocDefault.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocIntelTBB.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocJemalloc.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocThreadSafeDecorator.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Memory.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Dialog.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Path.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Crash.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericAllocator.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericDialog.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericMemory.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericPlatform.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericThread.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericFile.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\File.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericProcess.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsProcess.h">
+      <Filter>Source\Engine\HAL\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Editor\ActionCallback.h">
+      <Filter>Source\Engine\Editor\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Process.h">
+      <Filter>Source\Engine\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericCrash.h">
+      <Filter>Source\Engine\HAL\Platforms</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocJemalloc.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocDefault.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsMemory.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp">
+      <Filter>Source\Engine\Launch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Launch\_Internals\WindowsLaunch.cpp">
+      <Filter>Source\Engine\Launch\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Global\_Internals\EngineVariables.cpp">
+      <Filter>Source\Engine\Global\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Launch\_Internals\CoreEngine.cpp">
+      <Filter>Source\Engine\Launch\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsTime.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsEditorMisc.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\Editor.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsWindow.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\PlatformEditor.cpp">
+      <Filter>Source\Engine\Editor\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Global\_Internals\Assertion.cpp">
+      <Filter>Source\Engine\Global\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsThread.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogMacros.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFile.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDevice.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogManager.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsDialog.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFatal.cpp">
+      <Filter>Source\Engine\Log\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericThread.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericMemory.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericFile.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericAllocator.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsProcess.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsCrash.cpp">
+      <Filter>Source\Engine\HAL\_Internals</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RTRendererEngine.rc" />
+  </ItemGroup>
+</Project>

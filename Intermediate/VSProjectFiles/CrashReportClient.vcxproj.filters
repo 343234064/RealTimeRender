@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Platforms">
+      <UniqueIdentifier>{ee3b35f6-19d6-40a2-aa05-954984a43483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platforms\Windows">
+      <UniqueIdentifier>{434640b3-b037-4012-b2ed-7575af341005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReportClient">
+      <UniqueIdentifier>{408cc193-236b-4a27-918b-f0afd7d6a4b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Tools\CrashReportClient\Windows\Launch.cpp">
+      <Filter>Platforms\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.cpp">
+      <Filter>ReportClient</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.h">
+      <Filter>ReportClient</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="RTRDebug64|Win32">
+      <Configuration>RTRDebug64</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTRRelease64|Win32">
+      <Configuration>RTRRelease64</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTRDebug64|x64">
+      <Configuration>RTRDebug64</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTRRelease64|x64">
+      <Configuration>RTRRelease64</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Engine\Editor\Editor.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\ActionCallback.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\PlatformEditor.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsEditorMisc.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsMessage.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Platforms\Windows\WindowsWindow.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Resources.h" />
+    <ClInclude Include="..\..\Source\Engine\Editor\Window.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\GlobalConfigs.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\GlobalType.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\EngineVariables.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Serializer.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Assertion.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\AtomicCounter.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\ContainerAllocator.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\DynamicArray.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Misc.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\RefCount.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\CharConversion.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocDefault.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocIntelTBB.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocJemalloc.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\AllocThreadSafeDecorator.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Chars.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Crash.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Dialog.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\File.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Memory.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Path.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericAllocator.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericCrash.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericDialog.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericFile.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericMemory.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericPlatform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericProcess.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\GenericThread.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsChars.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsCrash.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsDialog.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsFile.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsMemory.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsPlatform.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsProcess.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsThread.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Platforms\Windows\WindowsTime.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Process.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Thread.h" />
+    <ClInclude Include="..\..\Source\Engine\HAL\Time.h" />
+    <ClInclude Include="..\..\Source\Engine\Launch\CoreEngine.h" />
+    <ClInclude Include="..\..\Source\Engine\Launch\LoopWrapper.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceConsole.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFatal.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogEnum.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDevice.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogDeviceFile.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogMacros.h" />
+    <ClInclude Include="..\..\Source\Engine\Log\LogManager.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\Editor.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\PlatformEditor.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsEditorMisc.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Editor\_Internals\WindowsWindow.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Global\_Internals\Assertion.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Global\_Internals\EngineVariables.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocDefault.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocJemalloc.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericAllocator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericFile.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericMemory.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\GenericThread.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsCrash.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsDialog.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsMemory.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsPlatform.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsProcess.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsThread.cpp" />
+    <ClCompile Include="..\..\Source\Engine\HAL\_Internals\WindowsTime.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Launch\ForTest.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Launch\_Internals\CoreEngine.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Launch\_Internals\WindowsLaunch.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDevice.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFatal.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogDeviceFile.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogMacros.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Log\_Internals\LogManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RTRendererEngine.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{1C4366AC-CDA0-4B9C-9F0C-696F887C16DE}</ProjectGuid>
+    <RootNamespace>RTRendererEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTRDebug64|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTRRelease64|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTRDebug64|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTRRelease64|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='RTRDebug64|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Properties\IntelTBBPropertySheet.props" />
+    <Import Project="Properties\JemallocPropertySheet.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='RTRRelease64|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Properties\IntelTBBPropertySheet.props" />
+    <Import Project="Properties\JemallocPropertySheet.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='RTRDebug64|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Properties\IntelTBBPropertySheet.props" />
+    <Import Project="Properties\JemallocPropertySheet.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='RTRRelease64|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Properties\IntelTBBPropertySheet.props" />
+    <Import Project="Properties\JemallocPropertySheet.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTRDebug64|x64'">
+    <OutDir>..\..</OutDir>
+    <IntDir>..\Debug\RTRenderEngine</IntDir>
+    <IncludePath>..\..\Source\Engine;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath);</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTRRelease64|x64'">
+    <OutDir>..\..\Binaries\</OutDir>
+    <IntDir>..\Debug\RTRenderEngine</IntDir>
+    <IncludePath>..\..\Source\Engine;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTRDebug64|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTRDebug64|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTRRelease64|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTRRelease64|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>
+      </SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
