@@ -954,8 +954,7 @@ public:
 
 protected:
 	template <typename LeftType, typename RightType>
-	FORCE_INLINE static
-	String Concat(typename ExplicitType<LeftType>::Type Left, typename ExplicitType<RightType>::Type Right)
+	inline static String Concat(typename ExplicitType<LeftType>::Type Left, typename ExplicitType<RightType>::Type Right)
 	{
 		if (Left.IsClear())
 		{
@@ -969,8 +968,7 @@ protected:
 	}
 
 	template <typename LeftType>
-	FORCE_INLINE static
-	String ConcatStringAndTChar(typename ExplicitType<LeftType>::Type Left, const TChar* Right)
+	inline static String ConcatStringAndTChar(typename ExplicitType<LeftType>::Type Left, const TChar* Right)
 	{
 		if (!Right || !*Right)
 		{
