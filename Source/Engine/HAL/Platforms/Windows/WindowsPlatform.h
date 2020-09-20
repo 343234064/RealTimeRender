@@ -110,32 +110,82 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 
 
 // WIN32_LEAN_AND_MEAN excludes rarely-used services from windows headers.
+#ifndef  WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
 // The below excludes some other unused services from the windows headers
+#ifndef  NOGDICAPMASKS
 #define NOGDICAPMASKS			// CC_*, LC_*, PC_*, CP_*, TC_*, RC_
+#endif
+#ifndef  OEMRESOURCE
 #define OEMRESOURCE				// OEM Resource values
+#endif
+#ifndef  NOATOM
 #define NOATOM					// Atom Manager routines
+#endif
+#ifndef  NODRAWTEXT
 #define NODRAWTEXT				// DrawText() and DT_*
+#endif
+#ifndef  NOKERNEL
 #define NOKERNEL				// All KERNEL #defines and routines
+#endif
+#ifndef  NOMEMMGR
 #define NOMEMMGR				// GMEM_*, LMEM_*, GHND, LHND, associated routines
+#endif
+#ifndef  NOMETAFILE
 #define NOMETAFILE				// typedef METAFILEPICT
+#endif
+#ifndef  NOMINMAX
 #define NOMINMAX				// Macros min(a,b) and max(a,b)
+#endif
+#ifndef  NOOPENFILE
 #define NOOPENFILE				// OpenFile(), OemToAnsi, AnsiToOem, and OF_*
+#endif
+#ifndef  NOSCROLL
 #define NOSCROLL				// SB_* and scrolling routines
+#endif
+#ifndef  NOSERVICE
 #define NOSERVICE				// All Service Controller routines, SERVICE_ equates, etc.
+#endif
+#ifndef  NOSOUND
 #define NOSOUND					// Sound driver routines
+#endif
+#ifndef  NOCOMM
 #define NOCOMM					// COMM driver routines
+#endif
+#ifndef  NOKANJI
 #define NOKANJI					// Kanji support stuff.
+#endif
+#ifndef NOHELP
 #define NOHELP					// Help engine interface.
+#endif
+#ifndef NOPROFILER
 #define NOPROFILER				// Profiler interface.
+#endif
+#ifndef NODEFERWINDOWPOS
 #define NODEFERWINDOWPOS		// DeferWindowPos routines
+#endif
+#ifndef NOMCX
 #define NOMCX					// Modem Configuration Extensions
+#endif
+#ifndef NOCRYPT
 #define NOCRYPT
+#endif
+#ifndef NOTAPE
 #define NOTAPE
+#endif
+#ifndef NOIMAGE
 #define NOIMAGE
+#endif
+#ifndef NOPROXYSTUB
 #define NOPROXYSTUB
+#endif
+#ifndef NORPC
 #define NORPC
+#endif
+#ifndef UNICODE
 #define UNICODE                 //Use unicode
+#endif
 #include <Windows.h>
 
 //Undo Windows definations which may be repeated
