@@ -5,9 +5,8 @@
 int main(int argc, char* argv[])
 {
     CrashReportCore Reporter(argc, argv);
-    Reporter.Init();
-
-    Reporter.Show();
-
+   
+    Reporter.Run();
+   
     return Reporter.Exit();
 }

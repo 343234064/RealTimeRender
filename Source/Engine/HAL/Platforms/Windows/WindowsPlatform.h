@@ -6,8 +6,12 @@
 #error Current Platform is NOT Windows or NO Platform macro
 #endif
 
+
 //Request Visual C++ 2017 or later
 static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to compile on Windows");
+
+
+#ifndef MINIMAL_PLATFORM_HEADER
 
 //Compiler Warning -> Error, to make the compile environment more stringent
 //Some may not work due to the compiler version
@@ -187,6 +191,8 @@ static_assert(_MSC_VER >= 1910, "Visual Studio 2017 or later is required to comp
 #define UNICODE                 //Use unicode
 #endif
 #include <Windows.h>
+
+#endif
 
 //Undo Windows definations which may be repeated
 #if defined(int8)

@@ -3,8 +3,10 @@
 
 #include "HAL/Platform.h"
 
-
+#ifndef _UNICODE
 #define _UNICODE
+#endif 
+
 #include <tchar.h>
 #include <stdlib.h>
 

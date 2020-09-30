@@ -3,6 +3,8 @@
 #include "Global/Utilities/CharConversion.h"
 #include "HAL/Platforms/GenericPlatform.h"
 #include "HAL/Platforms/Windows/WindowsCrash.h"
+#include "HAL/Path.h"
+#include "HAL/Dialog.h"
 #include "Log/LogManager.h"
 
 #include <TlHelp32.h>
@@ -144,24 +146,37 @@ int32 ReportCrashToReporterClient(
 		::AllowSetForegroundWindow(CrashReporterProcessId);
 	}
 
-	int32 OutDataWritten = 0;
-	PlatformProcess::WritePipe(WritePipe, (uint8*)SharedContext, sizeof(SharedCrashContext), &OutDataWritten);
-	CHECK(OutDataWritten == sizeof(SharedCrashContext));
-
-	bool CanContinueExecution = false;
-	int32 ExitCode = 0;
-	Array<uint8> ResponseBuffer;
-	ResponseBuffer.AddZeroed(16);
-	while (!PlatformProcess::GetProcReturnCode(CrashReporterHandle, &ExitCode) && !CanContinueExecution)
+	bool WritePipeSucceeded = true;
+	const uint8* DataIt = (const uint8*)SharedContext;
+	const uint8* DataEndIt = DataIt + sizeof(SharedCrashContext);
+	while (DataIt != DataEndIt && WritePipeSucceeded)
 	{
-		if (PlatformProcess::ReadPipeToArray(ReadPipe, ResponseBuffer))
+		int32 OutDataWritten = 0;
+		WritePipeSucceeded = PlatformProcess::WritePipe(WritePipe, (uint8*)SharedContext, sizeof(SharedCrashContext), &OutDataWritten);
+		DataIt += OutDataWritten;
+	}
+
+	if (WritePipeSucceeded && CrashReporterHandle.IsValid())
+	{
+		bool CanContinueExecution = false;
+		int32 ExitCode = 0;
+		Array<uint8> ResponseBuffer;
+		ResponseBuffer.AddZeroed(16);
+		while (!PlatformProcess::GetProcReturnCode(CrashReporterHandle, &ExitCode) && !CanContinueExecution)
 		{
-			if (ResponseBuffer[0] == 0xd && ResponseBuffer[1] == 0xe &&
-				ResponseBuffer[2] == 0xa && ResponseBuffer[3] == 0xd)
+			if (PlatformProcess::ReadPipeToArray(ReadPipe, ResponseBuffer))
 			{
-				CanContinueExecution = true;
+				if (ResponseBuffer[0] == 0xd && ResponseBuffer[1] == 0xe &&
+					ResponseBuffer[2] == 0xa && ResponseBuffer[3] == 0xd)
+				{
+					CanContinueExecution = true;
+				}
 			}
 		}
+	}
+	else
+	{
+		PlatformDialog::Open(DialogType::Ok, "Application has crashed", "The application will be closed soon. See log file for detail");
 	}
 
 	for (::HANDLE ThreadHandle : ThreadHandles)
@@ -208,9 +223,9 @@ PlatformProcessHandle LaunchCrashReportClient(void** OutReadPipe, void** OutWrit
 		}
 	}
 
-	const TChar* CommandLine = TEXTS(" -READ=%0u -WRITE=%0u -MAINPROCID=%u");
+	const TChar* CommandLine = TEXTS(" -READ=%0u -WRITE=%0u -MONITOR=%u");
 	String::Snprintf(ClientArgs, CRASH_CLIENT_MAX_ARGS_LEN, CommandLine, PipeInRead, PipeOutWrite, PlatformProcess::GetCurrentProcessId());
-	String CrashReporterPath = TEXTS("CrashReporter_Win64.exe");
+	String CrashReporterPath = Path::Join(Path::ToolDir(), TEXTS("CrashReportClient/Win64/CrashReportClient.exe"));
 	
 	return PlatformProcess::CreateProc(
 		*CrashReporterPath,
@@ -248,21 +263,21 @@ CrashReportThread::CrashReportThread() :
 	}
 
 	CrashClientHandle = LaunchCrashReportClient(&CrashClientReadPipe, &CrashClientWritePipe);
-
 	if (!CrashClientHandle.IsValid())
 	{
-		LOG(Error, CrashReportThread, TEXTS("Launch Crash Report Client Failed!!"));
+		LOG(Error, CrashReportThread, TEXTS("Launch Crash Report Client Failed"));
 	}
 
 	ThreadHandle = CreateThread(NULL, 0, CrashReportingThreadProc, this, 0, &ThreadID);
 	if (ThreadHandle)
 	{
 		SetThreadPriority(ThreadHandle, THREAD_PRIORITY_BELOW_NORMAL);
+		LOG(Info, CrashReportThread, TEXTS("Create Crash Report Thread Success"));
 		Valid = true;
 	}
 	else
 	{
-		LOG(Error, CrashReportThread, TEXTS("Create Crash Report Thread Failed!!"));
+		LOG(Error, CrashReportThread, TEXTS("Create Crash Report Thread Failed"));
 		Valid = false;
 	}
 	
@@ -288,6 +303,13 @@ CrashReportThread::~CrashReportThread()
 
 	CloseHandle(CrashHandledEvent);
 	CrashHandledEvent = nullptr;
+
+	if (CrashClientHandle.IsValid())
+	{
+		//PlatformProcess::TerminateProc(CrashClientHandle);
+		PlatformProcess::CloseProc(CrashClientHandle);
+		PlatformProcess::ClosePipe(CrashClientReadPipe, CrashClientWritePipe);
+	}
 }
 
 
@@ -312,6 +334,15 @@ PlatformTypes::int32 CrashReportThread::Run()
 			break;
 		}
 	}
+
+	//if (CrashClientHandle.IsValid())
+	//{
+	//	PlatformProcess::TerminateProc(CrashClientHandle);
+	//	PlatformProcess::ClosePipe(CrashClientReadPipe, CrashClientWritePipe);
+	//	PlatformProcess::CloseProc(CrashClientHandle);
+	//}
+
+	//DO NOT add log here beacause the main thread will stop before this thread
 
 	return 0;
 }
@@ -537,5 +568,4 @@ void WindowsCrash::ReportGPUCrash(const TChar* ErrorMessage)
 	::ULONG_PTR Arguments[] = { (ULONG_PTR)&Info };
 	::RaiseException(GPUCrashExceptionCode, 0, ARRAY_SIZE(Arguments), Arguments);
 }
-
 

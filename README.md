@@ -10,18 +10,18 @@ complete all exception handler
   -> Launch Crash report process
     -> platform process
 
-map
-Thread Manager
-inline allocator/heap allocator
-
-
 
 Fatal log按照OutputDeviceError
 
 log system:
 add traceback to fatal log (generate by throw exception)
 
+assertion failed 增加log输出stack
 
+
+map
+Thread Manager
+inline allocator/heap allocator
 
 
 memmory check -> 验证array clear element with pointer type

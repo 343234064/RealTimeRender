@@ -128,6 +128,17 @@ struct Path
 		return Dir;
 	}
 
+	// Tool dir
+	static String ToolDir()
+	{
+		static String Dir = TEXTS("");
+		if (Dir.Len() <= 0)
+		{
+			Dir = Path::ExeDir() + TEXTS("Tools/");
+		}
+		return Dir;
+	}
+
 	static String Join(const String& Left, const String& Right)
 	{
 		String Result;

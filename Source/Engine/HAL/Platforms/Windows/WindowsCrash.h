@@ -103,6 +103,7 @@ struct WindowsCrash
 	static void ReportAssert(const TChar* ErrorMessage);
 	static void ReportGPUCrash(const TChar* ErrorMessage);
 	//static void ReportHang(const TChar* ErrorMessage, uint32 HungThreadId);
+
 };
 
 typedef WindowsCrash PlatformCrash;

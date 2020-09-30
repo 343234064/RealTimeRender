@@ -22,6 +22,16 @@ public:
 		this->show();
 	}
 
+	void SetBasicLabelText(const QString Text)
+	{
+		ui.BasicLabel->setText(Text);
+	}
+
+	void SetTextBrowser(const QString Text)
+	{
+		ui.TextBrowser->setText(Text);
+	}
+
 private:
 	
 	Ui::CrashReportClientClass ui;
@@ -47,6 +57,16 @@ public:
 	int Exit()
 	{
 		return Application.exec();
+	}
+
+	void SetBasicLabelText(const QString Text)
+	{
+		Client.SetBasicLabelText(Text);
+	}
+
+	void SetTextBrowser(const QString Text)
+	{
+		Client.SetTextBrowser(Text);
 	}
 
 private:

@@ -121,6 +121,7 @@ void CoreEngine::Exit()
    //stop render thread
    //RHI exit
    
+
    LOG_SHUTDOWN;
    FATALLOG_SHUTDOWN;
 

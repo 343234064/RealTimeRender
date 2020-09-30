@@ -13,9 +13,7 @@ public:
 	{}
 	~CrashReportCore() {}
 
-	void Init();
-
-	void Show();
+	void Run();
 
 	int Exit();
 	
