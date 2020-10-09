@@ -6,12 +6,6 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Platforms">
-      <UniqueIdentifier>{ee3b35f6-19d6-40a2-aa05-954984a43483}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Platforms\Windows">
-      <UniqueIdentifier>{434640b3-b037-4012-b2ed-7575af341005}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ReportClient">
       <UniqueIdentifier>{408cc193-236b-4a27-918b-f0afd7d6a4b2}</UniqueIdentifier>
     </Filter>
@@ -25,10 +19,10 @@
     <QtRcc Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\Tools\CrashReportClient\Windows\Launch.cpp">
-      <Filter>Platforms\Windows</Filter>
+    <ClCompile Include="..\..\Source\Tools\CrashReportClient\Launch.cpp">
+      <Filter>ReportClient</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.cpp">
+    <ClCompile Include="..\..\Source\Tools\CrashReportClient\CrashReportCore.cpp">
       <Filter>ReportClient</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,5 +35,10 @@
     <QtUic Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Tools\CrashReportClient\CrashReportCore.h">
+      <Filter>ReportClient</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

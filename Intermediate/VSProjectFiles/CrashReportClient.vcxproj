@@ -53,6 +53,7 @@
     <IntDir>..\Debug\CrashReportClient</IntDir>
     <IncludePath>..\..\Source\Tools\CrashReportClient;..\..\Source\Engine;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CRCDebug64|x64'">
     <Link>
@@ -63,6 +64,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CRCDebug64|x64'" Label="QtSettings">
     <QtInstall>msvc2017_64</QtInstall>
@@ -107,8 +111,8 @@
     <QtRcc Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.cpp" />
-    <ClCompile Include="..\..\Source\Tools\CrashReportClient\Windows\Launch.cpp" />
+    <ClCompile Include="..\..\Source\Tools\CrashReportClient\CrashReportCore.cpp" />
+    <ClCompile Include="..\..\Source\Tools\CrashReportClient\Launch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\..\Source\Tools\CrashReportClient\CrashReportClient.h" />
@@ -118,6 +122,9 @@
       <QtUicDir Condition="'$(Configuration)|$(Platform)'=='CRCDebug64|x64'">..\..\Source\Tools\CrashReportClient</QtUicDir>
       <QtUicDir Condition="'$(Configuration)|$(Platform)'=='CRCRelease64|x64'">..\..\Source\Tools\CrashReportClient</QtUicDir>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Tools\CrashReportClient\CrashReportCore.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

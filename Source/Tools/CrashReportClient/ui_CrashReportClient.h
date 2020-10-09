@@ -27,10 +27,12 @@ public:
     {
         if (CrashReportClientClass->objectName().isEmpty())
             CrashReportClientClass->setObjectName(QString::fromUtf8("CrashReportClientClass"));
-        CrashReportClientClass->resize(600, 630);
+        CrashReportClientClass->resize(600, 674);
         BasicLabel = new QLabel(CrashReportClientClass);
         BasicLabel->setObjectName(QString::fromUtf8("BasicLabel"));
         BasicLabel->setGeometry(QRect(20, 20, 311, 121));
+        BasicLabel->setAutoFillBackground(false);
+        BasicLabel->setWordWrap(true);
         TextBrowser = new QTextBrowser(CrashReportClientClass);
         TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
         TextBrowser->setGeometry(QRect(20, 160, 561, 451));

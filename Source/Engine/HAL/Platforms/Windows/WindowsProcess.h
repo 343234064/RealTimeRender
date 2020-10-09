@@ -78,21 +78,63 @@ public:
 
 	static PlatformProcessHandle OpenProcess(uint32 ProcessID);
 
-	static bool IsProcRunning(PlatformProcessHandle& ProcessHandle);
+	static bool IsProcRunning(PlatformProcessHandle& ProcessHandle)
+	{
+		bool Running = true;
+		uint32 WaitResult = ::WaitForSingleObject(ProcessHandle.Get(), 0);
+		if (WaitResult != WAIT_TIMEOUT)
+		{
+			Running = false;
+		}
+		return Running;
+	}
 
 	static void WaitForProc(PlatformProcessHandle& ProcessHandle);
 
-	static void CloseProc(PlatformProcessHandle& ProcessHandle);
+	static void CloseProc(PlatformProcessHandle& ProcessHandle)
+	{
+		if (ProcessHandle.IsValid())
+		{
+			::CloseHandle(ProcessHandle.Get());
+			ProcessHandle.Reset();
+		}
+	}
 
 	static void TerminateProc(PlatformProcessHandle& ProcessHandle, bool KillTree = false);
 
-	static bool GetProcReturnCode(PlatformProcessHandle& ProcHandle, int32* ReturnCode);
+	static bool GetProcReturnCode(PlatformProcessHandle& ProcHandle, int32* ReturnCode)
+	{
+		DWORD ExitCode = 0;
+		if (::GetExitCodeProcess(ProcHandle.Get(), &ExitCode) && ExitCode != STILL_ACTIVE)
+		{
+			if (ReturnCode != nullptr)
+			{
+				*ReturnCode = (int32)ExitCode;
+			}
+			return true;
+		}
+		return false;
+	}
 
 	static bool ExecProcess(const TChar* URL, const TChar* Params, int32* OutReturnCode, String* OutStdOut, String* OutStdErr, const TChar* OptionalWorkingDirectory = NULL);
 
-	static void Sleep(float Seconds);
+	static void Sleep(float Seconds)
+	{
+		uint32 Milliseconds = (uint32)(Seconds * 1000.0);
+		if (Milliseconds == 0)
+		{
+			::SwitchToThread();
+		}
+		else
+		{
+			::Sleep(Milliseconds);
+		}
+	}
 
-	static void SleepInfinite();
+	static void SleepInfinite()
+	{
+		::Sleep(INFINITE);
+	}
 
 	static void ClosePipe(void* ReadPipe, void* WritePipe);
 

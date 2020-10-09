@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>630</height>
+    <height>674</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,8 +22,14 @@
      <height>121</height>
     </rect>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QTextBrowser" name="TextBrowser">

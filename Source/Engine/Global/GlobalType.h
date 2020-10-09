@@ -222,6 +222,45 @@ template<typename Type> struct IsReferenceType { enum { Value = false }; };
 template<typename Type> struct IsReferenceType<Type&> { enum { Value = true }; };
 template<typename Type> struct IsReferenceType<Type&&> { enum { Value = true }; };
 
+/**
+ * IsLValueReferenceType
+ */
+template<typename T> struct IsLValueReferenceType { enum { Value = false }; };
+template<typename T> struct IsLValueReferenceType<T&> { enum { Value = true }; };
+
+/**
+ * IsRValueReferenceType
+ */
+template<typename T> struct IsRValueReferenceType { enum { Value = false }; };
+template<typename T> struct IsRValueReferenceType<T&&> { enum { Value = true }; };
+
+
+/**
+ * Remove any references from a type.
+ */
+template <typename T> struct RemoveReference { typedef T Type; };
+template <typename T> struct RemoveReference<T& > { typedef T Type; };
+template <typename T> struct RemoveReference<T&&> { typedef T Type; };
+
+/**
+ * Remove any const/volatile qualifiers from a type.
+ * "const int*" will failed, as the pointer is not const
+ */
+template <typename T> struct RemoveConstAndVolatile { typedef T Type; };
+template <typename T> struct RemoveConstAndVolatile<const T> { typedef T Type; };
+template <typename T> struct RemoveConstAndVolatile<volatile T> { typedef T Type; };
+template <typename T> struct RemoveConstAndVolatile<const volatile T> { typedef T Type; };
+
+/**
+ * Removes one level of pointer from a type, e.g.:
+ *
+ * RemovePointer<      int32  >::Type == int32
+ * RemovePointer<      int32* >::Type == int32
+ * RemovePointer<      int32**>::Type == int32*
+ * RemovePointer<const int32* >::Type == const int32
+ */
+template <typename T> struct RemovePointer { typedef T Type; };
+template <typename T> struct RemovePointer<T*> { typedef T Type; };
 
 
 /**************************
@@ -589,6 +628,93 @@ struct IsTriviallyCopyAssignable
 	enum { Value = OrTest<IsTrivalAssginable<Type>, IsPodType<Type>>::Value };
 };
 
+/**************************
+Gets the Nth type in a template parameter pack. N must be less than sizeof...(Types)
+****************************/
+template <int32 N, typename... Types>
+struct GetNthTypeFromParameter;
+
+template <int32 N, typename T, typename... OtherTypes>
+struct GetNthTypeFromParameter<N, T, OtherTypes...>
+{
+	using Type = typename GetNthTypeFromParameter<N - 1, OtherTypes...>::Type;
+};
+
+template <typename T, typename... OtherTypes>
+struct GetNthTypeFromParameter<0, T, OtherTypes...>
+{
+	using Type = T;
+};
+
+
+
+
+/**
+ MoveTemp will cast a reference to an rvalue reference.
+ = std::move except that it will not compile when passed an rvalue or
+ const object, because we would prefer to be informed when MoveTemp will have no effect.
+ */
+template <typename T>
+FORCE_INLINE typename RemoveReference<T>::Type&& MoveTemp(T&& Obj)
+{
+	typedef typename RemoveReference<T>::Type CastType;
+
+	// Validate that we're not being passed an rvalue or a const object - the former is redundant, the latter is almost certainly a mistake
+	static_assert(IsLValueReferenceType<T>::Value, "MoveTemp called on an rvalue");
+	static_assert(!IsTypeEqual<CastType&, const CastType&>::Value, "MoveTemp called on a const object");
+
+	return (CastType&&)Obj;
+}
+
+/**************************
+ MoveTemp will cast a reference to an rvalue reference.
+ = std::move
+****************************/
+template <typename T>
+FORCE_INLINE typename RemoveReference<T>::Type && MoveTempIfPossible(T && Obj)
+{
+	typedef typename RemoveReference<T>::Type CastType;
+	return (CastType&&)Obj;
+}
+
+/**************************
+  CopyTemp will enforce the creation of an rvalue which can bind to rvalue reference parameters.
+****************************/
+template <typename T>
+FORCE_INLINE T CopyTemp(T& Val)
+{
+	return const_cast<const T&>(Val);
+}
+
+template <typename T>
+FORCE_INLINE T CopyTemp(const T& Val)
+{
+	return Val;
+}
+
+template <typename T>
+FORCE_INLINE T&& CopyTemp(T&& Val)
+{
+	// If we already have an rvalue, just return it unchanged, rather than needlessly creating yet another rvalue from it.
+	return MoveTemp(Val);
+}
+
+/**************************
+  Forward will cast a reference to an rvalue reference.
+  = std::forward.
+****************************/
+template <typename T>
+FORCE_INLINE T&& Forward(typename RemoveReference<T>::Type& Obj)
+{
+	return (T&&)Obj;
+}
+
+template <typename T>
+FORCE_INLINE T&& Forward(typename RemoveReference<T>::Type&& Obj)
+{
+	return (T&&)Obj;
+}
+
 
 
 /**************************
@@ -615,3 +741,113 @@ public:
 template <typename ReturnType>
 class FuncTrigger<false, ReturnType>
 {};
+
+
+/**************************
+Make Integer Sequence
+
+Example:
+MakeIntegerSequence<10>
+Output:
+0 1 2 3 4 5 6 7 8 9
+****************************/
+template <typename T, T... Indices>
+struct IntegerSequence
+{
+};
+
+#ifdef _MSC_VER
+
+template <typename T, T N>
+using MakeIntegerSequence = __make_integer_seq<IntegerSequence, T, N>;
+
+#elif __has_builtin(__make_integer_seq)
+
+template <typename T, T N>
+using MakeIntegerSequence = __make_integer_seq<IntegerSequence, T, N>;
+
+#else
+
+namespace IntegerSequenceContent
+{
+	template <typename T, unsigned N>
+	struct MakeIntegerSequenceImpl;
+}
+
+template <typename T, T N>
+using MakeIntegerSequence = typename IntegerSequenceContent::MakeIntegerSequenceImpl<T, N>::Type;
+
+namespace IntegerSequenceContent
+{
+	template<unsigned N, typename T1, typename T2>
+	struct ConcatImpl;
+
+	template<unsigned N, typename T, T... Indices1, T... Indices2>
+	struct ConcatImpl<N, IntegerSequence<T, Indices1...>, IntegerSequence<T, Indices2...>> : IntegerSequence<T, Indices1..., (T(N + Indices2))...>
+	{
+		using Type = IntegerSequence<T, Indices1..., (T(N + Indices2))...>;
+	};
+
+	template<unsigned N, typename T1, typename T2>
+	using Concat = typename ConcatImpl<N, T1, T2>::Type;
+
+
+	template <typename T, unsigned N>
+	struct MakeIntegerSequenceImpl : Concat<N / 2, MakeIntegerSequence<T, N / 2>, MakeIntegerSequence<T, N - N / 2>>
+	{
+		using Type = Concat<N / 2, MakeIntegerSequence<T, N / 2>, MakeIntegerSequence<T, N - N / 2>>;
+	};
+
+	template <typename T>
+	struct MakeIntegerSequenceImpl<T, 1> : IntegerSequence<T, T(0)>
+	{
+		using Type = IntegerSequence<T, T(0)>;
+	};
+
+	template <typename T>
+	struct MakeIntegerSequenceImpl<T, 0> : IntegerSequence<T>
+	{
+		using Type = IntegerSequence<T>;
+	};
+};
+
+#endif
+
+
+/**************************
+DecayedType
+
+Returns the decayed type of T, meaning it removes all references, qualifiers and
+applies array-to-pointer and function-to-pointer conversions.
+http://en.cppreference.com/w/cpp/types/decay
+****************************/
+template <typename T>
+struct DecayNonReference
+{
+	typedef typename RemoveConstAndVolatile<T>::Type Type;
+};
+
+template <typename T>
+struct DecayNonReference<T[]>
+{
+	typedef T* Type;
+};
+
+template <typename T, uint32 N>
+struct DecayNonReference<T[N]>
+{
+	typedef T* Type;
+};
+
+template <typename RetType, typename... Params>
+struct DecayNonReference<RetType(Params...)>
+{
+	typedef RetType(*Type)(Params...);
+};
+
+
+template <typename T>
+struct DecayedType
+{
+	typedef typename DecayNonReference<typename RemoveReference<T>::Type>::Type Type;
+};

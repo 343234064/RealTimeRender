@@ -223,7 +223,7 @@ PlatformProcessHandle LaunchCrashReportClient(void** OutReadPipe, void** OutWrit
 		}
 	}
 
-	const TChar* CommandLine = TEXTS(" -READ=%0u -WRITE=%0u -MONITOR=%u");
+	const TChar* CommandLine = TEXTS(" -READ=%0u -WRITE=%0u -MONITORID=%u");
 	String::Snprintf(ClientArgs, CRASH_CLIENT_MAX_ARGS_LEN, CommandLine, PipeInRead, PipeOutWrite, PlatformProcess::GetCurrentProcessId());
 	String CrashReporterPath = Path::Join(Path::ToolDir(), TEXTS("CrashReportClient/Win64/CrashReportClient.exe"));
 	

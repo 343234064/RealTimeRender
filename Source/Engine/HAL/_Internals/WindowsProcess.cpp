@@ -192,30 +192,12 @@ PlatformProcessHandle WindowsProcess::OpenProcess(uint32 ProcessID)
 }
 
 
-bool WindowsProcess::IsProcRunning(PlatformProcessHandle& ProcessHandle)
-{
-	bool Running = true;
-	uint32 WaitResult = ::WaitForSingleObject(ProcessHandle.Get(), 0);
-	if (WaitResult != WAIT_TIMEOUT)
-	{
-		Running = false;
-	}
-	return Running;
-}
 
 void WindowsProcess::WaitForProc(PlatformProcessHandle& ProcessHandle)
 {
 	::WaitForSingleObject(ProcessHandle.Get(), INFINITE);
 }
 
-void WindowsProcess::CloseProc(PlatformProcessHandle& ProcessHandle)
-{
-	if (ProcessHandle.IsValid())
-	{
-		::CloseHandle(ProcessHandle.Get());
-		ProcessHandle.Reset();
-	}
-}
 
 void WindowsProcess::TerminateProc(PlatformProcessHandle& ProcessHandle, bool KillTree)
 {
@@ -252,19 +234,6 @@ void WindowsProcess::TerminateProc(PlatformProcessHandle& ProcessHandle, bool Ki
 }
 
 
-bool WindowsProcess::GetProcReturnCode(PlatformProcessHandle& ProcHandle, int32* ReturnCode)
-{
-	DWORD ExitCode = 0;
-	if (::GetExitCodeProcess(ProcHandle.Get(), &ExitCode) && ExitCode != STILL_ACTIVE)
-	{
-		if (ReturnCode != nullptr)
-		{
-			*ReturnCode = (int32)ExitCode;
-		}
-		return true;
-	}
-	return false;
-}
 
 bool WindowsProcess::ExecProcess(const TChar* URL, const TChar* Params, int32* OutReturnCode, String* OutStdOut, String* OutStdErr, const TChar* OptionalWorkingDirectory)
 {
@@ -431,24 +400,6 @@ bool WindowsProcess::ExecProcess(const TChar* URL, const TChar* Params, int32* O
 	}
 
 	return Success;
-}
-
-void WindowsProcess::Sleep(float Seconds)
-{
-	uint32 Milliseconds = (uint32)(Seconds * 1000.0);
-	if (Milliseconds == 0)
-	{
-		::SwitchToThread();
-	}
-	else
-	{
-		::Sleep(Milliseconds);
-	}
-}
-
-void WindowsProcess::SleepInfinite()
-{
-	::Sleep(INFINITE);
 }
 
 
