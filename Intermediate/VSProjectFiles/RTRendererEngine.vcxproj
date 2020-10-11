@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\Source\Engine\Global\GlobalConfigs.h" />
     <ClInclude Include="..\..\Source\Engine\Global\GlobalType.h" />
     <ClInclude Include="..\..\Source\Engine\Global\EngineVariables.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Map.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Serializer.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Assertion.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\AtomicCounter.h" />
@@ -37,6 +38,7 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\DynamicArray.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Misc.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\RefCount.h" />
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Set.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\String.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\CharConversion.h" />
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Tuple.h" />

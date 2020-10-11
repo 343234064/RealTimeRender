@@ -271,6 +271,12 @@
     <ClInclude Include="..\..\Source\Engine\Global\Utilities\Tuple.h">
       <Filter>Source\Engine\Global\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Map.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Global\Utilities\Set.h">
+      <Filter>Source\Engine\Global\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\HAL\_Internals\AllocIntelTBB.cpp">
