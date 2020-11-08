@@ -7,7 +7,7 @@
 #include "HAL/Chars.h"
 #include "Global/Utilities/String.h"
 #include "Global/Utilities/Tuple.h"
-
+#include <tuple>  
 
 static uint64 MonitorProcessId = 0;
 
@@ -91,6 +91,27 @@ void CrashReportCore::Run()
 			PlatformProcess::Sleep(1);
 		}
 
+		/* Tuple pairs -> bool IsRunning. int32 ReturnCode*/
+		auto GetProcessStatus = [](PlatformProcessHandle& ProcessHandle)->TTuple<bool, int32>
+		{
+			bool IsRunning = true;
+			int32 ReturnCode = -10000;
+			if (!ProcessHandle.IsValid())
+			{
+				IsRunning = false;
+			}
+			else if (!PlatformProcess::IsProcRunning(ProcessHandle))
+			{
+				IsRunning = false;
+				int32 ReturnCodeTmp = 0;
+				if (PlatformProcess::GetProcReturnCode(ProcessHandle, &ReturnCodeTmp))
+				{
+					ReturnCode = ReturnCodeTmp;
+				}
+			}
+
+			return TTuple<Decayed<bool>::Type, Decayed<int32>::Type>(IsRunning, ReturnCode);
+		};
 
 
 		PlatformProcess::CloseProc(MonitorProcess);

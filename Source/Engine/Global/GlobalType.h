@@ -842,12 +842,12 @@ struct DecayNonReference<T[N]>
 template <typename RetType, typename... Params>
 struct DecayNonReference<RetType(Params...)>
 {
-	typedef RetType(*Type)(Params...);
+	typedef RetType (*Type)(Params...);
 };
 
 
 template <typename T>
-struct DecayedType
+struct Decayed
 {
 	typedef typename DecayNonReference<typename RemoveReference<T>::Type>::Type Type;
 };
