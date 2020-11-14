@@ -129,6 +129,20 @@ static_assert(sizeof(TChar) == 2, "TChar must be 2 bytes");
 
 
 
+template< class T >
+static constexpr FORCE_INLINE T Max(const T A, const T B)
+{
+	return (A >= B) ? A : B;
+}
+
+template< class T >
+static constexpr FORCE_INLINE T Min(const T A, const T B)
+{
+	return (A <= B) ? A : B;
+}
+
+
+
 //==============================
 //Type traits helpers
 //==============================
@@ -851,3 +865,6 @@ struct Decayed
 {
 	typedef typename DecayNonReference<typename RemoveReference<T>::Type>::Type Type;
 };
+
+
+
