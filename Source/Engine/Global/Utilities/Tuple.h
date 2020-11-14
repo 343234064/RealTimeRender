@@ -1,436 +1,352 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+/****************************************
+Tuple
 
+
+*****************************************/
 #pragma once
 
 #include "Global/GlobalType.h"
 
 
 template <typename... Types>
-struct TTuple;
+struct Tuple;
 
-namespace UE4Tuple_Private
+template <typename T, typename... Types>
+struct DecayedFrontOfParameterPackIsSameType
 {
-	template <typename T, typename... Types>
-	struct TDecayedFrontOfParameterPackIsSameType
+	enum { Value = IsTypeEqual<T, typename Decayed<typename GetNthTypeFromParameter<0, Types...>::Type>::Type>::Value };
+};
+
+
+template <typename T, uint32 Index>
+struct TupleElement
+{
+	template <
+		typename... ArgTypes
+	>
+		explicit TupleElement(ArgTypes&&... Args)
+		: Value(Forward<ArgTypes>(Args)...)
 	{
-		enum { Value = IsTypeEqual<T, typename Decayed<typename GetNthTypeFromParameter<0, Types...>::Type>::Type>::Value };
-	};
-
-	template <typename T, uint32 Index>
-	struct TTupleElement
-	{
-		template <
-			typename... ArgTypes
-		>
-			explicit TTupleElement(ArgTypes&&... Args)
-			: Value(Forward<ArgTypes>(Args)...)
-		{
-		}
-
-		TTupleElement()
-			: Value()
-		{
-		}
-
-		TTupleElement(TTupleElement&&) = default;
-		TTupleElement(const TTupleElement&) = default;
-		TTupleElement& operator=(TTupleElement&&) = default;
-		TTupleElement& operator=(const TTupleElement&) = default;
-
-		T Value;
-	};
-
-	template <uint32 IterIndex, uint32 Index, typename... Types>
-	struct TTupleElementHelperImpl;
-
-	template <uint32 IterIndex, uint32 Index, typename ElementType, typename... Types>
-	struct TTupleElementHelperImpl<IterIndex, Index, ElementType, Types...> : TTupleElementHelperImpl<IterIndex + 1, Index, Types...>
-	{
-	};
-
-	template <uint32 Index, typename ElementType, typename... Types>
-	struct TTupleElementHelperImpl<Index, Index, ElementType, Types...>
-	{
-		typedef ElementType Type;
-
-		template <typename TupleType>
-		static FORCEINLINE ElementType& Get(TupleType& Tuple)
-		{
-			return static_cast<TTupleElement<ElementType, Index>&>(Tuple).Value;
-		}
-
-		template <typename TupleType>
-		static FORCEINLINE const ElementType& Get(const TupleType& Tuple)
-		{
-			return Get((TupleType&)Tuple);
-		}
-	};
-
-	template <uint32 WantedIndex, typename... Types>
-	struct TTupleElementHelper : TTupleElementHelperImpl<0, WantedIndex, Types...>
-	{
-	};
-
-	template <uint32 ArgCount, uint32 ArgToCompare>
-	struct FEqualityHelper
-	{
-		template <typename TupleType>
-		FORCEINLINE static bool Compare(const TupleType& Lhs, const TupleType& Rhs)
-		{
-			return Lhs.template Get<ArgToCompare>() == Rhs.template Get<ArgToCompare>() && FEqualityHelper<ArgCount, ArgToCompare + 1>::Compare(Lhs, Rhs);
-		}
-	};
-
-	template <uint32 ArgCount>
-	struct FEqualityHelper<ArgCount, ArgCount>
-	{
-		template <typename TupleType>
-		FORCEINLINE static bool Compare(const TupleType& Lhs, const TupleType& Rhs)
-		{
-			return true;
-		}
-	};
-
-	template <uint32 NumArgs, uint32 ArgToCompare = 0, bool Last = ArgToCompare + 1 == NumArgs>
-	struct TLessThanHelper
-	{
-		template <typename TupleType>
-		FORCEINLINE static bool Do(const TupleType& Lhs, const TupleType& Rhs)
-		{
-			return Lhs.template Get<ArgToCompare>() < Rhs.template Get<ArgToCompare>() || (!(Rhs.template Get<ArgToCompare>() < Lhs.template Get<ArgToCompare>()) && TLessThanHelper<NumArgs, ArgToCompare + 1>::Do(Lhs, Rhs));
-		}
-	};
-
-	template <uint32 NumArgs, uint32 ArgToCompare>
-	struct TLessThanHelper<NumArgs, ArgToCompare, true>
-	{
-		template <typename TupleType>
-		FORCEINLINE static bool Do(const TupleType& Lhs, const TupleType& Rhs)
-		{
-			return Lhs.template Get<ArgToCompare>() < Rhs.template Get<ArgToCompare>();
-		}
-	};
-
-	template <uint32 NumArgs>
-	struct TLessThanHelper<NumArgs, NumArgs, false>
-	{
-		template <typename TupleType>
-		FORCEINLINE static bool Do(const TupleType& Lhs, const TupleType& Rhs)
-		{
-			return false;
-		}
-	};
-
-	template <typename Indices, typename... Types>
-	struct TTupleStorage;
-
-	template <uint32... Indices, typename... Types>
-	struct TTupleStorage<IntegerSequence<uint32, Indices...>, Types...> : TTupleElement<Types, Indices>...
-	{
-		template <
-			typename... ArgTypes
-		>
-			explicit TTupleStorage(ArgTypes&&... Args)
-			: TTupleElement<Types, Indices>(Forward<ArgTypes>(Args))...
-		{
-		}
-
-		TTupleStorage() = default;
-		TTupleStorage(TTupleStorage&&) = default;
-		TTupleStorage(const TTupleStorage&) = default;
-		TTupleStorage& operator=(TTupleStorage&&) = default;
-		TTupleStorage& operator=(const TTupleStorage&) = default;
-
-		template <uint32 Index> FORCEINLINE const typename TTupleElementHelper<Index, Types...>::Type& Get() const { return TTupleElementHelper<Index, Types...>::Get(*this); }
-		template <uint32 Index> FORCEINLINE       typename TTupleElementHelper<Index, Types...>::Type& Get() { return TTupleElementHelper<Index, Types...>::Get(*this); }
-	};
-
-	// Specialization of 2-TTuple to give it the API of TPair.
-	template <typename InKeyType, typename InValueType>
-	struct TTupleStorage<IntegerSequence<uint32, 0, 1>, InKeyType, InValueType>
-	{
-	private:
-		template <uint32 Index, typename Dummy> // Dummy needed for partial template specialization workaround
-		struct TGetHelper;
-
-		template <typename Dummy>
-		struct TGetHelper<0, Dummy>
-		{
-			typedef InKeyType ResultType;
-
-			static const InKeyType& Get(const TTupleStorage& Tuple) { return Tuple.Key; }
-			static       InKeyType& Get(TTupleStorage& Tuple) { return Tuple.Key; }
-		};
-
-		template <typename Dummy>
-		struct TGetHelper<1, Dummy>
-		{
-			typedef InValueType ResultType;
-
-			static const InValueType& Get(const TTupleStorage& Tuple) { return Tuple.Value; }
-			static       InValueType& Get(TTupleStorage& Tuple) { return Tuple.Value; }
-		};
-
-	public:
-		typedef InKeyType   KeyType;
-		typedef InValueType ValueType;
-
-		template <typename KeyInitType, typename ValueInitType>
-		explicit TTupleStorage(KeyInitType&& KeyInit, ValueInitType&& ValueInit)
-			: Key(Forward<KeyInitType  >(KeyInit))
-			, Value(Forward<ValueInitType>(ValueInit))
-		{
-		}
-
-		TTupleStorage()
-			: Key()
-			, Value()
-		{
-		}
-
-		TTupleStorage(TTupleStorage&&) = default;
-		TTupleStorage(const TTupleStorage&) = default;
-		TTupleStorage& operator=(TTupleStorage&&) = default;
-		TTupleStorage& operator=(const TTupleStorage&) = default;
-
-		template <uint32 Index> FORCEINLINE const typename TGetHelper<Index, void>::ResultType& Get() const { return TGetHelper<Index, void>::Get(*this); }
-		template <uint32 Index> FORCEINLINE       typename TGetHelper<Index, void>::ResultType& Get() { return TGetHelper<Index, void>::Get(*this); }
-
-		InKeyType   Key;
-		InValueType Value;
-	};
-
-	template <typename Indices, typename... Types>
-	struct TTupleImpl;
-
-	template <uint32... Indices, typename... Types>
-	struct TTupleImpl<IntegerSequence<uint32, Indices...>, Types...> : TTupleStorage<IntegerSequence<uint32, Indices...>, Types...>
-	{
-	private:
-		typedef TTupleStorage<IntegerSequence<uint32, Indices...>, Types...> Super;
-
-	public:
-		using Super::Get;
-
-		template <
-			typename... ArgTypes
-		>
-			explicit TTupleImpl(ArgTypes&&... Args)
-			: Super(Forward<ArgTypes>(Args)...)
-		{
-		}
-
-		TTupleImpl() = default;
-		TTupleImpl(TTupleImpl&& Other) = default;
-		TTupleImpl(const TTupleImpl& Other) = default;
-		TTupleImpl& operator=(TTupleImpl&& Other) = default;
-		TTupleImpl& operator=(const TTupleImpl& Other) = default;
-
-		template <typename FuncType, typename... ArgTypes>
-#if PLATFORM_COMPILER_HAS_DECLTYPE_AUTO
-		decltype(auto) ApplyAfter(FuncType&& Func, ArgTypes&&... Args) const
-#else
-		auto ApplyAfter(FuncType&& Func, ArgTypes&&... Args) const -> decltype(Func(Forward<ArgTypes>(Args)..., this->Get<Indices>()...))
-#endif
-		{
-			return Func(Forward<ArgTypes>(Args)..., this->template Get<Indices>()...);
-		}
-
-		template <typename FuncType, typename... ArgTypes>
-#if PLATFORM_COMPILER_HAS_DECLTYPE_AUTO
-		decltype(auto) ApplyBefore(FuncType&& Func, ArgTypes&&... Args) const
-#else
-		auto ApplyBefore(FuncType&& Func, ArgTypes&&... Args) const -> decltype(Func(this->Get<Indices>()..., Forward<ArgTypes>(Args)...))
-#endif
-		{
-			return Func(this->template Get<Indices>()..., Forward<ArgTypes>(Args)...);
-		}
-
-
-
-		FORCEINLINE friend bool operator==(const TTupleImpl& Lhs, const TTupleImpl& Rhs)
-		{
-			// This could be implemented with a fold expression when our compilers support it
-			return FEqualityHelper<sizeof...(Types), 0>::Compare(Lhs, Rhs);
-		}
-
-		FORCEINLINE friend bool operator!=(const TTupleImpl& Lhs, const TTupleImpl& Rhs)
-		{
-			return !(Lhs == Rhs);
-		}
-
-		FORCEINLINE friend bool operator<(const TTupleImpl& Lhs, const TTupleImpl& Rhs)
-		{
-			return TLessThanHelper<sizeof...(Types)>::Do(Lhs, Rhs);
-		}
-
-		FORCEINLINE friend bool operator<=(const TTupleImpl& Lhs, const TTupleImpl& Rhs)
-		{
-			return !(Rhs < Lhs);
-		}
-
-		FORCEINLINE friend bool operator>(const TTupleImpl& Lhs, const TTupleImpl& Rhs)
-		{
-			return Rhs < Lhs;
-		}
-
-		FORCEINLINE friend bool operator>=(const TTupleImpl& Lhs, const TTupleImpl& Rhs)
-		{
-			return !(Lhs < Rhs);
-		}
-	};
-
-
-	template <typename... Types>
-	FORCEINLINE TTuple<typename Decayed<Types>::Type...> MakeTupleImpl(Types&&... Args)
-	{
-		return TTuple<typename Decayed<Types>::Type...>(Forward<Types>(Args)...);
 	}
 
-	template <typename IntegerSequence>
-	struct TTransformTuple_Impl;
-
-	template <uint32... Indices>
-	struct TTransformTuple_Impl<IntegerSequence<uint32, Indices...>>
+	TupleElement()
+		: Value()
 	{
-		template <typename TupleType, typename FuncType>
-#if PLATFORM_COMPILER_HAS_DECLTYPE_AUTO
-		static decltype(auto) Do(TupleType&& Tuple, FuncType Func)
-#else
-		static auto Do(TupleType&& Tuple, FuncType Func) -> decltype(MakeTuple(Func(Forward<TupleType>(Tuple).template Get<Indices>())...))
-#endif
-		{
-			return MakeTupleImpl(Func(Forward<TupleType>(Tuple).template Get<Indices>())...);
-		}
-	};
+	}
 
-	template <typename IntegerSequence>
-	struct TVisitTupleElements_Impl;
+	TupleElement(TupleElement&&) = default;
+	TupleElement(const TupleElement&) = default;
+	TupleElement& operator=(TupleElement&&) = default;
+	TupleElement& operator=(const TupleElement&) = default;
 
-	template <uint32... Indices>
-	struct TVisitTupleElements_Impl<IntegerSequence<uint32, Indices...>>
-	{
-		// We need a second function to do the invocation for a particular index, to avoid the pack expansion being
-		// attempted on the indices and tuples simultaneously.
-		template <uint32 Index, typename FuncType, typename... TupleTypes>
-		FORCEINLINE static void InvokeFunc(FuncType&& Func, TupleTypes&&... Tuples)
-		{
-			Invoke(Forward<FuncType>(Func), Forward<TupleTypes>(Tuples).template Get<Index>()...);
-		}
+	T Value;
+};
 
-		template <typename FuncType, typename... TupleTypes>
-		static void Do(FuncType&& Func, TupleTypes&&... Tuples)
-		{
-			// This should be implemented with a fold expression when our compilers support it
-			int Temp[] = { 0, (InvokeFunc<Indices>(Forward<FuncType>(Func), Forward<TupleTypes>(Tuples)...), 0)... };
-			(void)Temp;
-		}
-	};
 
+
+template <uint32 IterIndex, uint32 Index, typename... Types>
+struct TupleElementHelperImpl;
+
+template <uint32 IterIndex, uint32 Index, typename ElementType, typename... Types>
+struct TupleElementHelperImpl<IterIndex, Index, ElementType, Types...> : TupleElementHelperImpl<IterIndex + 1, Index, Types...>
+{
+};
+
+template <uint32 Index, typename ElementType, typename... Types>
+struct TupleElementHelperImpl<Index, Index, ElementType, Types...>
+{
+	typedef ElementType Type;
 
 	template <typename TupleType>
-	struct TCVTupleArity;
-
-	template <typename... Types>
-	struct TCVTupleArity<const volatile TTuple<Types...>>
+	static FORCE_INLINE ElementType& Get(TupleType& Tuple)
 	{
-		enum { Value = sizeof...(Types) };
-	};
+		return static_cast<TupleElement<ElementType, Index>&>(Tuple).Value;
+	}
 
-	template <uint32 ArgToCombine, uint32 ArgCount>
-	struct TGetTupleHashHelper
+	template <typename TupleType>
+	static FORCE_INLINE const ElementType& Get(const TupleType& Tuple)
 	{
-		template <typename TupleType>
-		FORCEINLINE static uint32 Do(uint32 Hash, const TupleType& Tuple)
-		{
-			return TGetTupleHashHelper<ArgToCombine + 1, ArgCount>::Do(HashCombine(Hash, GetTypeHash(Tuple.template Get<ArgToCombine>())), Tuple);
-		}
-	};
+		return Get((TupleType&)Tuple);
+	}
+};
 
-	template <uint32 ArgIndex>
-	struct TGetTupleHashHelper<ArgIndex, ArgIndex>
+template <uint32 WantedIndex, typename... Types>
+struct TupleElementHelper : TupleElementHelperImpl<0, WantedIndex, Types...>
+{
+};
+
+
+template <uint32 ArgCount, uint32 ArgToCompare>
+struct EqualityHelper
+{
+	template <typename TupleType>
+	FORCE_INLINE static bool Compare(const TupleType& Lhs, const TupleType& Rhs)
 	{
-		template <typename TupleType>
-		FORCEINLINE static uint32 Do(uint32 Hash, const TupleType& Tuple)
-		{
-			return Hash;
-		}
-	};
-}
+		return Lhs.template Get<ArgToCompare>() == Rhs.template Get<ArgToCompare>() && EqualityHelper<ArgCount, ArgToCompare + 1>::Compare(Lhs, Rhs);
+	}
+};
 
-template <typename... Types>
-struct TTuple : UE4Tuple_Private::TTupleImpl<MakeIntegerSequence<uint32, sizeof...(Types)>, Types...>
+template <uint32 ArgCount>
+struct EqualityHelper<ArgCount, ArgCount>
+{
+	template <typename TupleType>
+	FORCE_INLINE static bool Compare(const TupleType& Lhs, const TupleType& Rhs)
+	{
+		return true;
+	}
+};
+
+
+template <uint32 NumArgs, uint32 ArgToCompare = 0, bool Last = ArgToCompare + 1 == NumArgs>
+struct LessThanHelper
+{
+	template <typename TupleType>
+	FORCE_INLINE static bool Do(const TupleType& Lhs, const TupleType& Rhs)
+	{
+		return Lhs.template Get<ArgToCompare>() < Rhs.template Get<ArgToCompare>() || (!(Rhs.template Get<ArgToCompare>() < Lhs.template Get<ArgToCompare>()) && LessThanHelper<NumArgs, ArgToCompare + 1>::Do(Lhs, Rhs));
+	}
+};
+
+template <uint32 NumArgs, uint32 ArgToCompare>
+struct LessThanHelper<NumArgs, ArgToCompare, true>
+{
+	template <typename TupleType>
+	FORCE_INLINE static bool Do(const TupleType& Lhs, const TupleType& Rhs)
+	{
+		return Lhs.template Get<ArgToCompare>() < Rhs.template Get<ArgToCompare>();
+	}
+};
+
+template <uint32 NumArgs>
+struct LessThanHelper<NumArgs, NumArgs, false>
+{
+	template <typename TupleType>
+	FORCE_INLINE static bool Do(const TupleType& Lhs, const TupleType& Rhs)
+	{
+		return false;
+	}
+};
+
+
+
+template <typename Indices, typename... Types>
+struct TupleStorage;
+
+template <uint32... Indices, typename... Types>
+struct TupleStorage<IntegerSequence<uint32, Indices...>, Types...> : TupleElement<Types, Indices>...
+{
+	template <
+		typename... ArgTypes
+	>
+		explicit TupleStorage(ArgTypes&&... Args)
+		: TupleElement<Types, Indices>(Forward<ArgTypes>(Args))...
+	{
+	}
+
+	TupleStorage() = default;
+	TupleStorage(TupleStorage&&) = default;
+	TupleStorage(const TupleStorage&) = default;
+	TupleStorage& operator=(TupleStorage&&) = default;
+	TupleStorage& operator=(const TupleStorage&) = default;
+
+	template <uint32 Index> FORCE_INLINE const typename TupleElementHelper<Index, Types...>::Type& Get() const { return TupleElementHelper<Index, Types...>::Get(*this); }
+	template <uint32 Index> FORCE_INLINE  typename TupleElementHelper<Index, Types...>::Type& Get() { return TupleElementHelper<Index, Types...>::Get(*this); }
+};
+
+
+template <typename InKeyType, typename InValueType>
+struct TupleStorage<IntegerSequence<uint32, 0, 1>, InKeyType, InValueType>
 {
 private:
-	typedef UE4Tuple_Private::TTupleImpl<MakeIntegerSequence<uint32, sizeof...(Types)>, Types...> Super;
+	template <uint32 Index, typename Dummy> // Dummy needed for partial template specialization workaround
+	struct GetHelper;
+
+	template <typename Dummy>
+	struct GetHelper<0, Dummy>
+	{
+		typedef InKeyType ResultType;
+
+		static const InKeyType& Get(const TupleStorage& Tuple) { return Tuple.Key; }
+		static       InKeyType& Get(TupleStorage& Tuple) { return Tuple.Key; }
+	};
+
+	template <typename Dummy>
+	struct GetHelper<1, Dummy>
+	{
+		typedef InValueType ResultType;
+
+		static const InValueType& Get(const TupleStorage& Tuple) { return Tuple.Value; }
+		static       InValueType& Get(TupleStorage& Tuple) { return Tuple.Value; }
+	};
+
+public:
+	typedef InKeyType   KeyType;
+	typedef InValueType ValueType;
+
+	template <typename KeyInitType, typename ValueInitType>
+	explicit TupleStorage(KeyInitType&& KeyInit, ValueInitType&& ValueInit)
+		: Key(Forward<KeyInitType  >(KeyInit))
+		, Value(Forward<ValueInitType>(ValueInit))
+	{
+	}
+
+	TupleStorage()
+		: Key()
+		, Value()
+	{
+	}
+
+	TupleStorage(TupleStorage&&) = default;
+	TupleStorage(const TupleStorage&) = default;
+	TupleStorage& operator=(TupleStorage&&) = default;
+	TupleStorage& operator=(const TupleStorage&) = default;
+
+	template <uint32 Index> FORCE_INLINE const typename GetHelper<Index, void>::ResultType& Get() const { return GetHelper<Index, void>::Get(*this); }
+	template <uint32 Index> FORCE_INLINE       typename GetHelper<Index, void>::ResultType& Get() { return GetHelper<Index, void>::Get(*this); }
+
+	InKeyType   Key;
+	InValueType Value;
+};
+
+
+template <typename Indices, typename... Types>
+struct TupleImpl;
+
+template <uint32... Indices, typename... Types>
+struct TupleImpl<IntegerSequence<uint32, Indices...>, Types...> : TupleStorage<IntegerSequence<uint32, Indices...>, Types...>
+{
+private:
+	typedef TupleStorage<IntegerSequence<uint32, Indices...>, Types...> Super;
+
+public:
+	using Super::Get;
+
+	template <
+		typename... ArgTypes
+	>
+		explicit TupleImpl(ArgTypes&&... Args)
+		: Super(Forward<ArgTypes>(Args)...)
+	{
+	}
+
+	TupleImpl() = default;
+	TupleImpl(TupleImpl&& Other) = default;
+	TupleImpl(const TupleImpl& Other) = default;
+	TupleImpl& operator=(TupleImpl&& Other) = default;
+	TupleImpl& operator=(const TupleImpl& Other) = default;
+
+	template <typename FuncType, typename... ArgTypes>
+	decltype(auto) ApplyAfter(FuncType&& Func, ArgTypes&&... Args) const
+	{
+		return Func(Forward<ArgTypes>(Args)..., this->template Get<Indices>()...);
+	}
+
+	template <typename FuncType, typename... ArgTypes>
+	decltype(auto) ApplyBefore(FuncType&& Func, ArgTypes&&... Args) const
+	{
+		return Func(this->template Get<Indices>()..., Forward<ArgTypes>(Args)...);
+	}
+
+
+	FORCE_INLINE friend bool operator==(const TupleImpl& Lhs, const TupleImpl& Rhs)
+	{
+		// This could be implemented with a fold expression when our compilers support it
+		return EqualityHelper<sizeof...(Types), 0>::Compare(Lhs, Rhs);
+	}
+
+	FORCE_INLINE friend bool operator!=(const TupleImpl& Lhs, const TupleImpl& Rhs)
+	{
+		return !(Lhs == Rhs);
+	}
+
+	FORCE_INLINE friend bool operator<(const TupleImpl& Lhs, const TupleImpl& Rhs)
+	{
+		return LessThanHelper<sizeof...(Types)>::Do(Lhs, Rhs);
+	}
+
+	FORCE_INLINE friend bool operator<=(const TupleImpl& Lhs, const TupleImpl& Rhs)
+	{
+		return !(Rhs < Lhs);
+	}
+
+	FORCE_INLINE friend bool operator>(const TupleImpl& Lhs, const TupleImpl& Rhs)
+	{
+		return Rhs < Lhs;
+	}
+
+	FORCE_INLINE friend bool operator>=(const TupleImpl& Lhs, const TupleImpl& Rhs)
+	{
+		return !(Lhs < Rhs);
+	}
+};
+
+
+template <typename... Types>
+FORCE_INLINE Tuple<typename Decayed<Types>::Type...> MakeTupleImpl(Types&&... Args)
+{
+	return Tuple<typename Decayed<Types>::Type...>(Forward<Types>(Args)...);
+}
+
+
+template <typename TIntegerSequence>
+struct TransformTuple_Impl;
+
+template <uint32... Indices>
+struct TransformTuple_Impl<IntegerSequence<uint32, Indices...>>
+{
+	template <typename TupleType, typename FuncType>
+	static decltype(auto) Do(TupleType&& Tuple, FuncType Func)
+	{
+		return MakeTupleImpl(Func(Forward<TupleType>(Tuple).template Get<Indices>())...);
+	}
+};
+
+
+
+template <typename... Types>
+struct Tuple : TupleImpl<MakeIntegerSequence<uint32, sizeof...(Types)>, Types...>
+{
+private:
+	typedef TupleImpl<MakeIntegerSequence<uint32, sizeof...(Types)>, Types...> Super;
 
 public:
 	template <
 		typename... ArgTypes
 	>
-		explicit TTuple(ArgTypes&&... Args)
+		explicit Tuple(ArgTypes&&... Args)
 		: Super(Forward<ArgTypes>(Args)...)
 	{
 		// This constructor is disabled for TTuple and zero parameters because VC is incorrectly instantiating it as a move/copy/default constructor.
 	}
 
-	TTuple() = default;
-	TTuple(TTuple&&) = default;
-	TTuple(const TTuple&) = default;
-	TTuple& operator=(TTuple&&) = default;
-	TTuple& operator=(const TTuple&) = default;
-};
-
-template <typename... Types>
-FORCEINLINE uint32 GetTypeHash(const TTuple<Types...>& Tuple)
-{
-	return UE4Tuple_Private::TGetTupleHashHelper<1u, sizeof...(Types)>::Do(GetTypeHash(Tuple.template Get<0>()), Tuple);
-}
-
-FORCEINLINE uint32 GetTypeHash(const TTuple<>& Tuple)
-{
-	return 0;
-}
-
-
-/**
- * Traits class which calculates the number of elements in a tuple.
- */
-template <typename TupleType>
-struct TTupleArity : UE4Tuple_Private::TCVTupleArity<const volatile TupleType>
-{
+	Tuple() = default;
+	Tuple(Tuple&&) = default;
+	Tuple(const Tuple&) = default;
+	Tuple& operator=(Tuple&&) = default;
+	Tuple& operator=(const Tuple&) = default;
 };
 
 
+
 /**
- * Makes a TTuple from some arguments.  The type of the TTuple elements are the decayed versions of the arguments.
- *
- * @param  Args  The arguments used to construct the tuple.
- * @return A tuple containing a copy of the arguments.
- *
  * Example:
  *
  * void Func(const int32 A, FString&& B)
  * {
  *     // Equivalent to:
- *     // TTuple<int32, const TCHAR*, FString> MyTuple(A, TEXT("Hello"), MoveTemp(B));
+ *     // Tuple<int32, const TCHAR*, FString> MyTuple(A, TEXT("Hello"), MoveTemp(B));
  *     auto MyTuple = MakeTuple(A, TEXT("Hello"), MoveTemp(B));
  * }
  */
 template <typename... Types>
-FORCEINLINE TTuple<typename Decayed<Types>::Type...> MakeTuple(Types&&... Args)
+FORCE_INLINE Tuple<typename Decayed<Types>::Type...> MakeTuple(Types&&... Args)
 {
-	return UE4Tuple_Private::MakeTupleImpl(Forward<Types>(Args)...);
+	return MakeTupleImpl(Forward<Types>(Args)...);
 }
 
 
+
 /**
- * Creates a new TTuple by applying a functor to each of the elements.
- *
- * @param  Tuple  The tuple to apply the functor to.
- * @param  Func   The functor to apply.
- *
- * @return A new tuple of the transformed elements.
  *
  * Example:
  *
@@ -438,7 +354,7 @@ FORCEINLINE TTuple<typename Decayed<Types>::Type...> MakeTuple(Types&&... Args)
  * char         Overloaded(const TCHAR* Arg);
  * const TCHAR* Overloaded(const FString& Arg);
  *
- * void Func(const TTuple<int32, const TCHAR*, FString>& MyTuple)
+ * void Func(const Tuple<int32, const TCHAR*, FString>& MyTuple)
  * {
  *     // Equivalent to:
  *     // TTuple<float, char, const TCHAR*> TransformedTuple(Overloaded(MyTuple.Get<0>()), Overloaded(MyTuple.Get<1>()), Overloaded(MyTuple.Get<2>())));
@@ -446,46 +362,16 @@ FORCEINLINE TTuple<typename Decayed<Types>::Type...> MakeTuple(Types&&... Args)
  * }
  */
 template <typename FuncType, typename... Types>
-#if PLATFORM_COMPILER_HAS_DECLTYPE_AUTO
-FORCEINLINE decltype(auto) TransformTuple(TTuple<Types...>&& Tuple, FuncType Func)
-#else
-FORCEINLINE auto TransformTuple(TTuple<Types...>&& Tuple, FuncType Func) -> decltype(UE4Tuple_Private::TTransformTuple_Impl<MakeIntegerSequence<uint32, sizeof...(Types)>>::Do(MoveTemp(Tuple), MoveTemp(Func)))
-#endif
+FORCE_INLINE decltype(auto) TransformTuple(Tuple<Types...>&& Tuple, FuncType Func)
 {
-	return UE4Tuple_Private::TTransformTuple_Impl<MakeIntegerSequence<uint32, sizeof...(Types)>>::Do(MoveTemp(Tuple), MoveTemp(Func));
+	return TransformTuple_Impl<MakeIntegerSequence<uint32, sizeof...(Types)>>::Do(MoveTemp(Tuple), MoveTemp(Func));
 }
 
 template <typename FuncType, typename... Types>
-#if PLATFORM_COMPILER_HAS_DECLTYPE_AUTO
-FORCEINLINE decltype(auto) TransformTuple(const TTuple<Types...>& Tuple, FuncType Func)
-#else
-FORCEINLINE auto TransformTuple(const TTuple<Types...>& Tuple, FuncType Func) -> decltype(UE4Tuple_Private::TTransformTuple_Impl<MakeIntegerSequence<uint32, sizeof...(Types)>>::Do(Tuple, MoveTemp(Func)))
-#endif
+FORCE_INLINE decltype(auto) TransformTuple(const Tuple<Types...>& Tuple, FuncType Func)
 {
-	return UE4Tuple_Private::TTransformTuple_Impl<MakeIntegerSequence<uint32, sizeof...(Types)>>::Do(Tuple, MoveTemp(Func));
+	return TransformTuple_Impl<MakeIntegerSequence<uint32, sizeof...(Types)>>::Do(Tuple, MoveTemp(Func));
 }
 
 
-/**
- * Visits each element in the specified tuples in parallel and applies them as arguments to the functor.
- * All specified tuples must have the same number of elements.
- *
- * @param  Func    The functor to apply.
- * @param  Tuples  The tuples whose elements are to be applied to the functor.
- *
- * Example:
- *
- * void Func(const TTuple<int32, const TCHAR*, FString>& Tuple1, const TTuple<bool, float, FName>& Tuple2)
- * {
- *     // Equivalent to:
- *     // Functor(Tuple1.Get<0>(), Tuple2.Get<0>());
- *     // Functor(Tuple1.Get<1>(), Tuple2.Get<1>());
- *     // Functor(Tuple1.Get<2>(), Tuple2.Get<2>());
- *     VisitTupleElements(Functor, Tuple1, Tuple2);
- * }
- */
-template <typename FuncType, typename FirstTupleType, typename... TupleTypes>
-FORCEINLINE void VisitTupleElements(FuncType&& Func, FirstTupleType&& FirstTuple, TupleTypes&&... Tuples)
-{
-	UE4Tuple_Private::TVisitTupleElements_Impl<MakeIntegerSequence<uint32, TTupleArity<typename Decayed<FirstTupleType>::Type>::Value>>::Do(Forward<FuncType>(Func), Forward<FirstTupleType>(FirstTuple), Forward<TupleTypes>(Tuples)...);
-}
+
